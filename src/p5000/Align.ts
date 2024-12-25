@@ -1,13 +1,15 @@
 enum Align {
-  LEFT,
-  RIGHT,
-  TOP,
-  BOTTOM,
-  LEFT_TOP,
-  RIGHT_TOP,
-  LEFT_BOTTOM,
-  RIGHT_BOTTOM,
-  CENTER
+    LEFT,
+    RIGHT,
+    LEFT_TOP,
+    RIGHT_TOP,
+    LEFT_BOTTOM,
+    RIGHT_BOTTOM,
+    CENTER,
+    CENTER_LEFT,
+    CENTER_RIGHT,
+    CENTER_TOP,
+    CENTER_BOTTOM,
 }
 
 export default Align;
