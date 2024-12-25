@@ -1,0 +1,33 @@
+{
+  "name": "@e.levenetc/p5000",
+  "version": "0.0.2",
+  "description": "Micro UI framework based on p5",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/elevenetc/p5000.git"
+  },
+  "keywords": [
+    "ui",
+    "p5",
+    "canvas"
+  ],
+  "author": "Eugene Levenetc",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/elevenetc/p5000/issues"
+  },
+  "homepage": "https://github.com/elevenetc/p5000#readme",
+  "peerDependencies": {
+    "p5": "^1.11.1"
+  },
+  "devDependencies": {
+    "@types/p5": "^1.7.6",
+    "ts-loader": "^9.5.1",
+    "typescript": "^5.6.3"
+  },
+  "files": ["src/"]
+}
