@@ -48,7 +48,7 @@ class TextView extends View {
   }
 
   public render(p: p5) {
-
+    super.render(p)
     //debug
     // if (this.bgAlpha > 0) {
     //   p.noStroke()
