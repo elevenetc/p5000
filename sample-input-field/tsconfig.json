@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "target": "ES6",
+    "esModuleInterop": true,
+    "sourceMap": true,
+    "rootDir": "./",
+    "allowSyntheticDefaultImports": true
+  }
+}
