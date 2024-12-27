@@ -7,6 +7,8 @@ import Vertical from "../../src/p5000/Vertical";
 import Align from "../../src/p5000/Align";
 import TextView from "../../src/p5000/TextView";
 import Free from "../../src/p5000/Free";
+import KeyboardTypeTransformer from "../../src/p5000/transformers/KeyboardTypeTransformer";
+import {KeyboardHandlerImpl} from "../../src/p5000/keyboard/KeyboardHandler";
 
 const projectsToTags = new Map();
 const tagsToProjects = new Map();
@@ -24,7 +26,7 @@ tagsView.alignContent = Align.RIGHT;
 
 allProjects.sort((a, b) => b.date.getTime() - a.date.getTime()).forEach(project => {
   const title = formatDateToMMYYYY(project.date) + " " + project.title
-  const projectView = new TextView(title, project.id, (id, hovered, p) => {
+  const projectView = new TextView(" " + title, project.id, (id, hovered, p) => {
     linksView.onProjectHover(id, hovered, p)
   });
   projectView.color = [255, 255, 255]
@@ -33,11 +35,12 @@ allProjects.sort((a, b) => b.date.getTime() - a.date.getTime()).forEach(project 
 })
 
 allTags.sort((a, b) => a.title.localeCompare(b.title)).forEach(tag => {
+  let tagTitle = tag.title + " ";
   let tagView = new TextView(
-    tag.title,
+    tagTitle,
     tag.id,
     (id, hovered, p) => {linksView.onTagHover(id, hovered, p)},
-    tagTitleToColor(tag.title)
+    tagTitleToColor(tagTitle)
   );
   tagsView.addChild(tagView);
   tagsToProjects.set(tagView, [])
@@ -58,6 +61,13 @@ tagsView.children.forEach(tagView => {
     })
   })
 })
+
+const filterText = new TextView("type to filter tags", "filter")
+filterText.textSize = 20
+filterText.align = Align.RIGHT_BOTTOM
+filterText.color = [100, 100, 100]
+filterText.transformers.push(new KeyboardTypeTransformer(new KeyboardHandlerImpl()))
+root.addChild(filterText)
 
 projectsView.children.forEach(projectView => {
   const projectId = projectView.id

@@ -8,11 +8,9 @@ class KeyboardHandlerImpl implements KeyboardHandler {
 
     constructor() {
         document.addEventListener("keydown", (event) => {
-
             const value = eventKeyToKeyValue(event.key)
             if (value != null) {
                 this.callbacks.forEach((callback) => {
-                    //console.log(`Key pressed: ${event.key}`);
                     callback(value)
                 })
             }
@@ -25,7 +23,9 @@ class KeyboardHandlerImpl implements KeyboardHandler {
 }
 
 function eventKeyToKeyValue(key: string): KeyValue | null {
-    if (key == "Backspace") {
+    if (key == "Escape") {
+        return new Escape()
+    } else if (key == "Backspace") {
         return new Backspace()
     } else {
         const value = filterAlphanumericKey(key)
@@ -44,7 +44,9 @@ interface KeyValue {
 }
 
 class Backspace implements KeyValue {
+}
 
+class Escape implements KeyValue {
 }
 
 class KeyChar implements KeyValue {
@@ -60,5 +62,6 @@ export {
     KeyboardHandlerImpl,
     KeyValue,
     Backspace,
-    KeyChar
+    KeyChar,
+    Escape
 }
