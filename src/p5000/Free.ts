@@ -4,7 +4,6 @@ import p5 from "p5";
 import {handleChildrenHover} from "./utils/viewUtils";
 
 class Free extends View {
-    parent?: View;
     private children: View[] = [];
 
     addChild(child: View): void {

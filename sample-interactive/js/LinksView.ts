@@ -9,10 +9,6 @@ import SinAnimationValue from "../../src/p5000/animation/SinAnimationValue";
 
 class LinksView extends View {
 
-  id?: string;
-  align?: Align;
-  parent?: View;
-
   projectsToTags: Map<TextView, TextView[]>
   tagsToProjects: Map<TextView, TextView[]>
 
