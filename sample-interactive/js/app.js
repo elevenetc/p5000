@@ -5,8 +5,8 @@ import LinksView from "./LinksView";
 import {tagTitleToColor} from "./appConfig";
 import Vertical from "../../src/p5000/Vertical";
 import Align from "../../src/p5000/Align";
-import TextView from "../../src/p5000/TextView";
-import Free from "../../src/p5000/Free";
+import TextView from "../../src/p5000/text/TextView";
+import {Free} from "../../src/p5000/containers/Free";
 import KeyboardTypeTransformer from "../../src/p5000/transformers/KeyboardTypeTransformer";
 import {KeyboardHandlerImpl} from "../../src/p5000/keyboard/KeyboardHandler";
 

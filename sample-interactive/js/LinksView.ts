@@ -2,7 +2,7 @@ import p5 from "p5";
 import {tagTitleToColor} from "./appConfig";
 import View from "../../src/p5000/View";
 import Align from "../../src/p5000/Align";
-import TextView from "../../src/p5000/TextView";
+import TextView from "../../src/p5000/text/TextView";
 import LinearAnimationValue from "../../src/p5000/animation/LinearAnimationValue";
 import {MouseSpeed} from "../../src/p5000/utils/MouseSpeed";
 import SinAnimationValue from "../../src/p5000/animation/SinAnimationValue";
@@ -180,12 +180,12 @@ class Link {
 
   render(p: p5) {
 
-    let projectStartX = this.projectView.getX();
+    let projectStartX = this.projectView.getX(p);
     let projectEndX = projectStartX + this.projectView.getWidth(p);
-    let projectY = this.projectView.getY() + this.projectView.getHeight(p);
-    let tagStartX = this.tagView.getX();
-    let tagEndX = this.tagView.getX() + this.tagView.getWidth(p);
-    let tagY = this.tagView.getY() + this.tagView.getHeight(p);
+    let projectY = this.projectView.getY(p) + this.projectView.getHeight(p);
+    let tagStartX = this.tagView.getX(p);
+    let tagEndX = this.tagView.getX(p) + this.tagView.getWidth(p);
+    let tagY = this.tagView.getY(p) + this.tagView.getHeight(p);
 
 
     p.noFill();

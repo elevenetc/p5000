@@ -1,5 +1,5 @@
 import TextOverlay from "./TextOverlay";
-import TextView from "../TextView";
+import TextView from "./TextView";
 import p5 from "p5";
 import {Backspace, Escape, KeyboardHandler, KeyChar} from "../keyboard/KeyboardHandler";
 import {dropLastChar} from "../utils/stringUtils";

@@ -1,4 +1,4 @@
-import TextView from "../TextView";
+import TextView from "./TextView";
 import p5 from "p5";
 
 interface TextOverlay {

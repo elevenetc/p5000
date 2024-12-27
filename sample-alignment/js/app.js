@@ -1,6 +1,6 @@
 import p5 from "p5";
-import Free from "../../src/p5000/Free";
-import TextView from "../../src/p5000/TextView";
+import {Free} from "../../src/p5000/containers/Free";
+import TextView from "../../src/p5000/text/TextView";
 import Align from "../../src/p5000/Align";
 
 const root = new Free()

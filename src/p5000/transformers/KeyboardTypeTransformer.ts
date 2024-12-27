@@ -1,6 +1,6 @@
 import ViewTransformer from "./ViewTransformer";
 import p5 from "p5";
-import TextView from "../TextView";
+import TextView from "../text/TextView";
 import {dropLastChar} from "../utils/stringUtils";
 import {Backspace, Escape, KeyboardHandler, KeyChar} from "../keyboard/KeyboardHandler";
 

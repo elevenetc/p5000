@@ -1,6 +1,6 @@
-import View from "./View";
+import View from "../View";
 import p5 from "p5";
-import TextOverlay from "./text/TextOverlay";
+import TextOverlay from "./TextOverlay";
 
 const alphaStep = 25;
 const maxAlpha = 200;
@@ -44,8 +44,8 @@ class TextView extends View {
     public contains(x: number, mouseY: number, p: p5): boolean {
         const w = this.getWidth(p);
         const h = this.getHeight(p);
-        const thisX = this.getX()
-        const thisY = this.getY()
+        const thisX = this.getX(p)
+        const thisY = this.getY(p)
         return x >= thisX && x <= thisX + w &&
             mouseY >= thisY && mouseY <= thisY + h;
     }
