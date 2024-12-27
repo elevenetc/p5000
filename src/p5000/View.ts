@@ -2,21 +2,19 @@ import Align from "./Align";
 import p5 from "p5";
 import LinearAnimationValue from "./animation/LinearAnimationValue";
 import ViewTransformer from "./transformers/ViewTransformer"
+import {Drawable} from "./drawable/Drawable";
 
 class View {
 
     id?: string;
-
     align?: Align
-
     parent?: View;
-
     alpha: LinearAnimationValue = new LinearAnimationValue(255, 30, 0, 255);
-
     hover: boolean = false;
+    background: Drawable | null = null
 
-    x: number;
-    y: number;
+    x: number = 0
+    y: number = 0
 
     transformers: ViewTransformer[] = []
 
@@ -30,11 +28,11 @@ class View {
         }
     }
 
-    getX(): number {
+    getX(p: p5): number {
         return this.x;
     }
 
-    getY(): number {
+    getY(p: p5): number {
         return this.y;
     }
 
@@ -55,6 +53,9 @@ class View {
     }
 
     render(p: p5): void {
+
+        this.background?.draw(this, p)
+
         this.transformers.forEach((transformer) => {
             transformer.transform(this, p)
         })
