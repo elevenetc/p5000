@@ -2,6 +2,8 @@ import View from "../View";
 import Align from "../Align";
 import p5 from "p5";
 import {handleChildrenHover} from "../utils/viewUtils";
+import {drawDebugViewRect} from "../debug/drawDebugViewRect";
+import {printViewInfo} from "../debug/printViewInfo";
 
 class Free extends View {
 
@@ -15,10 +17,11 @@ class Free extends View {
 
     setScale(scale: Scale) {
         this.scale = scale
-        this.scale.container = this
+        this.scale.setContainer(this)
     }
 
     addChild(child: View): void {
+        if(child == undefined) throw Error("child is not defined")
         this.children.push(child);
         child.parent = this;
     }
@@ -31,14 +34,6 @@ class Free extends View {
         return this.scale.getY(p)
     }
 
-    // setX(x: number): void {
-    //     //throw new Error("Free is fills the whole screen");
-    // }
-    //
-    // setY(y: number): void {
-    //     //throw new Error("Free is fills the whole screen");
-    // }
-
     getWidth(p: import("p5")): number {
         return this.scale.getWidth(p)
     }
@@ -49,6 +44,8 @@ class Free extends View {
 
     render(p: import("p5")): void {
         super.render(p)
+
+        drawDebugViewRect(this, p)
 
         for (let i = 0; i < this.children.length; i++) {
             const child = this.children[i];
@@ -66,8 +63,12 @@ class Free extends View {
                 child.setX(this.getX(p))
                 child.setY(this.getHeight(p) - child.getHeight(p))
             } else if (align === Align.CENTER) {
-                child.setX(this.x + this.getWidth(p) / 2 - child.getWidth(p) / 2)
-                child.setY(this.y + this.getHeight(p) / 2 - child.getHeight(p) / 2)
+                let width = this.getWidth(p);
+                let childWidth = child.getWidth(p);
+                let x = this.getX(p) + width / 2 - childWidth / 2;
+                let y = this.getY(p) + this.getHeight(p) / 2 - child.getHeight(p) / 2;
+                child.setX(x)
+                child.setY(y)
             } else if (align === Align.CENTER_LEFT) {
                 child.setX(this.getX(p))
                 child.setY(this.getHeight(p) / 2 - child.getHeight(p) / 2)
@@ -110,26 +111,47 @@ class Free extends View {
 
     }
 
+    setX(x: number) {
+        this.scale.setX(x)
+    }
+
+    setY(y: number) {
+        this.scale.setY(y)
+    }
 }
 
 class Scale {
 
-    container: Free
+    protected container: Free
+    protected x: number = 0
+    protected y: number = 0
+
+    setContainer(container: Free) {
+        this.container = container
+    }
+
+    setX(x: number) {
+        this.x = x
+    }
+
+    setY(y: number) {
+        this.y = y
+    }
 
     getX(p: p5): number {
-        return 0
+        throw new Error("Base Scale must not be used")
     }
 
     getY(p: p5): number {
-        return 0
+        throw new Error("Base Scale must not be used")
     }
 
     getWidth(p: p5): number {
-        return 0
+        throw new Error("Base Scale must not be used")
     }
 
     getHeight(p: p5): number {
-        return 0
+        throw new Error("Base Scale must not be used")
     }
 }
 
@@ -138,11 +160,11 @@ class Scale {
  */
 class FillParent extends Scale {
     getX(p: p5): number {
-        return 0;
+        return this.x;
     }
 
     getY(p: p5): number {
-        return 0;
+        return this.y;
     }
 
     getWidth(p: p5): number {
@@ -157,24 +179,11 @@ class FillParent extends Scale {
 class WrapContent extends Scale {
 
     getX(p: p5): number {
-
-        let x = Number.MAX_SAFE_INTEGER
-
-        this.container.children.forEach((child) => {
-            x = Math.min(x, child.getX(p))
-        });
-
-        return x;
+        return this.x;
     }
 
     getY(p: p5): number {
-        let y = Number.MAX_SAFE_INTEGER
-
-        this.container.children.forEach((child) => {
-            y = Math.min(y, child.getY(p))
-        });
-
-        return y;
+        return this.y
     }
 
     getWidth(p: p5): number {
@@ -182,20 +191,19 @@ class WrapContent extends Scale {
         let maxW = 0
 
         this.container.children.forEach((child) => {
-            maxW = Math.max(maxW, child.getX(p) + child.getWidth(p))
+            maxW = Math.max(maxW, child.getWidth(p))
         });
 
-        return maxW - this.getX(p);
+        return maxW
     }
 
     getHeight(p: p5): number {
         let maxH = 0
 
         this.container.children.forEach((child) => {
-            maxH = Math.max(maxH, child.getY(p) + child.getHeight(p))
+            maxH = Math.max(maxH, child.getHeight(p))
         });
-
-        return maxH - this.getY(p);
+        return maxH
     }
 }
 

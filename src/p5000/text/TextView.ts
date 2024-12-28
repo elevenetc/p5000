@@ -1,6 +1,8 @@
 import View from "../View";
-import p5 from "p5";
+import p5, {HORIZ_ALIGN} from "p5";
 import TextOverlay from "./TextOverlay";
+import {TextStyle} from "./TextStyle";
+import Align from "../Align";
 
 const alphaStep = 25;
 const maxAlpha = 200;
@@ -13,6 +15,8 @@ class TextView extends View {
 
     public color: [number, number, number] = [0, 0, 0];
     public overlays: TextOverlay[] = []
+
+    public textAlign: Align = Align.LEFT
 
     constructor(title: string)
     constructor(title: string, id: string)
@@ -41,6 +45,13 @@ class TextView extends View {
         }
     }
 
+    public setStyle(style: TextStyle) {
+        this.color[0] = style.color[0]
+        this.color[1] = style.color[1]
+        this.color[2] = style.color[2]
+        this.textSize = style.fontSize
+    }
+
     public contains(x: number, mouseY: number, p: p5): boolean {
         const w = this.getWidth(p);
         const h = this.getHeight(p);
@@ -59,8 +70,12 @@ class TextView extends View {
         //   p.rect(this.x, this.y, this.getWidth(p), this.getHeight(p))
         // }
 
+        if (!this.visible) return
+
         if (this.hover) this.bgAlpha = p.min(this.bgAlpha + alphaStep, maxAlpha);
         else this.bgAlpha = p.max(this.bgAlpha - alphaStep, 0);
+
+        p.push()
 
         p.fill(this.color[0], this.color[1], this.color[2], this.alpha.calculate());
 
@@ -69,8 +84,11 @@ class TextView extends View {
         if (this.textSize != -1) {
             p.textSize(this.textSize)
         }
-        p.text(this.title, this.x, this.y + this.getHeight(p));
+        p.textAlign(toP5Align(this.textAlign, p))
+        p.text(this.title, getX(this, p), this.y + this.getHeight(p));
         p.textSize(prevTextSize)
+
+        p.pop()
 
         this.overlays.forEach((overlay) => {
             overlay.render(this, p)
@@ -94,6 +112,30 @@ class TextView extends View {
     public onHoverOut(p: p5) {
         super.onHoverOut(p);
         this.hover = false;
+    }
+}
+
+function getX(view: TextView, p: p5): number {
+    if (view.textAlign == Align.LEFT) {
+        return view.getX(p)
+    } else if (view.textAlign == Align.RIGHT) {
+        return view.getX(p) + view.getWidth(p)
+    } else if (view.textAlign == Align.CENTER) {
+        return view.getX(p) + view.getWidth(p) / 2
+    } else {
+        throw new Error(`Unsupported align ${Align[view.textAlign]}`)
+    }
+}
+
+function toP5Align(align: Align, p: p5): HORIZ_ALIGN {
+    if (align == Align.LEFT) {
+        return p.LEFT
+    } else if (align == Align.RIGHT) {
+        return p.RIGHT
+    } else if (align == Align.CENTER) {
+        return p.CENTER
+    } else {
+        throw new Error(`Unsupported text align: ${Align[align]}`)
     }
 }
 

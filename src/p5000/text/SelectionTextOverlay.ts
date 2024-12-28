@@ -31,8 +31,8 @@ class SelectionTextOverlay implements TextOverlay {
             const match = intersection.match
             const textHeight = view.getHeight(p);
             const padding = textHeight / 10;
-            const x = view.x + p.textWidth(prefix) - padding
-            const y = view.y + padding
+            const x = view.getX(p) + p.textWidth(prefix) - padding
+            const y = view.getY(p) + padding
             const width = p.textWidth(match) + padding * 2
 
             const height = textHeight

@@ -12,13 +12,18 @@ class View {
     alpha: LinearAnimationValue = new LinearAnimationValue(255, 30, 0, 255);
     hover: boolean = false;
     background: Drawable | null = null
+    protected visible = true
 
-    x: number = 0
-    y: number = 0
+    protected x: number = 0
+    protected y: number = 0
 
     transformers: ViewTransformer[] = []
 
     hoverHandler: (id: string, hovered: boolean, p: p5) => void;
+
+    setVisible(value: boolean) {
+        this.visible = value
+    }
 
     setAlpha(value: number, step: number = this.alpha.step, animate: boolean = false) {
         if (animate) {
@@ -54,11 +59,13 @@ class View {
 
     render(p: p5): void {
 
-        this.background?.draw(this, p)
-
         this.transformers.forEach((transformer) => {
             transformer.transform(this, p)
         })
+
+        if(!this.visible) return
+
+        this.background?.draw(this, p)
     }
 
     onHoverIn(p: p5): void {
