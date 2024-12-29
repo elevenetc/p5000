@@ -45,7 +45,7 @@ class Free extends View {
     render(p: import("p5")): void {
         super.render(p)
 
-        drawDebugViewRect(this, p)
+
 
         for (let i = 0; i < this.children.length; i++) {
             const child = this.children[i];
@@ -84,8 +84,12 @@ class Free extends View {
             } else {
                 throw new Error("Unknown align value at Free: " + align)
             }
+        }
 
-            child.render(p)
+        drawDebugViewRect(this, p)
+
+        for (let i = 0; i < this.children.length; i++) {
+            this.children[i].render(p)
         }
     }
 

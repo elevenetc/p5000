@@ -116,14 +116,16 @@ class TextView extends View {
 }
 
 function getX(view: TextView, p: p5): number {
+    let parentX = view.parent?.getX(p) ?? view.getX(p)
+    let parentWidth = view.parent?.getWidth(p) ?? view.getWidth(p)
     if (view.textAlign == Align.LEFT) {
-        return view.getX(p)
+        return parentX
     } else if (view.textAlign == Align.RIGHT) {
-        return view.getX(p) + view.getWidth(p)
+        return parentX + parentWidth
     } else if (view.textAlign == Align.CENTER) {
         return view.getX(p) + view.getWidth(p) / 2
     } else {
-        throw new Error(`Unsupported align ${Align[view.textAlign]}`)
+        throw new Error(`TextView: Unsupported textAlign ${Align[view.textAlign]}`)
     }
 }
 
