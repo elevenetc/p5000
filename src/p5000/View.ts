@@ -57,14 +57,14 @@ class View {
         throw new Error("getHeight not implemented.");
     }
 
-    render(p: p5): void {
-
+    layout(p: p5): void {
         this.transformers.forEach((transformer) => {
             transformer.transform(this, p)
         })
+    }
 
-        if(!this.visible) return
-
+    render(p: p5): void {
+        if (!this.visible) return
         this.background?.draw(this, p)
     }
 
@@ -82,10 +82,12 @@ class View {
 
     handleHover(mouseX: number, mouseY: number, p: p5): boolean {
         let result = false;
+
         if (this.contains(mouseX, mouseY, p)) {
 
             if (!this.hover) {
                 this.hover = true;
+                console.log("handleHover: true")
                 this.onHoverIn(p);
             }
 

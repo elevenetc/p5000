@@ -2,6 +2,7 @@ import p5 from 'p5';
 import View from "./View";
 import Align from "./Align"
 import {handleChildrenHover} from "./utils/viewUtils";
+import {drawDebugViewRect} from "./debug/drawDebugViewRect";
 
 class Vertical extends View {
 
@@ -41,7 +42,14 @@ class Vertical extends View {
         return false;
     }
 
-    public render(p: p5) {
+
+    layout(p: p5) {
+        super.layout(p)
+
+        for (let i = 0; i < this.children.length; i++) {
+            this.children[i].layout(p)
+        }
+
         for (let i = 0; i < this.children.length; i++) {
             const child = this.children[i];
             const y = this.y + i * child.getHeight(p);
@@ -55,8 +63,17 @@ class Vertical extends View {
             } else {
                 throw new Error("Unknown alignContent: " + this.alignContent)
             }
-            child.render(p);
         }
+    }
+
+    public render(p: p5) {
+        super.render(p)
+
+        for (let i = 0; i < this.children.length; i++) {
+            this.children[i].render(p)
+        }
+
+        drawDebugViewRect(this, p)
 
 
         //debug

@@ -52,13 +52,12 @@ class TextView extends View {
         this.textSize = style.fontSize
     }
 
-    public contains(x: number, mouseY: number, p: p5): boolean {
-        const w = this.getWidth(p);
-        const h = this.getHeight(p);
-        const thisX = this.getX(p)
+    public contains(x: number, y: number, p: p5): boolean {
+        const w = this.getWidth(p)
+        const h = this.getHeight(p)
+        const thisX = getX(this, p)
         const thisY = this.getY(p)
-        return x >= thisX && x <= thisX + w &&
-            mouseY >= thisY && mouseY <= thisY + h;
+        return x >= thisX && x <= thisX + w && y >= thisY && y <= thisY + h
     }
 
     public render(p: p5) {
@@ -84,7 +83,7 @@ class TextView extends View {
         if (this.textSize != -1) {
             p.textSize(this.textSize)
         }
-        p.textAlign(toP5Align(this.textAlign, p))
+        p.textAlign(getTextAlign(p))
         p.text(this.title, getX(this, p), this.y + this.getHeight(p));
         p.textSize(prevTextSize)
 
@@ -116,29 +115,25 @@ class TextView extends View {
 }
 
 function getX(view: TextView, p: p5): number {
-    let parentX = view.parent?.getX(p) ?? view.getX(p)
-    let parentWidth = view.parent?.getWidth(p) ?? view.getWidth(p)
+    let parentX = view.parent?.getX(p) ?? 0
+    let viewWidth = view.getWidth(p);
+    let parentWidth = view.parent?.getWidth(p) ?? 0
     if (view.textAlign == Align.LEFT) {
         return parentX
     } else if (view.textAlign == Align.RIGHT) {
-        return parentX + parentWidth
+        return parentX + parentWidth - viewWidth
     } else if (view.textAlign == Align.CENTER) {
-        return view.getX(p) + view.getWidth(p) / 2
+        return view.getX(p) + viewWidth / 2
     } else {
         throw new Error(`TextView: Unsupported textAlign ${Align[view.textAlign]}`)
     }
 }
 
-function toP5Align(align: Align, p: p5): HORIZ_ALIGN {
-    if (align == Align.LEFT) {
-        return p.LEFT
-    } else if (align == Align.RIGHT) {
-        return p.RIGHT
-    } else if (align == Align.CENTER) {
-        return p.CENTER
-    } else {
-        throw new Error(`Unsupported text align: ${Align[align]}`)
-    }
+/**
+ * Text align remains left always. We shift it accordingly in getX
+ */
+function getTextAlign(p: p5): HORIZ_ALIGN {
+    return p.LEFT
 }
 
 

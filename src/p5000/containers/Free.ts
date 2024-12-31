@@ -42,10 +42,12 @@ class Free extends View {
         return this.scale.getHeight(p)
     }
 
-    render(p: import("p5")): void {
-        super.render(p)
+    layout(p: p5) {
+        super.layout(p);
 
-
+        for (let i = 0; i < this.children.length; i++) {
+            this.children[i].layout(p)
+        }
 
         for (let i = 0; i < this.children.length; i++) {
             const child = this.children[i];
@@ -85,6 +87,10 @@ class Free extends View {
                 throw new Error("Unknown align value at Free: " + align)
             }
         }
+    }
+
+    render(p: import("p5")): void {
+        super.render(p)
 
         drawDebugViewRect(this, p)
 
@@ -104,7 +110,7 @@ class Free extends View {
                 return true
             }
         }
-        return false;
+        return false
     }
 
     onHoverIn(p: import("p5")): void {
