@@ -3,11 +3,26 @@ import View from "./View";
 import Align from "./Align"
 import {handleChildrenHover} from "./utils/viewUtils";
 import {drawDebugViewRect} from "./debug/drawDebugViewRect";
+import {Container} from "./containers/Container";
 
-class Vertical extends View {
+class Vertical extends View implements Container {
+
 
     public alignContent: Align = Align.LEFT
     children: View[] = [];
+
+    getChildren(): View[] {
+        return this.children;
+    }
+
+    getChildX(child: View, p: p5): number {
+        return this.x;
+    }
+
+    getChildY(child: View, p: p5): number {
+        let index = indexOfChild(child, this.getChildren())
+        return this.y + index * child.getHeight(p);
+    }
 
     getHeight(p: p5): number {
         let h = 0;
@@ -94,6 +109,18 @@ class Vertical extends View {
     public onHoverOut(p: p5) {
 
     }
+}
+
+function indexOfChild(child: View, children: View[]): number {
+    const index = children.indexOf(child)
+    if (index === -1) {
+        throw new Error("Child not found in the provided children array.")
+    }
+    return index
+}
+
+function getChildY(parentY: number, childIndex: number, childHeight: number): number {
+    return parentY + childIndex * childHeight
 }
 
 export default Vertical;

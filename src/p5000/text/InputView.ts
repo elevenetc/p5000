@@ -19,6 +19,7 @@ class InputView extends Free {
     ) {
         super()
 
+        this.id = "input-view"
         this.background = new ColorDrawable([0, 100, 0, 255])
 
         this.text.title = currentValue
@@ -30,6 +31,11 @@ class InputView extends Free {
         //this.hint.align = viewAlign
         this.text.textAlign = textAlign
         this.hint.textAlign = textAlign
+
+        //let padding = 0
+        let padding = 20
+        this.text.setPadding(padding)
+        this.hint.setPadding(padding)
 
         this.text.setStyle(style)
         this.hint.setStyle(style)

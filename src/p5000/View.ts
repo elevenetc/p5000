@@ -3,12 +3,13 @@ import p5 from "p5";
 import LinearAnimationValue from "./animation/LinearAnimationValue";
 import ViewTransformer from "./transformers/ViewTransformer"
 import {Drawable} from "./drawable/Drawable";
+import {Container} from "./containers/Container";
 
 class View {
 
     id?: string;
     align?: Align
-    parent?: View;
+    parent?: Container;
     alpha: LinearAnimationValue = new LinearAnimationValue(255, 30, 0, 255);
     hover: boolean = false;
     background: Drawable | null = null
@@ -16,6 +17,7 @@ class View {
 
     protected x: number = 0
     protected y: number = 0
+    protected padding: number = 0
 
     transformers: ViewTransformer[] = []
 
@@ -23,6 +25,14 @@ class View {
 
     setVisible(value: boolean) {
         this.visible = value
+    }
+
+    setPadding(value: number) {
+        this.padding = value
+    }
+
+    getPadding(): number {
+        return this.padding
     }
 
     setAlpha(value: number, step: number = this.alpha.step, animate: boolean = false) {
@@ -50,11 +60,11 @@ class View {
     }
 
     getWidth(p: p5): number {
-        throw new Error("getWidth not implemented.");
+        throw this.padding * 2
     }
 
     getHeight(p: p5): number {
-        throw new Error("getHeight not implemented.");
+        throw this.padding * 2
     }
 
     layout(p: p5): void {

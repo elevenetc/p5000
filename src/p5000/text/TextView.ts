@@ -55,7 +55,7 @@ class TextView extends View {
     public contains(x: number, y: number, p: p5): boolean {
         const w = this.getWidth(p)
         const h = this.getHeight(p)
-        const thisX = getX(this, p)
+        const thisX = getRenderX(this, p)
         const thisY = this.getY(p)
         return x >= thisX && x <= thisX + w && y >= thisY && y <= thisY + h
     }
@@ -84,7 +84,8 @@ class TextView extends View {
             p.textSize(this.textSize)
         }
         p.textAlign(getTextAlign(p))
-        p.text(this.title, getX(this, p), this.y + this.getHeight(p));
+        //p.text(this.title, getX(this, p) + this.padding, this.y + this.getHeight(p));
+        p.text(this.title, getRenderX(this, p) + this.padding, getRenderY(this, p));
         p.textSize(prevTextSize)
 
         p.pop()
@@ -99,10 +100,15 @@ class TextView extends View {
         if (this.textSize != -1) p.textSize(this.textSize)
         let w = p.textWidth(this.title)
         p.pop()
-        return w
+        return w + this.padding * 2
     }
 
     getHeight(p: p5): number {
+        let h = this.getTextHeight(p)
+        return h + this.padding * 2
+    }
+
+    getTextHeight(p: p5): number {
         p.push()
         if (this.textSize != -1) p.textSize(this.textSize)
         let h = p.textAscent() + p.textDescent()
@@ -122,7 +128,16 @@ class TextView extends View {
     }
 }
 
-function getX(view: TextView, p: p5): number {
+function getRenderY(view: TextView, p: p5) {
+    //let result = view.y + view.getHeight(p)
+    let parentY = view.parent.getChildY(view, p) ?? 0
+    return parentY + view.getHeight(p) / 2 + view.getTextHeight(p) / 2 - view.getPadding() / 4
+}
+
+/**
+ * TODO: use container.getChildX
+ */
+function getRenderX(view: TextView, p: p5): number {
     let parentX = view.parent?.getX(p) ?? 0
     let viewWidth = view.getWidth(p);
     let parentWidth = view.parent?.getWidth(p) ?? 0
