@@ -25,7 +25,9 @@ class InputView extends Free {
         this.hint.title = hintValue
 
         let textAlign = Align.CENTER
-        this.text.align = Align.CENTER
+        let viewAlign = Align.CENTER
+        //this.text.align = viewAlign
+        //this.hint.align = viewAlign
         this.text.textAlign = textAlign
         this.hint.textAlign = textAlign
 

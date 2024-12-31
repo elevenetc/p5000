@@ -95,11 +95,19 @@ class TextView extends View {
     }
 
     getWidth(p: p5): number {
-        return p.textWidth(this.title);
+        p.push()
+        if (this.textSize != -1) p.textSize(this.textSize)
+        let w = p.textWidth(this.title)
+        p.pop()
+        return w
     }
 
     getHeight(p: p5): number {
-        return p.textAscent() + p.textDescent();
+        p.push()
+        if (this.textSize != -1) p.textSize(this.textSize)
+        let h = p.textAscent() + p.textDescent()
+        p.pop()
+        return h
     }
 
     public onHoverIn(p: p5) {
@@ -123,7 +131,7 @@ function getX(view: TextView, p: p5): number {
     } else if (view.textAlign == Align.RIGHT) {
         return parentX + parentWidth - viewWidth
     } else if (view.textAlign == Align.CENTER) {
-        return view.getX(p) + viewWidth / 2
+        return parentX + parentWidth / 2 - viewWidth / 2
     } else {
         throw new Error(`TextView: Unsupported textAlign ${Align[view.textAlign]}`)
     }
