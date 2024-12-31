@@ -3,9 +3,10 @@ import Align from "../Align";
 import p5 from "p5";
 import {handleChildrenHover} from "../utils/viewUtils";
 import {drawDebugViewRect} from "../debug/drawDebugViewRect";
-import {printViewInfo} from "../debug/printViewInfo";
+import {Container} from "./Container";
 
-class Free extends View {
+class Free extends View implements Container {
+
 
     children: View[] = [];
     private scale: Scale
@@ -15,13 +16,25 @@ class Free extends View {
         this.setScale(new FillParent())
     }
 
+    getChildX(child: View, p: p5): number {
+        return child.getX(p);
+    }
+
+    getChildY(child: View, p: p5): number {
+        return child.getY(p);
+    }
+
+    getChildren(): View[] {
+        return this.children;
+    }
+
     setScale(scale: Scale) {
         this.scale = scale
         this.scale.setContainer(this)
     }
 
     addChild(child: View): void {
-        if(child == undefined) throw Error("child is not defined")
+        if (child == undefined) throw Error("child is not defined")
         this.children.push(child);
         child.parent = this;
     }
