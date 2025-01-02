@@ -21,14 +21,19 @@ function drawDebugViewRect(view: View, p:p5) {
     p.line(x + width / 2, y, x + width / 2, y + height)
 
     //details
-    p.stroke(0)
-    p.textSize(10)
-    p.text("w: " + width, x + 100, y + 100)
-    p.text("h: " + height, x + 100, y + 110)
-    p.text("x: " + x, x + 100, y + 120)
-    p.text("y: " + y, x + 100, y + 130)
+    if(enableCoordinatesData){
+        p.stroke(0)
+        p.textSize(10)
+        p.text("w: " + width, x + 100, y + 100)
+        p.text("h: " + height, x + 100, y + 110)
+        p.text("x: " + x, x + 100, y + 120)
+        p.text("y: " + y, x + 100, y + 130)
+    }
+
     p.pop()
 }
+
+const enableCoordinatesData = false
 
 export {
     drawDebugViewRect
