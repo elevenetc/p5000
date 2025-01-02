@@ -3,6 +3,7 @@ import {Free, WrapContent} from "../../src/p5000/containers/Free";
 import TextView from "../../src/p5000/text/TextView";
 import Align from "../../src/p5000/Align";
 import {ColorDrawable} from "../../src/p5000/drawable/ColorDrawable";
+import {layoutAndRender} from "../../src/p5000/layoutAndRender";
 
 const root = new Free()
 
@@ -35,7 +36,13 @@ function setup(p) {
 
 function draw(p) {
     p.background(0, 0, 0);
-    root.render(p)
+    layoutAndRender(root, p)
+
+    if (root.handleHover(p.mouseX, p.mouseY, p)) {
+        p.cursor('pointer');
+    } else {
+        p.cursor('default');
+    }
 }
 
 const sketch = (p) => {

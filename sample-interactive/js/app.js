@@ -10,15 +10,19 @@ import {Free} from "../../src/p5000/containers/Free";
 import KeyboardTypeTransformer from "../../src/p5000/transformers/KeyboardTypeTransformer";
 import {KeyboardHandlerImpl} from "../../src/p5000/keyboard/KeyboardHandler";
 import {layoutAndRender} from "../../src/p5000/layoutAndRender";
+import {InputView} from "../../src/p5000/text/InputView";
+import TextOverlay from "../../src/p5000/text/TextOverlay";
+import SelectionTextOverlay from "../../src/p5000/text/SelectionTextOverlay";
 
 const projectsToTags = new Map();
 const tagsToProjects = new Map();
 
 const root = new Free()
-
 const linksView = new LinksView()
-
 const projectsView = new Vertical()
+
+const keyboardHandler = new KeyboardHandlerImpl()
+
 projectsView.align = Align.LEFT_TOP;
 projectsView.alignContent = Align.LEFT;
 const tagsView = new Vertical()
@@ -32,6 +36,7 @@ allProjects.sort((a, b) => b.date.getTime() - a.date.getTime()).forEach(project 
     });
     projectView.color = [255, 255, 255]
     projectView.textAlign = Align.LEFT
+    projectView.overlays.push(new SelectionTextOverlay(keyboardHandler))
     projectsToTags.set(projectView, [])
     projectsView.addChild(projectView);
 })
@@ -47,6 +52,7 @@ allTags.sort((a, b) => a.title.localeCompare(b.title)).forEach(tag => {
         tagTitleToColor(tagTitle)
     );
     tagView.textAlign = Align.RIGHT
+    tagView.overlays.push(new SelectionTextOverlay(keyboardHandler))
     tagsView.addChild(tagView);
     tagsToProjects.set(tagView, [])
 })
@@ -67,12 +73,11 @@ tagsView.children.forEach(tagView => {
     })
 })
 
-const filterText = new TextView("type to filter tags", "filter")
-filterText.textSize = 20
-filterText.align = Align.RIGHT_BOTTOM
+
+const filterText = new InputView("Type to search...", "", keyboardHandler)
+filterText.align = Align.CENTER_BOTTOM
 filterText.color = [100, 100, 100]
-filterText.transformers.push(new KeyboardTypeTransformer(new KeyboardHandlerImpl()))
-root.addChild(filterText)
+
 
 projectsView.children.forEach(projectView => {
     const projectId = projectView.id
@@ -80,7 +85,6 @@ projectsView.children.forEach(projectView => {
     tagsView.children.forEach(tagView => {
 
         const tagId = tagView.id
-        //const tag = allTags.filter(tag => tag.id === tagId)[0]
         const project = allProjects.filter(project => project.id === projectId)[0]
 
         project.tags.forEach(tag => {
@@ -96,6 +100,7 @@ linksView.setMaps(tagsToProjects, projectsToTags)
 root.addChild(linksView)
 root.addChild(projectsView)
 root.addChild(tagsView)
+root.addChild(filterText)
 
 function setup(p) {
     p.createCanvas(p.windowWidth, p.windowHeight);
@@ -105,14 +110,9 @@ function setup(p) {
 function draw(p) {
     p.background(0);
 
-    layoutAndRender(root, p)
-
-    if (root.handleHover(p.mouseX, p.mouseY, p)) {
-        p.cursor('pointer');
-    } else {
-        p.cursor('default');
-        linksView.onNoHover(p);
-    }
+    layoutAndRender(root, p, null, (view, p) => {
+        linksView.onNoHover(p)
+    })
 }
 
 

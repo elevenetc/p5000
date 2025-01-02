@@ -8,7 +8,7 @@ import {Container} from "./containers/Container";
 class View {
 
     id?: string;
-    align?: Align
+    align?: Align //Used only by containers which place their children according the align
     parent?: Container;
     alpha: LinearAnimationValue = new LinearAnimationValue(255, 30, 0, 255);
     hover: boolean = false;
@@ -97,7 +97,6 @@ class View {
 
             if (!this.hover) {
                 this.hover = true;
-                console.log("handleHover: true")
                 this.onHoverIn(p);
             }
 

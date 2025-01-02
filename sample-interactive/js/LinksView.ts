@@ -179,14 +179,16 @@ class Link {
   lines = 20
 
   render(p: p5) {
+    p.push()
 
     let projectStartX = this.projectView.getX(p);
     let projectEndX = projectStartX + this.projectView.getWidth(p);
-    let projectY = this.projectView.getY(p) + this.projectView.getHeight(p);
+    let projectHeight = this.projectView.getHeight(p);
+    let projectY = this.projectView.getY(p) + projectHeight;
     let tagStartX = this.tagView.getX(p);
     let tagEndX = this.tagView.getX(p) + this.tagView.getWidth(p);
     let tagY = this.tagView.getY(p) + this.tagView.getHeight(p);
-
+    //console.log("projectHeight: " + projectHeight)
 
     p.noFill();
 
@@ -219,6 +221,7 @@ class Link {
 
       p.line(tagStartX, tagY, tagEndX, tagY)
     }
+    p.pop()
   }
 }
 

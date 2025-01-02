@@ -12,9 +12,14 @@ class KeyboardTypeTransformer extends ViewTransformer {
     constructor(keyboardHandler: KeyboardHandler) {
         super()
         keyboardHandler.addListener((keyValue) => {
+            if (!this.view) {
+                throw new Error(
+                    'The "transform" method must be called before interacting with the KeyboardTypeTransformer instance.'
+                );
+            }
             if (keyValue instanceof Escape) {
                 this.view.title = this.initText
-            }else if (keyValue instanceof Backspace) {
+            } else if (keyValue instanceof Backspace) {
                 this.view.title = dropLastChar(this.view.title)
             } else if (keyValue instanceof KeyChar) {
                 this.view.title = this.view.title + keyValue.char
@@ -24,7 +29,7 @@ class KeyboardTypeTransformer extends ViewTransformer {
 
     transform(view: TextView, p: p5) {
         this.view = view
-        if(this.initText == null){
+        if (this.initText == null) {
             this.initText = view.title
         }
     }

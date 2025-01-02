@@ -5,6 +5,7 @@ import Align from "../../src/p5000/Align";
 import SelectionTextOverlay from "../../src/p5000/text/SelectionTextOverlay";
 import KeyboardTypeTransformer from "../../src/p5000/transformers/KeyboardTypeTransformer";
 import {KeyboardHandlerImpl} from "../../src/p5000/keyboard/KeyboardHandler";
+import {layoutAndRender} from "../../src/p5000/layoutAndRender";
 
 const root = new Free()
 
@@ -18,7 +19,7 @@ text.overlays.push(new SelectionTextOverlay(keyboardHandler))
 const filterText = new TextView("type to filer")
 filterText.color = [255, 255, 255]
 filterText.setAlpha(20)
-filterText.align = Align.CENTER_BOTTOM
+filterText.align = Align.CENTER
 filterText.transformers.push(new KeyboardTypeTransformer(keyboardHandler))
 
 root.addChild(text)
@@ -31,7 +32,7 @@ function setup(p) {
 
 function draw(p) {
     p.background(0, 0, 0);
-    root.render(p)
+    layoutAndRender(root, p)
 }
 
 const sketch = (p) => {

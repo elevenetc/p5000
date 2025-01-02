@@ -76,7 +76,7 @@ class Vertical extends View implements Container {
                 child.setX(this.x + maxChildWidth - child.getWidth(p))
                 child.setY(y)
             } else {
-                throw new Error("Unknown alignContent: " + this.alignContent)
+                throw new Error("Unknown alignContent in Vertical: " + Align[this.alignContent])
             }
         }
     }
@@ -88,7 +88,7 @@ class Vertical extends View implements Container {
             this.children[i].render(p)
         }
 
-        drawDebugViewRect(this, p)
+        //drawDebugViewRect(this, p)
 
 
         //debug
