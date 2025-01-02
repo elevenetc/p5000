@@ -69,7 +69,9 @@ class Free extends View implements Container {
                 child.setX(this.getX(p))
                 child.setY(this.getY(p))
             } else if (align === Align.RIGHT_TOP) {
-                child.setX(this.getWidth(p) - child.getWidth(p))
+                let width1 = this.getWidth(p);
+                let width2 = child.getWidth(p);
+                child.setX(width1 - width2)
                 child.setY(this.getY(p))
             } else if (align === Align.RIGHT_BOTTOM) {
                 child.setX(this.getWidth(p) - child.getWidth(p))
@@ -78,11 +80,8 @@ class Free extends View implements Container {
                 child.setX(this.getX(p))
                 child.setY(this.getHeight(p) - child.getHeight(p))
             } else if (align === Align.CENTER) {
-                let width = this.getWidth(p);
-                let childWidth = child.getWidth(p);
-                let x = this.getX(p) + width / 2 - childWidth / 2;
                 let y = this.getY(p) + this.getHeight(p) / 2 - child.getHeight(p) / 2;
-                child.setX(x)
+                child.setX(getCenterX(child, p))
                 child.setY(y)
             } else if (align === Align.CENTER_LEFT) {
                 child.setX(this.getX(p))
@@ -91,10 +90,10 @@ class Free extends View implements Container {
                 child.setX(this.getWidth(p) - child.getWidth(p))
                 child.setY(this.getHeight(p) / 2 - child.getHeight(p) / 2)
             } else if (align === Align.CENTER_TOP) {
-                child.setX(this.getWidth(p) / 2 - child.getWidth(p) / 2)
+                child.setX(getCenterX(child, p))
                 child.setY(this.getY(p))
             } else if (align === Align.CENTER_BOTTOM) {
-                child.setX(this.getWidth(p) / 2 - child.getWidth(p) / 2)
+                child.setX(getCenterX(child, p))
                 child.setY(this.getHeight(p) - child.getHeight(p))
             } else {
                 throw new Error("Unknown align value at Free: " + align)
@@ -141,6 +140,24 @@ class Free extends View implements Container {
     setY(y: number) {
         this.scale.setY(y)
     }
+}
+
+function getCenterX(view: View, p: p5): number {
+    let parentX = view.parent?.getX(p) ?? 0
+    let viewWidth = view.getWidth(p);
+    let parentWidth = view.parent?.getWidth(p) ?? 0
+    return parentX + parentWidth / 2 - viewWidth / 2
+}
+
+function getLeftX(view: View, p: p5): number {
+    return view.parent?.getX(p) ?? 0
+}
+
+function getRightX(view: View, p: p5): number {
+    let parentX = view.parent?.getX(p) ?? 0
+    let viewWidth = view.getWidth(p);
+    let parentWidth = view.parent?.getWidth(p) ?? 0
+    return parentX + parentWidth - viewWidth
 }
 
 class Scale {
