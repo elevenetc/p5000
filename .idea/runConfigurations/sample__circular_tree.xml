@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="sample: tree" type="js.build_tools.npm">
-    <package-json value="$PROJECT_DIR$/sample-tree/package.json" />
+  <configuration default="false" name="sample: circular tree" type="js.build_tools.npm">
+    <package-json value="$PROJECT_DIR$/sample-circular-tree/package.json" />
     <command value="run" />
     <scripts>
       <script value="start" />

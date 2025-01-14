@@ -1,13 +1,10 @@
 import p5 from "p5";
 import {Free} from "../../src/p5000/containers/Free";
-import TextView from "../../src/p5000/text/TextView";
-import Align from "../../src/p5000/Align";
-import Vertical from "../../src/p5000/Vertical";
 import {layoutAndRender} from "../../src/p5000/layoutAndRender";
-import {TreeView} from "../../src/p5000/tree/TreeView";
+import {CircularTreeView} from "../../src/p5000/tree/CircularTreeView";
 
 const root = new Free()
-const tree = new TreeView()
+const tree = new CircularTreeView()
 root.addChild(tree)
 
 function setup(p) {

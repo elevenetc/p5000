@@ -1,12 +1,12 @@
 import View from "../View";
 import p5 from "p5";
-import {getSegmentPart} from "./getSegmentPart";
 import {SegmentPart} from "./SegmentPart";
 import {renderNodePlaceholders} from "./renderNodePlaceholders";
+import {getMaxKey} from "../utils/geMaxKey";
 
-class TreeView extends View {
+class CircularTreeView extends View {
 
-    totalSegments = 200
+    totalSegments = 10
     totalParts = 30
 
     constructor() {
@@ -54,12 +54,48 @@ class TreeView extends View {
     }
 }
 
+function to(node: TreeNode) {
+    let map = new Map<number, TreeNode[]>()
+    buildViewTree(node, 0, map)
+    let maxLevel = getMaxKey(map)
+
+    for (let lvl = 0; lvl <= maxLevel; lvl++) {
+        let nodes = map[lvl]
+    }
+}
+
+function buildViewTree(
+    node: TreeNode,
+    depth: number,
+    levels: Map<number, TreeNode[]>
+) {
+    let lvl = levels[depth]
+    if (lvl === undefined) {
+        levels[depth] = [node]
+    } else {
+        levels[depth].push(node)
+    }
+
+    node.children.forEach(child => {
+        buildViewTree(child, depth + 1, levels)
+    })
+}
+
+class TreeNodeView {
+
+    parent?: TreeNodeView = null
+    children: TreeNodeView[] = []
+
+    node: TreeNode
+    segmentParts: SegmentPart
+}
+
 class TreeNode {
-    name: String = ""
+    id: string = ""
     parent?: TreeNode = null
     children: TreeNode[] = []
 }
 
 export {
-    TreeView
+    CircularTreeView
 }

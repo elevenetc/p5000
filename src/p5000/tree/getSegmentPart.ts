@@ -4,7 +4,8 @@ function getSegmentPart(
     segment: number,      // which wedge, 1-based
     part: number,         // which ring, 1-based
     totalSegments: number,
-    totalParts: number
+    totalParts: number,
+    scale: number = 2
 ): SegmentPart {
     //
     // 1) Determine the angle for this segment.
@@ -34,8 +35,8 @@ function getSegmentPart(
 
 
     return new SegmentPart(
-        x,
-        y,
+        x * scale,
+        y * scale,
         segment,
         part
     );
