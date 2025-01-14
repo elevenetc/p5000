@@ -5,6 +5,12 @@
     "sourceMap": true,
     "rootDir": "./",
     "allowSyntheticDefaultImports": true,
-    "types": ["p5"]
-  }
+    "types": [
+      "p5",
+      "jest"
+    ]
+  },
+  "include": [
+    "tests/**/*"
+  ]
 }
