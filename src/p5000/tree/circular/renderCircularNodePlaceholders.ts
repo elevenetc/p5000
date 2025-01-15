@@ -2,7 +2,7 @@ import {buildSegmentParts} from "./buildSegmentParts";
 import {SegmentPart} from "./SegmentPart";
 import p5 from "p5";
 
-function renderNodePlaceholders(totalSegments: number, totalParts: number, p: p5) {
+function renderCircularNodePlaceholders(totalSegments: number, totalParts: number, p: p5) {
     for (let s = 0; s < totalSegments; s++) {
         let parts = buildSegmentParts(s, totalSegments, totalParts)
 
@@ -38,5 +38,5 @@ function renderSegmentPart(
 }
 
 export {
-    renderNodePlaceholders
+    renderCircularNodePlaceholders
 }

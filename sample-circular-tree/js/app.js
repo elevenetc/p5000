@@ -1,7 +1,7 @@
 import p5 from "p5";
 import {Free} from "../../src/p5000/containers/Free";
 import {layoutAndRender} from "../../src/p5000/layoutAndRender";
-import {CircularTreeView} from "../../src/p5000/tree/CircularTreeView";
+import {CircularTreeView} from "../../src/p5000/tree/circular/CircularTreeView";
 
 const root = new Free()
 const tree = new CircularTreeView()

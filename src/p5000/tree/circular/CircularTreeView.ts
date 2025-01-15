@@ -1,8 +1,8 @@
-import View from "../View";
+import View from "../../View";
 import p5 from "p5";
 import {SegmentPart} from "./SegmentPart";
-import {renderNodePlaceholders} from "./renderNodePlaceholders";
-import {getMaxKey} from "../utils/geMaxKey";
+import {renderCircularNodePlaceholders} from "./renderCircularNodePlaceholders";
+import {getMaxKey} from "../../utils/getMaxKey";
 
 class CircularTreeView extends View {
 
@@ -41,7 +41,7 @@ class CircularTreeView extends View {
         p.push()
 
         p.translate(midX, midY)
-        renderNodePlaceholders(this.totalSegments, this.totalParts, p)
+        renderCircularNodePlaceholders(this.totalSegments, this.totalParts, p)
 
 
         p.pop()

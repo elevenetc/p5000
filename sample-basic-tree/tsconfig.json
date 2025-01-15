@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "target": "ES2023",
+    "esModuleInterop": true,
+    "sourceMap": true,
+    "rootDir": "./",
+    "allowSyntheticDefaultImports": true
+  }
+}
