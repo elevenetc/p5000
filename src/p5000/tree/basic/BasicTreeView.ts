@@ -40,6 +40,9 @@ class BasicTreeView extends View {
         //console.log("L")
 
         super.layout(p);
+
+        if (this.root == null) return
+
         let levels = new Map<number, BasicTreeNode[]>();
         fillLevels(this.root, 0, levels, p)
         this.views = layoutNodes(levels, this.textSize, p)
@@ -72,7 +75,7 @@ class BasicTreeView extends View {
         p.stroke("rgba(255,0,0,0.5)")
         p.rect(node.x, node.y, node.width, node.height)
         p.textSize(this.textSize)
-        p.text(node.id, node.x, node.y + node.height - node.height / 4)
+        p.text(node.fqn, node.x, node.y + node.height - node.height / 4)
 
         p.pop()
     }
@@ -129,6 +132,7 @@ function layoutNodes(
             let view = new NodeView()
             view.node = n
             view.id = n.id
+            view.fqn = n.fqn
             view.x = currentX
             view.y = currentY
             view.height = nodeHeight
@@ -147,7 +151,7 @@ function layoutNodes(
 function getMaxNodeWidth(level: BasicTreeNode[], textSize: number, p: p5): number {
     let result = 0
     level.forEach(node => {
-        result = Math.max(getNodeViewWidth(node.id, textSize, p), result)
+        result = Math.max(getNodeViewWidth(node.fqn, textSize, p), result)
     })
     return result
 }
@@ -171,6 +175,7 @@ function getNodeViewHeight(text: string, textSize: number, p: p5): number {
 class NodeView {
 
     id: string = ""
+    fqn: string = ""
     x: number = 0
     y: number = 0
     width: number = 0
@@ -184,6 +189,7 @@ class NodeView {
 
 class BasicTreeNode {
     id: string = ""
+    fqn: string = ""
     parent?: BasicTreeNode = null
     children: BasicTreeNode[] = []
 
