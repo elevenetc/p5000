@@ -3,13 +3,25 @@ import {Free} from "../../src/p5000/containers/Free";
 import {layoutAndRender} from "../../src/p5000/layoutAndRender";
 import {BasicTreeView} from "../../src/p5000/tree/basic/BasicTreeView";
 import {parseTree} from "../../src/p5000/tree/basic/parseTree";
+import {PlaybackView} from "../../src/p5000/playback/PlaybackView";
+import Align from "../../src/p5000/Align";
+import {ColorDrawable} from "../../src/p5000/drawable/ColorDrawable";
+import {PlaybackController} from "../../src/p5000/playback/PlaybackController";
 
 const root = new Free()
 const tree = new BasicTreeView()
 root.addChild(tree)
+let playbackView = new PlaybackView();
 
-parseTree("tree-data-sample.json", (node) => {
-    tree.setRoot(node)
+playbackView.background = new ColorDrawable([255, 0, 0])
+root.addChild(playbackView, Align.CENTER_BOTTOM)
+let controller = new PlaybackController(playbackView, (frame) => {
+    tree.setSelectedNode(frame.id)
+})
+
+parseTree("tree-data-sample.json", (result) => {
+    tree.setRoot(result.root)
+    playbackView.setFrames(result.history)
 })
 
 // let child00 = new BasicTreeNode("ch-0-0");

@@ -5,16 +5,33 @@ class BasicTreeView extends View {
 
     root: BasicTreeNode | null = null
     views = new Map<string, NodeView>();
-    textSize = 22
+
+    scale = 0.7
+    textSize = 22 * this.scale
+    horizontalMargin = 40 * this.scale
+    verticalMargin = 40 * this.scale
+    selectedNodeId: string = null
+    relayout = true
 
     constructor() {
         super();
     }
 
-    setRoot(root: BasicTreeNode) {
-        this.root = root;
+    setSelectedNode(nodeId: string) {
+        if (nodeId == this.selectedNodeId) return
+
+        if (this.selectedNodeId != nodeId && this.selectedNodeId != null) {
+            this.views.get(this.selectedNodeId).selected = false
+        }
+
+        this.selectedNodeId = nodeId
+        this.views.get(this.selectedNodeId).selected = true
     }
 
+    setRoot(root: BasicTreeNode) {
+        this.root = root;
+        this.relayout = true
+    }
 
     getWidth(p: p5): number {
         return this.parent?.getWidth(p)
@@ -37,7 +54,8 @@ class BasicTreeView extends View {
 
     layout(p: p5) {
 
-        //console.log("L")
+        //TODO: optimize layout, shouldn't be called if tree isn't changed
+        if (!this.relayout) return
 
         super.layout(p);
 
@@ -45,7 +63,13 @@ class BasicTreeView extends View {
 
         let levels = new Map<number, BasicTreeNode[]>();
         fillLevels(this.root, 0, levels, p)
-        this.views = layoutNodes(levels, this.textSize, p)
+        this.views = createAndLayoutNodeViews(levels,
+            this.textSize,
+            this.verticalMargin,
+            this.horizontalMargin,
+            p)
+
+        this.relayout = false
     }
 
     render(p: p5) {
@@ -71,6 +95,10 @@ class BasicTreeView extends View {
     renderNode(node: NodeView, p: p5) {
         if (node == null) return
         p.push()
+
+        if (node.selected) {
+            p.fill("rgba(255,0,0,0.5)")
+        }
 
         p.stroke("rgba(255,0,0,0.5)")
         p.rect(node.x, node.y, node.width, node.height)
@@ -111,17 +139,18 @@ function drawConnection(parent: NodeView, child: NodeView, p: p5) {
     p.line(parent.x + parent.width, parent.y + parent.height / 2, child.x, child.y + parent.height / 2)
 }
 
-function layoutNodes(
+function createAndLayoutNodeViews(
     map: Map<number, BasicTreeNode[]>,
     textSize: number,
+    verticalMargin: number,
+    horizontalMargin: number,
     p: p5
 ): Map<string, NodeView> {
     let result = new Map<string, NodeView>()
     let level = 0
     let currentX = 0
     let nodeHeight = getNodeViewHeight("A", textSize, p)
-    let horizontalMargin = 40
-    let verticalMargin = 40
+
     while (map.has(level)) {
         let nodes = map.get(level)
         let maxWidth = getMaxNodeWidth(nodes, textSize, p)
@@ -185,6 +214,8 @@ class NodeView {
     children: NodeView[] = []
 
     node: BasicTreeNode
+
+    selected: boolean = false
 }
 
 class BasicTreeNode {

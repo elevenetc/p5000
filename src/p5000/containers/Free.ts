@@ -33,8 +33,9 @@ class Free extends View implements Container {
         this.scale.setContainer(this)
     }
 
-    addChild(child: View): void {
+    addChild(child: View, align: Align = null): void {
         if (child == undefined) throw Error("child is not defined")
+        child.align = align
         this.children.push(child);
         child.parent = this;
     }

@@ -1,17 +1,17 @@
 import {BasicTreeNode} from "./BasicTreeView";
+import {PlaybackFrame} from "../../playback/PlaybackView";
 
-function parseTree(filePath: string, loadHandler: (result: any) => BasicTreeNode) {
+function parseTree(filePath: string, loadHandler: (result: ParseResult) => void) {
 
     parseJsonToObject(filePath)
         .then((node) => {
-            console.log("parsed node: " + node)
             loadHandler(node)
             //node.forEach((person) => console.log(person));
         })
         .catch((error) => console.error(error));
 }
 
-async function parseJsonToObject(filePath: string): Promise<BasicTreeNode> {
+async function parseJsonToObject(filePath: string): Promise<ParseResult> {
     const jsonData = await loadJSON(filePath);
     return jsonToBasicTreeNode(jsonData);
 }
@@ -24,9 +24,22 @@ async function loadJSON(filePath: string): Promise<any> {
     return response.json();
 }
 
-function jsonToBasicTreeNode(json: any): BasicTreeNode | null {
-    let root = json.treeRoot;
-    return parseNode(root)
+function jsonToBasicTreeNode(json: any): ParseResult {
+    let result = new ParseResult()
+    result.root = parseNode(json.treeRoot)
+    result.history = parseHistory(json.history)
+    return result
+}
+
+function parseHistory(history: any): PlaybackFrame[] {
+    let result: PlaybackFrame[] = [];
+    history.forEach((item) => {
+        let frame = new PlaybackFrame()
+        frame.id = item.id
+        frame.name = item.fqn
+        result.push(frame);
+    })
+    return result
 }
 
 function parseNode(json: any): BasicTreeNode {
@@ -43,11 +56,15 @@ function parseNode(json: any): BasicTreeNode {
     result.id = id
     result.fqn = fqn
     result.children = children
-    console.log("child count: " + result.children.length)
 
     return result
 }
 
+class ParseResult {
+    root: BasicTreeNode | null = null
+    history: PlaybackFrame[] = []
+}
+
 export {
-    parseTree
+    parseTree, ParseResult
 }
