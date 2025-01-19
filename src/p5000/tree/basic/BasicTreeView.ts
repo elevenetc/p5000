@@ -18,14 +18,23 @@ class BasicTreeView extends View {
     }
 
     setSelectedNode(nodeId: string) {
-        if (nodeId == this.selectedNodeId) return
+        let selectedKey = this.selectedNodeId;
+        if (nodeId == selectedKey) return
 
-        if (this.selectedNodeId != nodeId && this.selectedNodeId != null) {
-            this.views.get(this.selectedNodeId).selected = false
+        if (selectedKey != nodeId && selectedKey != null) {
+            if (this.views.has(selectedKey)) {
+                this.views.get(selectedKey).selected = false
+            } else {
+                console.log("no key: " + selectedKey)
+            }
+
         }
 
         this.selectedNodeId = nodeId
-        this.views.get(this.selectedNodeId).selected = true
+        if (this.views.has(selectedKey)) {
+            this.views.get(selectedKey).selected = true
+        }
+
     }
 
     setRoot(root: BasicTreeNode) {
@@ -83,7 +92,7 @@ class BasicTreeView extends View {
         p.translate(midX, midY)
 
         this.views.forEach(v => {
-            this.renderNode(v, p)
+            this.drawNode(v, p)
         })
 
         drawConnections(this.root, this.views, p)
@@ -92,7 +101,7 @@ class BasicTreeView extends View {
         p.pop()
     }
 
-    renderNode(node: NodeView, p: p5) {
+    drawNode(node: NodeView, p: p5) {
         if (node == null) return
         p.push()
 
@@ -103,7 +112,9 @@ class BasicTreeView extends View {
         p.stroke("rgba(255,0,0,0.5)")
         p.rect(node.x, node.y, node.width, node.height)
         p.textSize(this.textSize)
-        p.text(node.fqn, node.x, node.y + node.height - node.height / 4)
+
+
+        p.text(drawableName(node.fqn), node.x, node.y + node.height - node.height / 4)
 
         p.pop()
     }
@@ -180,7 +191,7 @@ function createAndLayoutNodeViews(
 function getMaxNodeWidth(level: BasicTreeNode[], textSize: number, p: p5): number {
     let result = 0
     level.forEach(node => {
-        result = Math.max(getNodeViewWidth(node.fqn, textSize, p), result)
+        result = Math.max(getNodeViewWidth(drawableName(node.fqn), textSize, p), result)
     })
     return result
 }
@@ -227,6 +238,15 @@ class BasicTreeNode {
     constructor(id: string = "") {
         this.id = id;
     }
+}
+
+function drawableName(fqn: string): string {
+    let name = fqn
+    if (name.indexOf(".") > -1) {
+        let separated = name.split(".")
+        name = separated[separated.length - 1]
+    }
+    return name
 }
 
 export {

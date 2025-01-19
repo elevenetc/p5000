@@ -26,7 +26,6 @@ class PlaybackView extends View {
     }
 
     setFrames(frames: PlaybackFrame[]) {
-        console.log("frames: " + frames)
         this.frames = frames
     }
 

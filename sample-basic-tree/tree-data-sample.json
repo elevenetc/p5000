@@ -1,135 +1,490 @@
 {
-  "timestamp": 1737217508318,
+  "timestamp": 1737318973159,
   "history": [
     {
-      "id": "7d15bbeb-bf73-4b90-808b-cd702961e3da",
-      "start": 1737217508278,
-      "end": 1737217508318,
-      "fqn": "main"
+      "id": "1418c137-9af5-4405-9eb4-c2ab517fa068",
+      "start": 1737318972471,
+      "end": 1737318972471,
+      "threadName": "main",
+      "fqn": "com.example.myapplication.App.onCreate"
     },
     {
-      "id": "d609e2ac-3150-44c3-83eb-6f2d60f8446a",
-      "start": 1737217508278,
-      "end": 1737217508308,
-      "fqn": "Foo.bar"
+      "id": "cef08c17-0fe5-4fa1-9eaa-bdacd9f41c54",
+      "start": 1737318972471,
+      "end": 1737318972471,
+      "threadName": "main",
+      "fqn": "com.example.myapplication.di.ServiceLocator.Companion.<get-instance>"
     },
     {
-      "id": "7059a6df-f75d-406d-b24e-2baa8e6685d1",
-      "start": 1737217508278,
-      "end": 1737217508278,
-      "fqn": "Foo.privateFoo"
+      "id": "4d6c139d-a1b9-4faa-ac0f-8ba302ad5cf9",
+      "start": 1737318972471,
+      "end": 1737318972471,
+      "threadName": "main",
+      "fqn": "com.example.myapplication.di.ServiceLocator.Companion.instance$delegate.<anonymous>"
     },
     {
-      "id": "d609e2ac-3150-44c3-83eb-6f2d60f8446a",
-      "start": 1737217508278,
-      "end": 1737217508308,
-      "fqn": "Foo.bar"
+      "id": "04dec98b-2fb7-4cc4-9b34-dba744808917",
+      "start": 1737318972471,
+      "end": 1737318972471,
+      "threadName": "main",
+      "fqn": "com.example.myapplication.di.ServiceLocator.registerService"
     },
     {
-      "id": "7d15bbeb-bf73-4b90-808b-cd702961e3da",
-      "start": 1737217508278,
-      "end": 1737217508318,
-      "fqn": "main"
+      "id": "4d6c139d-a1b9-4faa-ac0f-8ba302ad5cf9",
+      "start": 1737318972471,
+      "end": 1737318972471,
+      "threadName": "main",
+      "fqn": "com.example.myapplication.di.ServiceLocator.Companion.instance$delegate.<anonymous>"
     },
     {
-      "id": "b68f22fb-9102-4083-bb97-a2257ad735e9",
-      "start": 1737217508312,
-      "end": 1737217508313,
-      "fqn": "Foo.bar"
+      "id": "2ebeeec0-35cc-4f9a-9ab8-9a82eff20842",
+      "start": 1737318972471,
+      "end": 1737318972471,
+      "threadName": "main",
+      "fqn": "com.example.myapplication.di.ServiceLocator.registerService"
     },
     {
-      "id": "27509cf8-73ef-4719-8a32-66d9ad917d4a",
-      "start": 1737217508312,
-      "end": 1737217508312,
-      "fqn": "Foo.privateFoo"
+      "id": "4d6c139d-a1b9-4faa-ac0f-8ba302ad5cf9",
+      "start": 1737318972471,
+      "end": 1737318972471,
+      "threadName": "main",
+      "fqn": "com.example.myapplication.di.ServiceLocator.Companion.instance$delegate.<anonymous>"
     },
     {
-      "id": "b68f22fb-9102-4083-bb97-a2257ad735e9",
-      "start": 1737217508312,
-      "end": 1737217508313,
-      "fqn": "Foo.bar"
+      "id": "00d80dac-d0c3-425c-8bfb-608d24c06189",
+      "start": 1737318972471,
+      "end": 1737318972471,
+      "threadName": "main",
+      "fqn": "com.example.myapplication.di.ServiceLocator.registerService"
     },
     {
-      "id": "7d15bbeb-bf73-4b90-808b-cd702961e3da",
-      "start": 1737217508278,
-      "end": 1737217508318,
-      "fqn": "main"
+      "id": "4d6c139d-a1b9-4faa-ac0f-8ba302ad5cf9",
+      "start": 1737318972471,
+      "end": 1737318972471,
+      "threadName": "main",
+      "fqn": "com.example.myapplication.di.ServiceLocator.Companion.instance$delegate.<anonymous>"
     },
     {
-      "id": "f2578eeb-2ee0-4a8b-b578-a8e62e3b7254",
-      "start": 1737217508313,
-      "end": 1737217508314,
-      "fqn": "Foo.bar"
+      "id": "cef08c17-0fe5-4fa1-9eaa-bdacd9f41c54",
+      "start": 1737318972471,
+      "end": 1737318972471,
+      "threadName": "main",
+      "fqn": "com.example.myapplication.di.ServiceLocator.Companion.<get-instance>"
     },
     {
-      "id": "07dc419b-7f67-429b-a856-67c3fbfc8a3e",
-      "start": 1737217508313,
-      "end": 1737217508313,
-      "fqn": "Foo.privateFoo"
+      "id": "1418c137-9af5-4405-9eb4-c2ab517fa068",
+      "start": 1737318972471,
+      "end": 1737318972471,
+      "threadName": "main",
+      "fqn": "com.example.myapplication.App.onCreate"
     },
     {
-      "id": "f2578eeb-2ee0-4a8b-b578-a8e62e3b7254",
-      "start": 1737217508313,
-      "end": 1737217508314,
-      "fqn": "Foo.bar"
+      "id": "95f422ba-3676-4627-a9ab-f5de22bc8b75",
+      "start": 1737318972471,
+      "end": 1737318972471,
+      "threadName": "main",
+      "fqn": "com.example.myapplication.di.ServiceLocator.registerService"
     },
     {
-      "id": "7d15bbeb-bf73-4b90-808b-cd702961e3da",
-      "start": 1737217508278,
-      "end": 1737217508318,
-      "fqn": "main"
+      "id": "1418c137-9af5-4405-9eb4-c2ab517fa068",
+      "start": 1737318972471,
+      "end": 1737318972471,
+      "threadName": "main",
+      "fqn": "com.example.myapplication.App.onCreate"
+    },
+    {
+      "id": "0b2304a5-e2c6-49e0-bf71-19ae2e95ff55",
+      "start": 1737318972559,
+      "end": 1737318972943,
+      "threadName": "main",
+      "fqn": "com.example.myapplication.MainActivity.onCreate"
+    },
+    {
+      "id": "64aefb9f-5c1e-42eb-8475-fabd6e05a7ef",
+      "start": 1737318972941,
+      "end": 1737318972942,
+      "threadName": "main",
+      "fqn": "com.example.myapplication.moviesList.MoviesListFragment.Companion.newInstance"
+    },
+    {
+      "id": "0b2304a5-e2c6-49e0-bf71-19ae2e95ff55",
+      "start": 1737318972559,
+      "end": 1737318972943,
+      "threadName": "main",
+      "fqn": "com.example.myapplication.MainActivity.onCreate"
+    },
+    {
+      "id": "fc251026-80a6-42d8-aa82-0c1ec9dfbbf7",
+      "start": 1737318972954,
+      "end": 1737318972974,
+      "threadName": "main",
+      "fqn": "com.example.myapplication.moviesList.MoviesListFragment.onCreateView"
+    },
+    {
+      "id": "c0b4f240-2b28-4182-b853-e6b597193837",
+      "start": 1737318972974,
+      "end": 1737318972974,
+      "threadName": "main",
+      "fqn": "com.example.myapplication.moviesList.MoviesListFragment.<get-binding>"
+    },
+    {
+      "id": "fc251026-80a6-42d8-aa82-0c1ec9dfbbf7",
+      "start": 1737318972954,
+      "end": 1737318972974,
+      "threadName": "main",
+      "fqn": "com.example.myapplication.moviesList.MoviesListFragment.onCreateView"
+    },
+    {
+      "id": "b44871c8-d841-4cca-a43b-4710fd68303a",
+      "start": 1737318972974,
+      "end": -1,
+      "threadName": "main",
+      "fqn": "com.example.myapplication.moviesList.MoviesListFragment.onViewCreated"
+    },
+    {
+      "id": "bb7df84e-bda3-4213-af42-0ed03b18645c",
+      "start": 1737318972975,
+      "end": 1737318972975,
+      "threadName": "main",
+      "fqn": "com.example.myapplication.moviesList.MoviesListFragment.<get-binding>"
+    },
+    {
+      "id": "b44871c8-d841-4cca-a43b-4710fd68303a",
+      "start": 1737318972974,
+      "end": -1,
+      "threadName": "main",
+      "fqn": "com.example.myapplication.moviesList.MoviesListFragment.onViewCreated"
+    },
+    {
+      "id": "849ad36c-b972-48a6-b11d-bbff1d521f87",
+      "start": 1737318973029,
+      "end": -1,
+      "threadName": "main",
+      "fqn": "com.example.myapplication.moviesList.MoviesListFragment.onViewCreated.<anonymous>"
+    },
+    {
+      "id": "1d988219-cb3f-4245-8a8b-c33d05d65499",
+      "start": 1737318973029,
+      "end": 1737318973149,
+      "threadName": "main",
+      "fqn": "com.example.myapplication.moviesList.MoviesListFragment.<get-viewModel>"
+    },
+    {
+      "id": "f9e5601e-22aa-44d0-8d55-9cc380a47073",
+      "start": 1737318973029,
+      "end": 1737318973083,
+      "threadName": "main",
+      "fqn": "com.example.myapplication.moviesList.MoviesListFragment.viewModel$delegate.<anonymous>"
+    },
+    {
+      "id": "6ab22952-e4e7-402a-9fac-6b3122679c12",
+      "start": 1737318973082,
+      "end": 1737318973083,
+      "threadName": "main",
+      "fqn": "com.example.myapplication.moviesList.MoviesViewModel.Companion.Factory.<anonymous>"
+    },
+    {
+      "id": "f9e5601e-22aa-44d0-8d55-9cc380a47073",
+      "start": 1737318973029,
+      "end": 1737318973083,
+      "threadName": "main",
+      "fqn": "com.example.myapplication.moviesList.MoviesListFragment.viewModel$delegate.<anonymous>"
+    },
+    {
+      "id": "a4f9a9e2-7ec0-40d7-a285-7f1208ecb131",
+      "start": 1737318973083,
+      "end": 1737318973083,
+      "threadName": "main",
+      "fqn": "com.example.myapplication.moviesList.MoviesViewModel.Companion.<get-Factory>"
+    },
+    {
+      "id": "f9e5601e-22aa-44d0-8d55-9cc380a47073",
+      "start": 1737318973029,
+      "end": 1737318973083,
+      "threadName": "main",
+      "fqn": "com.example.myapplication.moviesList.MoviesListFragment.viewModel$delegate.<anonymous>"
+    },
+    {
+      "id": "1d988219-cb3f-4245-8a8b-c33d05d65499",
+      "start": 1737318973029,
+      "end": 1737318973149,
+      "threadName": "main",
+      "fqn": "com.example.myapplication.moviesList.MoviesListFragment.<get-viewModel>"
+    },
+    {
+      "id": "7e3aa17a-0bd4-4de7-83d7-2395651e172f",
+      "start": 1737318973083,
+      "end": 1737318973149,
+      "threadName": "main",
+      "fqn": "com.example.myapplication.moviesList.MoviesViewModel.Companion.Factory.<anonymous>.<anonymous>"
+    },
+    {
+      "id": "213dab24-1b2d-4dd3-bbb9-4e3bbf97296f",
+      "start": 1737318973083,
+      "end": 1737318973083,
+      "threadName": "main",
+      "fqn": "com.example.myapplication.di.ServiceLocator.Companion.<get-instance>"
+    },
+    {
+      "id": "7e3aa17a-0bd4-4de7-83d7-2395651e172f",
+      "start": 1737318973083,
+      "end": 1737318973149,
+      "threadName": "main",
+      "fqn": "com.example.myapplication.moviesList.MoviesViewModel.Companion.Factory.<anonymous>.<anonymous>"
+    },
+    {
+      "id": "e7099205-ed3b-47eb-a2cc-f7d2177d91dd",
+      "start": 1737318973083,
+      "end": 1737318973148,
+      "threadName": "main",
+      "fqn": "com.example.myapplication.di.ServiceLocator.getService"
+    },
+    {
+      "id": "c8aed01d-11b1-4543-8d16-b0733a73dae6",
+      "start": 1737318973083,
+      "end": -1,
+      "threadName": "main",
+      "fqn": "com.example.myapplication.di.ServiceLocator.getService.<anonymous>"
+    },
+    {
+      "id": "44894c7a-2e9a-4365-9524-17c11cf33455",
+      "start": 1737318973083,
+      "end": 1737318973148,
+      "threadName": "main",
+      "fqn": "com.example.myapplication.di.ServiceLocator.<anonymous>"
+    },
+    {
+      "id": "dbf4d619-8d67-4ec2-8000-73a70ac2b088",
+      "start": 1737318973083,
+      "end": 1737318973084,
+      "threadName": "main",
+      "fqn": "com.example.myapplication.di.ServiceLocator.getService"
+    },
+    {
+      "id": "3a5b1a6c-b516-4af2-938c-b24a8fd700fe",
+      "start": 1737318973083,
+      "end": -1,
+      "threadName": "main",
+      "fqn": "com.example.myapplication.di.ServiceLocator.getService.<anonymous>"
+    },
+    {
+      "id": "a557a10a-b50a-4db1-9ae1-b445d33a13d0",
+      "start": 1737318973083,
+      "end": 1737318973084,
+      "threadName": "main",
+      "fqn": "com.example.myapplication.di.ServiceLocator.<anonymous>"
+    },
+    {
+      "id": "3a5b1a6c-b516-4af2-938c-b24a8fd700fe",
+      "start": 1737318973083,
+      "end": -1,
+      "threadName": "main",
+      "fqn": "com.example.myapplication.di.ServiceLocator.getService.<anonymous>"
+    },
+    {
+      "id": "dbf4d619-8d67-4ec2-8000-73a70ac2b088",
+      "start": 1737318973083,
+      "end": 1737318973084,
+      "threadName": "main",
+      "fqn": "com.example.myapplication.di.ServiceLocator.getService"
+    },
+    {
+      "id": "e2b8d834-7a61-487e-889c-76f837544608",
+      "start": 1737318973084,
+      "end": 1737318973148,
+      "threadName": "main",
+      "fqn": "com.example.myapplication.di.ServiceLocator.getService"
+    },
+    {
+      "id": "1b502163-faac-44f6-bcb0-5385dcb4af1c",
+      "start": 1737318973084,
+      "end": -1,
+      "threadName": "main",
+      "fqn": "com.example.myapplication.di.ServiceLocator.getService.<anonymous>"
+    },
+    {
+      "id": "c5bdd4f1-31af-4794-8005-b6d57c0cd483",
+      "start": 1737318973084,
+      "end": 1737318973148,
+      "threadName": "main",
+      "fqn": "com.example.myapplication.di.ServiceLocator.<anonymous>"
+    },
+    {
+      "id": "1b502163-faac-44f6-bcb0-5385dcb4af1c",
+      "start": 1737318973084,
+      "end": -1,
+      "threadName": "main",
+      "fqn": "com.example.myapplication.di.ServiceLocator.getService.<anonymous>"
+    },
+    {
+      "id": "e2b8d834-7a61-487e-889c-76f837544608",
+      "start": 1737318973084,
+      "end": 1737318973148,
+      "threadName": "main",
+      "fqn": "com.example.myapplication.di.ServiceLocator.getService"
+    },
+    {
+      "id": "be32c83d-5eec-43ea-9889-3b197d54be19",
+      "start": 1737318973148,
+      "end": 1737318973148,
+      "threadName": "main",
+      "fqn": "com.example.myapplication.di.ServiceLocator.getService"
+    },
+    {
+      "id": "6caa4859-1fd3-441a-9768-914e02b11828",
+      "start": 1737318973148,
+      "end": -1,
+      "threadName": "main",
+      "fqn": "com.example.myapplication.di.ServiceLocator.getService.<anonymous>"
+    },
+    {
+      "id": "9b4d7c4f-54b9-4f54-9e94-8056e3bb806b",
+      "start": 1737318973148,
+      "end": 1737318973148,
+      "threadName": "main",
+      "fqn": "com.example.myapplication.App.onCreate.<anonymous>"
+    },
+    {
+      "id": "6caa4859-1fd3-441a-9768-914e02b11828",
+      "start": 1737318973148,
+      "end": -1,
+      "threadName": "main",
+      "fqn": "com.example.myapplication.di.ServiceLocator.getService.<anonymous>"
+    },
+    {
+      "id": "be32c83d-5eec-43ea-9889-3b197d54be19",
+      "start": 1737318973148,
+      "end": 1737318973148,
+      "threadName": "main",
+      "fqn": "com.example.myapplication.di.ServiceLocator.getService"
+    },
+    {
+      "id": "8c87c4b5-d2d0-4cb4-99e6-46c8516fa80a",
+      "start": 1737318973148,
+      "end": 1737318973148,
+      "threadName": "main",
+      "fqn": "com.example.myapplication.App.<get-appScope>"
+    },
+    {
+      "id": "be32c83d-5eec-43ea-9889-3b197d54be19",
+      "start": 1737318973148,
+      "end": 1737318973148,
+      "threadName": "main",
+      "fqn": "com.example.myapplication.di.ServiceLocator.getService"
+    },
+    {
+      "id": "e2b8d834-7a61-487e-889c-76f837544608",
+      "start": 1737318973084,
+      "end": 1737318973148,
+      "threadName": "main",
+      "fqn": "com.example.myapplication.di.ServiceLocator.getService"
+    },
+    {
+      "id": "dbf4d619-8d67-4ec2-8000-73a70ac2b088",
+      "start": 1737318973083,
+      "end": 1737318973084,
+      "threadName": "main",
+      "fqn": "com.example.myapplication.di.ServiceLocator.getService"
+    },
+    {
+      "id": "44894c7a-2e9a-4365-9524-17c11cf33455",
+      "start": 1737318973083,
+      "end": 1737318973148,
+      "threadName": "main",
+      "fqn": "com.example.myapplication.di.ServiceLocator.<anonymous>"
+    },
+    {
+      "id": "c8aed01d-11b1-4543-8d16-b0733a73dae6",
+      "start": 1737318973083,
+      "end": -1,
+      "threadName": "main",
+      "fqn": "com.example.myapplication.di.ServiceLocator.getService.<anonymous>"
+    },
+    {
+      "id": "a8efdb92-6bb0-4050-a8e0-1ab388943f32",
+      "start": 1737318973149,
+      "end": 1737318973149,
+      "threadName": "main",
+      "fqn": "com.example.myapplication.moviesList.MoviesViewModel.<get-model>"
+    },
+    {
+      "id": "c8aed01d-11b1-4543-8d16-b0733a73dae6",
+      "start": 1737318973083,
+      "end": -1,
+      "threadName": "main",
+      "fqn": "com.example.myapplication.di.ServiceLocator.getService.<anonymous>"
+    },
+    {
+      "id": "80b174d8-db08-4eb2-a81e-587e53c7a187",
+      "start": 1737318973157,
+      "end": -1,
+      "threadName": "main",
+      "fqn": "com.example.myapplication.moviesList.MoviesListFragment.onViewCreated.<anonymous>.<anonymous>"
+    },
+    {
+      "id": "303d8f4e-7b43-4de0-9013-bdfdb5ba9174",
+      "start": 1737318973157,
+      "end": -1,
+      "threadName": "main",
+      "fqn": "com.example.myapplication.moviesList.MoviesListFragment.handleModel"
     }
   ],
   "treeRoot": {
-    "id": "7d15bbeb-bf73-4b90-808b-cd702961e3da",
-    "start": 1737217508278,
-    "end": 1737217508318,
-    "fqn": "main",
+    "id": "1418c137-9af5-4405-9eb4-c2ab517fa068",
+    "start": 1737318972471,
+    "end": 1737318972471,
+    "fqn": "com.example.myapplication.App.onCreate",
+    "threadName": "main",
     "children": [
       {
-        "id": "d609e2ac-3150-44c3-83eb-6f2d60f8446a",
-        "start": 1737217508278,
-        "end": 1737217508308,
-        "fqn": "Foo.bar",
+        "id": "cef08c17-0fe5-4fa1-9eaa-bdacd9f41c54",
+        "start": 1737318972471,
+        "end": 1737318972471,
+        "fqn": "com.example.myapplication.di.ServiceLocator.Companion.<get-instance>",
+        "threadName": "main",
         "children": [
           {
-            "id": "7059a6df-f75d-406d-b24e-2baa8e6685d1",
-            "start": 1737217508278,
-            "end": 1737217508278,
-            "fqn": "Foo.privateFoo",
-            "children": []
+            "id": "4d6c139d-a1b9-4faa-ac0f-8ba302ad5cf9",
+            "start": 1737318972471,
+            "end": 1737318972471,
+            "fqn": "com.example.myapplication.di.ServiceLocator.Companion.instance$delegate.<anonymous>",
+            "threadName": "main",
+            "children": [
+              {
+                "id": "04dec98b-2fb7-4cc4-9b34-dba744808917",
+                "start": 1737318972471,
+                "end": 1737318972471,
+                "fqn": "com.example.myapplication.di.ServiceLocator.registerService",
+                "threadName": "main",
+                "children": []
+              },
+              {
+                "id": "2ebeeec0-35cc-4f9a-9ab8-9a82eff20842",
+                "start": 1737318972471,
+                "end": 1737318972471,
+                "fqn": "com.example.myapplication.di.ServiceLocator.registerService",
+                "threadName": "main",
+                "children": []
+              },
+              {
+                "id": "00d80dac-d0c3-425c-8bfb-608d24c06189",
+                "start": 1737318972471,
+                "end": 1737318972471,
+                "fqn": "com.example.myapplication.di.ServiceLocator.registerService",
+                "threadName": "main",
+                "children": []
+              }
+            ]
           }
         ]
       },
       {
-        "id": "b68f22fb-9102-4083-bb97-a2257ad735e9",
-        "start": 1737217508312,
-        "end": 1737217508313,
-        "fqn": "Foo.bar",
-        "children": [
-          {
-            "id": "27509cf8-73ef-4719-8a32-66d9ad917d4a",
-            "start": 1737217508312,
-            "end": 1737217508312,
-            "fqn": "Foo.privateFoo",
-            "children": []
-          }
-        ]
-      },
-      {
-        "id": "f2578eeb-2ee0-4a8b-b578-a8e62e3b7254",
-        "start": 1737217508313,
-        "end": 1737217508314,
-        "fqn": "Foo.bar",
-        "children": [
-          {
-            "id": "07dc419b-7f67-429b-a856-67c3fbfc8a3e",
-            "start": 1737217508313,
-            "end": 1737217508313,
-            "fqn": "Foo.privateFoo",
-            "children": []
-          }
-        ]
+        "id": "95f422ba-3676-4627-a9ab-f5de22bc8b75",
+        "start": 1737318972471,
+        "end": 1737318972471,
+        "fqn": "com.example.myapplication.di.ServiceLocator.registerService",
+        "threadName": "main",
+        "children": []
       }
     ]
   }
