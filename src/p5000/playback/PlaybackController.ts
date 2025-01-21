@@ -9,7 +9,7 @@ class PlaybackController {
         setInterval(() => {
             this.view.selectNext()
             handler(this.view.currentFrame())
-        }, 100);
+        }, 10);
     }
 
     setPlaybackView(view: PlaybackView): void {

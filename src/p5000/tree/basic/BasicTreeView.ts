@@ -1,12 +1,15 @@
 import View from "../../View";
 import p5 from "p5";
+import TextView from "../../text/TextView";
+import {ColorDrawable} from "../../drawable/ColorDrawable";
+import Vertical from "../../Vertical";
 
 class BasicTreeView extends View {
 
     root: BasicTreeNode | null = null
     views = new Map<string, NodeView>();
 
-    scale = 0.7
+    scale = 0.5
     textSize = 22 * this.scale
     horizontalMargin = 40 * this.scale
     verticalMargin = 40 * this.scale
@@ -31,8 +34,8 @@ class BasicTreeView extends View {
         }
 
         this.selectedNodeId = nodeId
-        if (this.views.has(selectedKey)) {
-            this.views.get(selectedKey).selected = true
+        if (this.views.has(this.selectedNodeId)) {
+            this.views.get(this.selectedNodeId).selected = true
         }
 
     }
@@ -105,16 +108,25 @@ class BasicTreeView extends View {
         if (node == null) return
         p.push()
 
+
+        node.view.render(p)
+
         if (node.selected) {
-            p.fill("rgba(255,0,0,0.5)")
+            (node.view.background as ColorDrawable).color = [255, 0, 0, 255]
+            //p.fill("rgba(255,0,0,1)")
+        } else {
+            (node.view.background as ColorDrawable).color = [255, 0, 0, 0]
+            //p.fill("rgba(0,0,0,1)")
         }
 
-        p.stroke("rgba(255,0,0,0.5)")
-        p.rect(node.x, node.y, node.width, node.height)
-        p.textSize(this.textSize)
+        //p.stroke("rgba(255,0,0,0.5)")
+        //p.rect(node.x, node.y, node.width, node.height)
+
+        //p.fill("rgba(255, 255, 255)")
+        //p.textSize(this.textSize)
 
 
-        p.text(drawableName(node.fqn), node.x, node.y + node.height - node.height / 4)
+        //p.text(drawableName(node.fqn), node.x, node.y + node.height - node.height / 4)
 
         p.pop()
     }
@@ -146,8 +158,10 @@ function drawConnections(n: BasicTreeNode, views: Map<string, NodeView>, p: p5) 
 }
 
 function drawConnection(parent: NodeView, child: NodeView, p: p5) {
+    let parentWidth = parent.view.getWidth(p)
+    let parentHeight = parent.view.getHeight(p)
     p.stroke("rgba(255,0,0,0.5)")
-    p.line(parent.x + parent.width, parent.y + parent.height / 2, child.x, child.y + parent.height / 2)
+    p.line(parent.x + parentWidth, parent.y + parentHeight / 2, child.x, child.y + parentHeight / 2)
 }
 
 function createAndLayoutNodeViews(
@@ -160,25 +174,50 @@ function createAndLayoutNodeViews(
     let result = new Map<string, NodeView>()
     let level = 0
     let currentX = 0
-    let nodeHeight = getNodeViewHeight("A", textSize, p)
+
+    function makeView(className: string, methodName: string, id: string): View {
+        let vertical = new Vertical()
+        let classNameView = new TextView(className, "class-" + id)
+        let methodNameView = new TextView(methodName, "method-" + id)
+        classNameView.color = [255, 255, 255]
+        methodNameView.color = [255, 255, 255]
+        classNameView.textSize = textSize
+        methodNameView.textSize = textSize
+
+        vertical.addChild(classNameView)
+        vertical.addChild(methodNameView)
+        vertical.background = new ColorDrawable([0, 0, 0, 255])
+
+        return vertical
+    }
+
+    let nodeHeight = makeView("A", "A", "A").getHeight(p)//temp workaround
 
     while (map.has(level)) {
         let nodes = map.get(level)
-        let maxWidth = getMaxNodeWidth(nodes, textSize, p)
+        let maxWidth = 0//getMaxNodeWidth(nodes, textSize, p)
         let totalHeight = nodes.length * nodeHeight + (verticalMargin) * (nodes.length - 1)
         let currentY = totalHeight / 2 * -1
 
+
         nodes.forEach(n => {
-            let view = new NodeView()
-            view.node = n
-            view.id = n.id
-            view.fqn = n.fqn
-            view.x = currentX
-            view.y = currentY
-            view.height = nodeHeight
-            view.width = maxWidth
+            let nodeView = new NodeView()
+            nodeView.view = makeView(getClassName(n.fqn), getMethodName(n.fqn), n.id)
+            nodeView.view.setX(currentX)
+            nodeView.view.setY(currentY)
+            nodeView.node = n
+            nodeView.id = n.id
+            nodeView.fqn = n.fqn
+            nodeView.x = currentX
+            nodeView.y = currentY
             currentY += nodeHeight + verticalMargin
-            result.set(view.id, view)
+
+
+            nodeView.view.layout(p)
+
+            maxWidth = Math.max(maxWidth, nodeView.view.getWidth(p))
+
+            result.set(nodeView.id, nodeView)
         })
 
         currentX += maxWidth + horizontalMargin
@@ -188,43 +227,19 @@ function createAndLayoutNodeViews(
     return result
 }
 
-function getMaxNodeWidth(level: BasicTreeNode[], textSize: number, p: p5): number {
-    let result = 0
-    level.forEach(node => {
-        result = Math.max(getNodeViewWidth(drawableName(node.fqn), textSize, p), result)
-    })
-    return result
-}
-
-function getNodeViewWidth(text: string, textSize: number, p: p5): number {
-    p.push()
-    p.textSize(textSize)
-    let w = p.textWidth(text)
-    p.pop()
-    return w
-}
-
-function getNodeViewHeight(text: string, textSize: number, p: p5): number {
-    p.push()
-    p.textSize(textSize)
-    let h = p.textAscent() + p.textDescent()
-    p.pop()
-    return h
-}
-
 class NodeView {
 
     id: string = ""
     fqn: string = ""
     x: number = 0
     y: number = 0
-    width: number = 0
-    height: number = 0
 
     parent?: NodeView = null
     children: NodeView[] = []
 
     node: BasicTreeNode
+
+    view: View
 
     selected: boolean = false
 }
@@ -240,7 +255,16 @@ class BasicTreeNode {
     }
 }
 
-function drawableName(fqn: string): string {
+function getClassName(fqn: string): string {
+    let name = fqn
+    if (name.indexOf(".") > -1) {
+        let separated = name.split(".")
+        name = separated[separated.length - 2]
+    }
+    return name
+}
+
+function getMethodName(fqn: string): string {
     let name = fqn
     if (name.indexOf(".") > -1) {
         let separated = name.split(".")
