@@ -1,7 +1,7 @@
 import p5 from 'p5';
 import View from "./View";
 import Align from "./Align"
-import {handleChildrenHover} from "./utils/viewUtils";
+import {handleChildrenClick, handleChildrenHover} from "./utils/viewUtils";
 import {drawDebugViewRect} from "./debug/drawDebugViewRect";
 import {Container} from "./containers/Container";
 
@@ -10,6 +10,12 @@ class Vertical extends View implements Container {
 
     public alignContent: Align = Align.LEFT
     children: View[] = [];
+
+
+    constructor() {
+        super();
+        this.clickable = true
+    }
 
     getChildren(): View[] {
         return this.children;
@@ -65,19 +71,26 @@ class Vertical extends View implements Container {
             this.children[i].layout(p)
         }
 
+        let currentY = this.y;
+
         for (let i = 0; i < this.children.length; i++) {
             const child = this.children[i];
-            const y = this.y + i * child.getHeight(p);
+            const childHeight = child.getHeight(p);
             if (this.alignContent === Align.LEFT) {
                 child.setX(this.x)
-                child.setY(y)
             } else if (this.alignContent == Align.RIGHT) {
                 const maxChildWidth = this.getWidth(p)
                 child.setX(this.x + maxChildWidth - child.getWidth(p))
-                child.setY(y)
+            } else if (this.alignContent == Align.CENTER) {
+                const maxChildWidth = this.getWidth(p)
+                child.setX(this.x + maxChildWidth / 2 - child.getWidth(p) / 2)
             } else {
                 throw new Error("Unknown alignContent in Vertical: " + Align[this.alignContent])
             }
+
+            child.setY(currentY)
+
+            currentY += childHeight
         }
     }
 
@@ -88,18 +101,15 @@ class Vertical extends View implements Container {
             this.children[i].render(p)
         }
 
-        //drawDebugViewRect(this, p)
-
-
-        //debug
-        //let c: p5.Color;
-        //c = p.color(0, 204, 0, 30)
-        //p.fill(c);
-        //p.rect(this.x, this.y, this.getWidth(p), this.getHeight(p));
+        drawDebugViewRect(this, p)
     }
 
     handleHover(mouseX: number, mouseY: number, p: p5): boolean {
         return handleChildrenHover(this.children, mouseX, mouseY, p)
+    }
+
+    handleClick(mouseX: number, mouseY: number, p: p5): boolean {
+        return handleChildrenClick(this.children, mouseX, mouseY, p)
     }
 
     public onHoverIn(p: p5) {
