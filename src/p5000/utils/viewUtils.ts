@@ -12,4 +12,18 @@ function handleChildrenHover(children: View[], mouseX: number, mouseY: number, p
     return result;
 }
 
-export {handleChildrenHover}
+function handleChildrenClick(children: View[], mouseX: number, mouseY: number, p: p5): boolean {
+    let result = false;
+    for (let i = 0; i < children.length; i++) {
+        const child = children[i];
+        if (child.handleClick(mouseX, mouseY, p)) {
+            result = true;
+        }
+    }
+    return result;
+}
+
+export {
+    handleChildrenHover,
+    handleChildrenClick
+}

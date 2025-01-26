@@ -1,7 +1,7 @@
 import View from "../View";
 import Align from "../Align";
 import p5 from "p5";
-import {handleChildrenHover} from "../utils/viewUtils";
+import {handleChildrenClick, handleChildrenHover} from "../utils/viewUtils";
 import {drawDebugViewRect} from "../debug/drawDebugViewRect";
 import {Container} from "./Container";
 
@@ -114,6 +114,10 @@ class Free extends View implements Container {
 
     handleHover(mouseX: number, mouseY: number, p: p5): boolean {
         return handleChildrenHover(this.children, mouseX, mouseY, p)
+    }
+
+    handleClick(mouseX: number, mouseY: number, p: p5): boolean {
+        return handleChildrenClick(this.children, mouseX, mouseY, p)
     }
 
     contains(x: number, y: number, p: import("p5")): boolean {

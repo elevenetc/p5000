@@ -21,6 +21,9 @@ class View {
 
     transformers: ViewTransformer[] = []
 
+    clickable: boolean = false
+    clickListener: () => void | null = null
+
     hoverHandler: (id: string, hovered: boolean, p: p5) => void;
 
     setVisible(value: boolean) {
@@ -86,8 +89,12 @@ class View {
         this.hoverHandler?.(this.id, false, p)
     }
 
-    contains(x: number, mouseY: number, p: p5): boolean {
-        throw new Error(`${this.constructor.name}.contains not implemented.`);
+    contains(x: number, y: number, p: p5): boolean {
+        const w = this.getWidth(p)
+        const h = this.getHeight(p)
+        const thisX = this.getX(p)
+        const thisY = this.getY(p)
+        return x >= thisX && x <= thisX + w && y >= thisY && y <= thisY + h
     }
 
     handleHover(mouseX: number, mouseY: number, p: p5): boolean {
@@ -108,6 +115,15 @@ class View {
             }
         }
         return result;
+    }
+
+    handleClick(mouseX: number, mouseY: number, p: p5): boolean {
+        if (this.clickable && (this.contains(mouseX, mouseY, p))) {
+            this.clickListener?.call(this)
+            return true
+        } else {
+            return false
+        }
     }
 }
 
