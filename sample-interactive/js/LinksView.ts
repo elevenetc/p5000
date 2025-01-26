@@ -1,7 +1,6 @@
 import p5 from "p5";
 import {tagTitleToColor} from "./appConfig";
 import View from "../../src/p5000/View";
-import Align from "../../src/p5000/Align";
 import TextView from "../../src/p5000/text/TextView";
 import LinearAnimationValue from "../../src/p5000/animation/LinearAnimationValue";
 import {MouseSpeed} from "../../src/p5000/utils/MouseSpeed";
@@ -188,7 +187,6 @@ class Link {
     let tagStartX = this.tagView.getX(p);
     let tagEndX = this.tagView.getX(p) + this.tagView.getWidth(p);
     let tagY = this.tagView.getY(p) + this.tagView.getHeight(p);
-    //console.log("projectHeight: " + projectHeight)
 
     p.noFill();
 

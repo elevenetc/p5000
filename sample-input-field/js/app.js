@@ -17,10 +17,6 @@ root.addChild(text)
 function setup(p) {
     p.createCanvas(p.windowWidth, p.windowHeight);
     p.textSize(32);
-
-    // p.keyPressed = () => {
-    //     console.log(`Key pressed: ${p.key}`);
-    // }
 }
 
 function draw(p) {

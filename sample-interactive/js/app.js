@@ -7,11 +7,9 @@ import Vertical from "../../src/p5000/Vertical";
 import Align from "../../src/p5000/Align";
 import TextView from "../../src/p5000/text/TextView";
 import {Free} from "../../src/p5000/containers/Free";
-import KeyboardTypeTransformer from "../../src/p5000/transformers/KeyboardTypeTransformer";
 import {KeyboardHandlerImpl} from "../../src/p5000/keyboard/KeyboardHandler";
 import {layoutAndRender} from "../../src/p5000/layoutAndRender";
 import {InputView} from "../../src/p5000/text/InputView";
-import TextOverlay from "../../src/p5000/text/TextOverlay";
 import SelectionTextOverlay from "../../src/p5000/text/SelectionTextOverlay";
 
 const projectsToTags = new Map();
@@ -99,8 +97,8 @@ linksView.setMaps(tagsToProjects, projectsToTags)
 
 root.addChild(linksView)
 root.addChild(projectsView)
-root.addChild(tagsView)
-root.addChild(filterText)
+root.addChild(tagsView, Align.RIGHT_TOP)
+root.addChild(filterText, Align.CENTER_BOTTOM)
 
 function setup(p) {
     p.createCanvas(p.windowWidth, p.windowHeight);

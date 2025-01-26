@@ -14,6 +14,7 @@ class Free extends View implements Container {
     constructor() {
         super();
         this.setScale(new FillParent())
+        this.clickable = true
     }
 
     getChildX(child: View, p: p5): number {

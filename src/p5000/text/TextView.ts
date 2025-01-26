@@ -46,6 +46,10 @@ class TextView extends View {
         }
     }
 
+    setText(text: string): void {
+        this.title = text
+    }
+
     public setStyle(style: TextStyle) {
         this.color[0] = style.color[0]
         this.color[1] = style.color[1]
@@ -85,7 +89,7 @@ class TextView extends View {
             overlay.render(this, p)
         })
 
-        //drawDebugViewRect(this, p)
+        drawDebugViewRect(this, p)
     }
 
     getWidth(p: p5): number {
