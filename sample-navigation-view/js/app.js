@@ -16,12 +16,7 @@ directionText.color = [255, 255, 255, 255];
 
 
 // Create navigation view
-const navigationView = new NavigationView(
-    "assets/arrow_top.png",
-    "assets/arrow_bottom.png",
-    "assets/arrow_left.png",
-    "assets/arrow_right.png"
-);
+const navigationView = new NavigationView()
 
 // Add click handler
 navigationView.setClickHandler((direction) => {

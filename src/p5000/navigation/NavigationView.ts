@@ -17,17 +17,12 @@ export class NavigationView extends Free {
     private readonly rightButton: ImageButton;
     private clickHandler: ((direction: Direction) => void) | null = null;
 
-    constructor(
-        upImagePath: string,
-        downImagePath: string,
-        leftImagePath: string,
-        rightImagePath: string
-    ) {
+    constructor() {
         super();
-        this.upButton = new ImageButton(upImagePath);
-        this.downButton = new ImageButton(downImagePath);
-        this.leftButton = new ImageButton(leftImagePath);
-        this.rightButton = new ImageButton(rightImagePath);
+        this.upButton = new ImageButton("assets/arrow_top.png");
+        this.downButton = new ImageButton("assets/arrow_bottom.png");
+        this.leftButton = new ImageButton("assets/arrow_left.png");
+        this.rightButton = new ImageButton("assets/arrow_right.png");
 
         this.clickable = true
         this.setScale(new WrapContent()) //TODO: replace with custom scale
