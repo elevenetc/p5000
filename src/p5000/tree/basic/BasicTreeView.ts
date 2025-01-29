@@ -3,6 +3,7 @@ import p5 from "p5";
 import TextView from "../../text/TextView";
 import {ColorDrawable} from "../../drawable/ColorDrawable";
 import Vertical from "../../Vertical";
+import {AnimationValue, Ease} from "../../animation/AnimationValue";
 
 class BasicTreeView extends View {
 
@@ -16,8 +17,39 @@ class BasicTreeView extends View {
     selectedNodeId: string = null
     relayout = true
 
+    private translationX = new AnimationValue(0)
+    private translationY = new AnimationValue(0)
+
     constructor() {
         super();
+        this.translationX.setEasing(Ease.IN_OUT)
+        this.translationX.setDuration(250)
+        this.translationY.setEasing(Ease.IN_OUT)
+        this.translationY.setDuration(250)
+    }
+
+    translateX(value: number) {
+        this.translationX.addValue(value)
+    }
+
+    translateY(value: number) {
+        this.translationY.addValue(value)
+    }
+
+    setTranslationX(value: number) {
+        this.translationX.setValue(value, false)
+    }
+
+    setTranslationY(value: number) {
+        this.translationY.setValue(value, false)
+    }
+
+    getTranslationX() {
+        return this.translationX.getTarget()
+    }
+
+    getTranslationY() {
+        return this.translationY.getTarget()
     }
 
     setSelectedNode(nodeId: string) {
@@ -28,7 +60,7 @@ class BasicTreeView extends View {
             if (this.views.has(selectedKey)) {
                 this.views.get(selectedKey).selected = false
             } else {
-                console.log("no key: " + selectedKey)
+                //console.log("no key: " + selectedKey)
             }
 
         }
@@ -87,8 +119,8 @@ class BasicTreeView extends View {
     render(p: p5) {
         super.render(p)
 
-        let midX = this.getWidth(p) / 2;
-        let midY = this.getHeight(p) / 2;
+        let midX = this.getWidth(p) / 2 + this.translationX.calculate();
+        let midY = this.getHeight(p) / 2 + this.translationY.calculate();
 
         p.push()
 
@@ -129,6 +161,11 @@ class BasicTreeView extends View {
         //p.text(drawableName(node.fqn), node.x, node.y + node.height - node.height / 4)
 
         p.pop()
+    }
+
+
+    handleHover(mouseX: number, mouseY: number, p: p5): boolean {
+        return false
     }
 }
 
