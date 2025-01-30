@@ -1,0 +1,63 @@
+{
+  "timestamp": 1737494262844,
+  "history": [
+    {
+      "id": "61ff1dae-1aaa-45ad-bc79-dffb7b8c257f",
+      "start": 1737494262173,
+      "end": 1737494262175,
+      "threadName": "main",
+      "fqn": "ClassA.methodA"
+    }
+  ],
+  "treeRoot": {
+    "id": "61ff1dae-1aaa-45ad-bc79-dffb7b8c257f",
+    "start": 1737494262173,
+    "end": 1737494262175,
+    "fqn": "ClassA.methodA",
+    "threadName": "main",
+    "children": [
+      {
+        "id": "bafb7646-b387-449a-9448-603f5394ac3d",
+        "start": 1737494262175,
+        "end": 1737494262175,
+        "fqn": "com.example.myapplication.di.ServiceLocator.Companion.<get-instance>",
+        "threadName": "main",
+        "children": [
+          {
+            "id": "01c10b9d-19a6-4736-88cd-d28fabd45b2e",
+            "start": 1737494262175,
+            "end": 1737494262175,
+            "fqn": "com.example.myapplication.di.ServiceLocator.Companion.instance$delegate.<anonymous>",
+            "threadName": "main",
+            "children": [
+              {
+                "id": "ed9058c9-1514-4972-90bb-91a99c58934f",
+                "start": 1737494262175,
+                "end": 1737494262175,
+                "fqn": "com.example.myapplication.di.ServiceLocator.registerService",
+                "threadName": "main",
+                "children": []
+              },
+              {
+                "id": "5aed7401-1f30-467b-8f59-79effd38f80f",
+                "start": 1737494262175,
+                "end": 1737494262175,
+                "fqn": "com.example.myapplication.di.ServiceLocator.registerService",
+                "threadName": "main",
+                "children": []
+              },
+              {
+                "id": "0a706690-8158-4cb7-b021-b12de87d3a7f",
+                "start": 1737494262175,
+                "end": 1737494262175,
+                "fqn": "com.example.myapplication.di.ServiceLocator.registerService",
+                "threadName": "main",
+                "children": []
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
