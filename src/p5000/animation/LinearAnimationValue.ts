@@ -33,7 +33,7 @@ class LinearAnimationValue {
       this.current += this.step;
 
       if(this.current > this.target || this.current > this.max) {
-        //avoid going outside target/min bound
+        //avoid going outside target/max bound
         this.current = this.target;
       }
 

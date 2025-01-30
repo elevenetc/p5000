@@ -36,7 +36,6 @@ export class AnimationValue {
     }
 
     setValue(value: number, animate: boolean = true) {
-
         if (animate) {
             this.target = value;
             this.startAnimation();

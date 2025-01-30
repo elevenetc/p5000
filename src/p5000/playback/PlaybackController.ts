@@ -4,12 +4,15 @@ class PlaybackController {
 
     private view: PlaybackView;
 
-    constructor(view: PlaybackView, handler: (selected: PlaybackFrame) => void) {
+    constructor(
+        view: PlaybackView,
+        interval: number,
+        handler: (selected: PlaybackFrame) => void) {
         this.view = view;
         setInterval(() => {
             this.view.selectNext()
             handler(this.view.currentFrame())
-        }, 10);
+        }, interval);
     }
 
     setPlaybackView(view: PlaybackView): void {

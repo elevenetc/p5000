@@ -2,7 +2,7 @@ import {layoutAndRender} from "./layoutAndRender";
 import View from "./View";
 import p5 from "p5";
 
-function initP5000(root: View) {
+function initP5000(root: View): p5 {
     function setup(p) {
         const canvas = p.createCanvas(p.windowWidth, p.windowHeight)
         p.textSize(32)
@@ -32,7 +32,7 @@ function initP5000(root: View) {
         p.windowResized = () => p.resizeCanvas(p.windowWidth, p.windowHeight);
     };
 
-    new p5(sketch);
+    return new p5(sketch)
 }
 
 export {

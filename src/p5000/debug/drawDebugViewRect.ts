@@ -2,6 +2,7 @@ import View from "../View";
 import p5 from "p5";
 
 function drawDebugViewRect(view: View, p:p5) {
+    if (!enableDebugView) return
     let x = view.getX(p);
     let y = view.getY(p);
     let width = view.getWidth(p);
@@ -33,6 +34,7 @@ function drawDebugViewRect(view: View, p:p5) {
     p.pop()
 }
 
+const enableDebugView = false
 const enableCoordinatesData = false
 
 export {
