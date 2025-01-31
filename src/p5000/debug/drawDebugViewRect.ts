@@ -34,6 +34,19 @@ function drawDebugViewRect(view: View, p:p5) {
     p.pop()
 }
 
+export function drawPurpleDebugViewRect(view: View, p: p5) {
+    p.push()
+    let x = view.getX(p);
+    let y = view.getY(p);
+    let width = view.getWidth(p);
+    let height = view.getHeight(p);
+    p.stroke("rgb(102,0,255)")
+    p.noFill()
+    p.rect(x, y, width, height)
+    p.rect(x + 5, y + 5, width - 10, height - 10)
+    p.pop()
+}
+
 const enableDebugView = false
 const enableCoordinatesData = false
 

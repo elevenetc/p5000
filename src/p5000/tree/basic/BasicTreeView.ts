@@ -2,7 +2,7 @@ import View from "../../View";
 import p5 from "p5";
 import TextView from "../../text/TextView";
 import {ColorDrawable} from "../../drawable/ColorDrawable";
-import Vertical from "../../Vertical";
+import Vertical from "../../containers/Vertical";
 import {AnimationValue, Ease} from "../../animation/AnimationValue";
 
 class BasicTreeView extends View {
@@ -15,7 +15,7 @@ class BasicTreeView extends View {
     horizontalMargin = 40 * this.scale
     verticalMargin = 40 * this.scale
     selectedNodeId: string = null
-    relayout = true
+    layouted = false
 
     private translationX = new AnimationValue(0)
     private translationY = new AnimationValue(0)
@@ -54,6 +54,13 @@ class BasicTreeView extends View {
     }
 
     setSelectedNode(nodeId: string) {
+        console.log("set selected node: " + nodeId)
+
+        if (!this.layouted) {
+            console.log(`layout isn't passed yet, skip node selection: ${nodeId}`)
+            return
+        }
+
         let selectedKey = this.selectedNodeId;
         if (nodeId == selectedKey) return
 
@@ -61,7 +68,7 @@ class BasicTreeView extends View {
             if (this.views.has(selectedKey)) {
                 this.views.get(selectedKey).selected = false
             } else {
-                //console.log("no key: " + selectedKey)
+                console.log("no key: " + selectedKey)
             }
 
         }
@@ -69,8 +76,9 @@ class BasicTreeView extends View {
         this.selectedNodeId = nodeId
         if (this.views.has(this.selectedNodeId)) {
             this.views.get(this.selectedNodeId).selected = true
+        } else {
+            console.log("failed attempt to selected node: " + nodeId + ", views count: " + this.views.size)
         }
-
     }
 
     getViewNode(nodeId: string): NodeView | null {
@@ -79,7 +87,7 @@ class BasicTreeView extends View {
 
     setRoot(root: BasicTreeNode) {
         this.root = root;
-        this.relayout = true
+        this.layouted = false
     }
 
     getWidth(p: p5): number {
@@ -104,7 +112,7 @@ class BasicTreeView extends View {
     layout(p: p5) {
 
         //TODO: optimize layout, shouldn't be called if tree isn't changed
-        if (!this.relayout) return
+        if (this.layouted) return
 
         super.layout(p);
 
@@ -112,13 +120,19 @@ class BasicTreeView extends View {
 
         let levels = new Map<number, BasicTreeNode[]>();
         fillLevels(this.root, 0, levels, p)
-        this.views = createAndLayoutNodeViews(levels,
+
+        this.selectedNodeId = this.root.id
+
+        this.views = createAndLayoutNodeViews(
+            levels,
             this.textSize,
             this.verticalMargin,
             this.horizontalMargin,
-            p)
+            this.selectedNodeId,
+            p
+        )
 
-        this.relayout = false
+        this.layouted = true
     }
 
     render(p: p5) {
@@ -234,6 +248,7 @@ function createAndLayoutNodeViews(
     textSize: number,
     verticalMargin: number,
     horizontalMargin: number,
+    selectedNodeId: string | null,
     p: p5
 ): Map<string, NodeView> {
     let result = new Map<string, NodeView>()
@@ -244,8 +259,8 @@ function createAndLayoutNodeViews(
         let vertical = new Vertical()
         let classNameView = new TextView(className, "class-" + id)
         let methodNameView = new TextView(methodName, "method-" + id)
-        classNameView.color = [255, 255, 255]
-        methodNameView.color = [255, 255, 255]
+        classNameView.color = [255, 255, 255, 255]
+        methodNameView.color = [255, 255, 255, 255]
         classNameView.textSize = textSize
         methodNameView.textSize = textSize
 
@@ -277,6 +292,10 @@ function createAndLayoutNodeViews(
             nodeView.y = currentY
             currentY += nodeHeight + verticalMargin
 
+
+            if (selectedNodeId != null && selectedNodeId == nodeView.id) {
+                nodeView.selected = true
+            }
 
             nodeView.view.layout(p)
 

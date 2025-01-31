@@ -4,6 +4,7 @@ import TextOverlay from "./TextOverlay";
 import {TextStyle} from "./TextStyle";
 import Align from "../Align";
 import {drawDebugViewRect} from "../debug/drawDebugViewRect";
+import {getValueSafe} from "../utils/getValueSafe";
 
 const alphaStep = 25;
 const maxAlpha = 200;
@@ -14,7 +15,7 @@ class TextView extends View {
     public bgAlpha: number = 0
     public textSize: number = 30
 
-    public color: [number, number, number] = [0, 0, 0];
+    public color: [number, number, number, number] = [0, 0, 0, 0];
     public overlays: TextOverlay[] = []
 
     public textAlign: Align = Align.LEFT
@@ -37,7 +38,7 @@ class TextView extends View {
             this.title = args[0];
             this.id = args[1];
             this.hoverHandler = args[2];
-            this.color = [0, 0, 0];
+            this.color = [0, 0, 0, 255];
         } else {
             this.title = args[0];
             this.id = args[1];
@@ -51,9 +52,10 @@ class TextView extends View {
     }
 
     public setStyle(style: TextStyle) {
-        this.color[0] = style.color[0]
-        this.color[1] = style.color[1]
-        this.color[2] = style.color[2]
+        this.color[0] = getValueSafe(style.color, 0, 0)
+        this.color[1] = getValueSafe(style.color, 1, 0)
+        this.color[2] = getValueSafe(style.color, 2, 0)
+        this.color[3] = getValueSafe(style.color, 3, 255)
         this.textSize = style.fontSize
     }
 
@@ -101,8 +103,14 @@ class TextView extends View {
     }
 
     getHeight(p: p5): number {
+
+        /**
+         * heightScale is a workaround to reduce space above the text.
+         * Fits most single line cases
+         */
+        let heightScale = 1.5
         let h = this.getTextHeight(p)
-        return h + this.padding * 2
+        return (h + this.padding * 2) / heightScale
     }
 
     getTextHeight(p: p5): number {

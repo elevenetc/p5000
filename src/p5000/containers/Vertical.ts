@@ -1,9 +1,9 @@
 import p5 from 'p5';
-import View from "./View";
-import Align from "./Align"
-import {handleChildrenClick, handleChildrenHover} from "./utils/viewUtils";
-import {drawDebugViewRect} from "./debug/drawDebugViewRect";
-import {Container} from "./containers/Container";
+import View from "../View";
+import Align from "../Align"
+import {handleChildrenClick, handleChildrenHover} from "../utils/viewUtils";
+import {drawDebugViewRect} from "../debug/drawDebugViewRect";
+import {Container} from "./Container";
 
 class Vertical extends View implements Container {
 

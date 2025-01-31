@@ -1,5 +1,5 @@
 import {BasicTreeNode} from "./BasicTreeView";
-import {PlaybackFrame} from "../../playback/PlaybackView";
+import {PlaybackFrame} from "../../playback/PlaybackTimelineView";
 
 function parseTree(filePath: string, loadHandler: (result: ParseResult) => void) {
 

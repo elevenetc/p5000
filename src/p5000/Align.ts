@@ -10,6 +10,8 @@ enum Align {
     CENTER_RIGHT,
     CENTER_TOP,
     CENTER_BOTTOM,
+    TOP,
+    BOTTOM,
 }
 
 export default Align;
