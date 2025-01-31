@@ -3,7 +3,7 @@ import TextView from "../../src/p5000/text/TextView";
 import Align from "../../src/p5000/Align";
 import {Direction, NavigationView} from "../../src/p5000/navigation/NavigationView";
 import {initP5000} from "../../src/p5000/initP5000";
-import Vertical from "../../src/p5000/Vertical";
+import Vertical from "../../src/p5000/containers/Vertical";
 
 const root = new Free()
 const vertical = new Vertical()

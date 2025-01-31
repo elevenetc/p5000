@@ -3,7 +3,7 @@ import {allProjects, allTags} from "./projectsData";
 import {formatDateToMMYYYY} from "./dateUtils";
 import LinksView from "./LinksView";
 import {tagTitleToColor} from "./appConfig";
-import Vertical from "../../src/p5000/Vertical";
+import Vertical from "../../src/p5000/containers/Vertical";
 import Align from "../../src/p5000/Align";
 import TextView from "../../src/p5000/text/TextView";
 import {Free} from "../../src/p5000/containers/Free";
