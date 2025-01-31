@@ -18,6 +18,7 @@ class View {
     protected x: number = 0
     protected y: number = 0
     protected padding: number = 0
+    margin: number = 0
 
     transformers: ViewTransformer[] = []
 
@@ -63,11 +64,11 @@ class View {
     }
 
     getWidth(p: p5): number {
-        throw this.padding * 2
+        return this.padding * 2
     }
 
     getHeight(p: p5): number {
-        throw this.padding * 2
+        return this.padding * 2
     }
 
     layout(p: p5): void {
@@ -90,41 +91,58 @@ class View {
     }
 
     contains(x: number, y: number, p: p5): boolean {
-        const w = this.getWidth(p)
-        const h = this.getHeight(p)
-        const thisX = this.getX(p)
-        const thisY = this.getY(p)
-        return x >= thisX && x <= thisX + w && y >= thisY && y <= thisY + h
+        return viewContains(x, y, this, p)
     }
 
     handleHover(mouseX: number, mouseY: number, p: p5): boolean {
         let result = false;
 
         if (this.contains(mouseX, mouseY, p)) {
+            this.onContainsHover(true, p)
+            result = true;
+        } else {
+            this.onContainsHover(false, p)
+        }
+        return result;
+    }
 
+    onContainsHover(hovered: boolean, p: p5) {
+        if (hovered) {
             if (!this.hover) {
                 this.hover = true;
                 this.onHoverIn(p);
             }
-
-            result = true;
         } else {
             if (this.hover) {
                 this.hover = false;
                 this.onHoverOut(p);
             }
         }
-        return result;
+
     }
 
     handleClick(mouseX: number, mouseY: number, p: p5): boolean {
-        if (this.clickable && (this.contains(mouseX, mouseY, p))) {
+        let contains = this.contains(mouseX, mouseY, p);
+        //console.log(`${this.constructor.name} - handleClick: contains: ${contains}, clickable: ${this.clickable}`);
+        if (this.clickable && contains) {
             this.clickListener?.call(this)
             return true
         } else {
             return false
         }
     }
+}
+
+export function viewContains(
+    x: number, y: number,
+    view: View,
+    p: p5
+) {
+    const w = view.getWidth(p)
+    const h = view.getHeight(p)
+    const thisX = view.getX(p)
+    const thisY = view.getY(p)
+    return x >= thisX && x <= thisX + w && y >= thisY && y <= thisY + h
 }
 
 export default View;

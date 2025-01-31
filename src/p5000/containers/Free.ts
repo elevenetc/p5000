@@ -50,11 +50,11 @@ class Free extends View implements Container {
     }
 
     getWidth(p: import("p5")): number {
-        return this.scale.getWidth(p)
+        return this.scale.getWidth(p) + this.padding * 2
     }
 
     getHeight(p: import("p5")): number {
-        return this.scale.getHeight(p)
+        return this.scale.getHeight(p) + this.padding * 2
     }
 
     layout(p: p5) {
@@ -67,39 +67,43 @@ class Free extends View implements Container {
         for (let i = 0; i < this.children.length; i++) {
             const child = this.children[i];
             const align = child.align ?? Align.LEFT_TOP
+            let x = 0
+            let y = 0
             if (align === Align.LEFT_TOP) {
-                child.setX(this.getX(p))
+                x = this.getX(p)
                 child.setY(this.getY(p))
             } else if (align === Align.RIGHT_TOP) {
                 let width1 = this.getWidth(p);
                 let width2 = child.getWidth(p);
-                child.setX(width1 - width2)
-                child.setY(this.getY(p))
+                x = (width1 - width2)
+                y = (this.getY(p))
             } else if (align === Align.RIGHT_BOTTOM) {
-                child.setX(this.getWidth(p) - child.getWidth(p))
-                child.setY(this.getHeight(p) - child.getHeight(p))
+                x = (this.getWidth(p) - child.getWidth(p))
+                y = (this.getHeight(p) - child.getHeight(p))
             } else if (align === Align.LEFT_BOTTOM) {
-                child.setX(this.getX(p))
-                child.setY(this.getHeight(p) - child.getHeight(p))
+                x = (this.getX(p))
+                y = (this.getHeight(p) - child.getHeight(p))
             } else if (align === Align.CENTER) {
-                let y = this.getY(p) + this.getHeight(p) / 2 - child.getHeight(p) / 2;
-                child.setX(getCenterX(child, p))
-                child.setY(y)
+                y = this.getY(p) + this.getHeight(p) / 2 - child.getHeight(p) / 2;
+                x = (getCenterX(child, p))
             } else if (align === Align.CENTER_LEFT) {
-                child.setX(this.getX(p))
-                child.setY(this.getHeight(p) / 2 - child.getHeight(p) / 2)
+                x = (this.getX(p))
+                y = (this.getHeight(p) / 2 - child.getHeight(p) / 2)
             } else if (align === Align.CENTER_RIGHT) {
-                child.setX(this.getWidth(p) - child.getWidth(p))
-                child.setY(this.getHeight(p) / 2 - child.getHeight(p) / 2)
+                x = (this.getWidth(p) - child.getWidth(p))
+                y = (this.getHeight(p) / 2 - child.getHeight(p) / 2)
             } else if (align === Align.CENTER_TOP) {
-                child.setX(getCenterX(child, p))
-                child.setY(this.getY(p))
+                x = (getCenterX(child, p))
+                y = (this.getY(p))
             } else if (align === Align.CENTER_BOTTOM) {
-                child.setX(getCenterX(child, p))
-                child.setY(this.getHeight(p) - child.getHeight(p))
+                x = (getCenterX(child, p))
+                y = (this.getHeight(p) - child.getHeight(p))
             } else {
                 throw new Error("Unknown align value at Free: " + align)
             }
+
+            child.setX(x)
+            child.setY(y)
         }
     }
 
