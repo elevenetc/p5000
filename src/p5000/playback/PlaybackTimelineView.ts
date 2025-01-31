@@ -1,7 +1,7 @@
 import View from "../View";
 import p5 from "p5";
 
-class PlaybackView extends View {
+class PlaybackTimelineView extends View {
 
     private frames: PlaybackFrame[] = []
     private selected = 0
@@ -13,7 +13,14 @@ class PlaybackView extends View {
         }
     }
 
-    currentFrame() {
+    selectPrevious() {
+        this.selected--;
+        if (this.selected < 0) {
+            this.selected = this.frames.length - 1;
+        }
+    }
+
+    getCurrentFrame(): PlaybackFrame {
         return this.frames[this.selected];
     }
 
@@ -79,10 +86,10 @@ class PlaybackView extends View {
 }
 
 class PlaybackFrame {
-    id: String = ""
-    name: String = ""
+    id: string = ""
+    name: string = ""
 }
 
 export {
-    PlaybackView, PlaybackFrame
+    PlaybackTimelineView, PlaybackFrame
 }

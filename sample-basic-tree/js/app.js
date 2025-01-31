@@ -1,7 +1,7 @@
 import {Free} from "../../src/p5000/containers/Free";
 import {BasicTreeView} from "../../src/p5000/tree/basic/BasicTreeView";
 import {parseTree} from "../../src/p5000/tree/basic/parseTree";
-import {PlaybackView} from "../../src/p5000/playback/PlaybackView";
+import {PlaybackTimelineView} from "../../src/p5000/playback/PlaybackTimelineView";
 import Align from "../../src/p5000/Align";
 import {ColorDrawable} from "../../src/p5000/drawable/ColorDrawable";
 import {PlaybackController} from "../../src/p5000/playback/PlaybackController";
@@ -9,31 +9,49 @@ import {Direction, NavigationView} from "../../src/p5000/navigation/NavigationVi
 import {initP5000} from "../../src/p5000/initP5000";
 import FpsView from "../../src/p5000/debug/FpsView";
 import {getNumberOrDefault, storeNumber} from "../../src/p5000/cookies/storeValue";
+import Vertical from "../../src/p5000/containers/Vertical";
+import {PlaybackControlsView} from "../../src/p5000/playback/PlaybackControlsView";
 
 const follow = false
 
 const root = new Free()
 const tree = new BasicTreeView()
 root.addChild(tree)
-let playbackView = new PlaybackView();
+let timeline = new PlaybackTimelineView();
 
 let navigationView = new NavigationView();
 
-playbackView.background = new ColorDrawable([255, 0, 0])
-root.addChild(playbackView, Align.CENTER_BOTTOM)
-let controller = new PlaybackController(playbackView, 50, (frame) => {
-    tree.setSelectedNode(frame.id)
+let playbackGroup = new Vertical()
+playbackGroup.alignContent = Align.CENTER
 
-    if (follow) {
-        let node = tree.getViewNode(frame.id)
-        if (node != null) {
-            tree.setTranslationX(node.x * -1, true)
-            tree.setTranslationY(node.y * -1, true)
+
+let controls = new PlaybackControlsView()
+
+timeline.background = new ColorDrawable([255, 0, 0])
+
+let controller = new PlaybackController(
+    timeline,
+    controls,
+    tree,
+    50, (frame) => {
+        //tree.setSelectedNode(frame.id)
+
+        if (follow) {
+            let node = tree.getViewNode(frame.id)
+            if (node != null) {
+                tree.setTranslationX(node.x * -1, true)
+                tree.setTranslationY(node.y * -1, true)
+            }
         }
-    }
-})
+    })
 
 let fpsView = new FpsView()
+
+
+playbackGroup.addChild(controls)
+playbackGroup.addChild(timeline)
+
+root.addChild(playbackGroup, Align.CENTER_BOTTOM)
 root.addChild(fpsView, Align.LEFT_TOP)
 
 
@@ -61,7 +79,7 @@ root.addChild(navigationView, Align.LEFT_BOTTOM)
 
 parseTree("tree-data-sample-large.json", (result) => {
     tree.setRoot(result.root)
-    playbackView.setFrames(result.history)
+    timeline.setFrames(result.history)
 })
 
 let p = initP5000(root)
