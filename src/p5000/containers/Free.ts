@@ -36,7 +36,7 @@ class Free extends View implements Container {
 
     addChild(child: View, align: Align = null): void {
         if (child == undefined) throw Error("child is not defined")
-        child.align = align
+        if (align != null) child.align = align
         this.children.push(child);
         child.parent = this;
     }
@@ -71,21 +71,21 @@ class Free extends View implements Container {
             let y = 0
             if (align === Align.LEFT_TOP) {
                 x = this.getX(p)
-                child.setY(this.getY(p))
+                y = this.getY(p)
             } else if (align === Align.RIGHT_TOP) {
                 let width1 = this.getWidth(p);
                 let width2 = child.getWidth(p);
                 x = (width1 - width2)
-                y = (this.getY(p))
+                y = this.getY(p)
             } else if (align === Align.RIGHT_BOTTOM) {
-                x = (this.getWidth(p) - child.getWidth(p))
-                y = (this.getHeight(p) - child.getHeight(p))
+                x = this.getWidth(p) - child.getWidth(p)
+                y = this.getHeight(p) - child.getHeight(p)
             } else if (align === Align.LEFT_BOTTOM) {
                 x = (this.getX(p))
                 y = (this.getHeight(p) - child.getHeight(p))
             } else if (align === Align.CENTER) {
                 y = this.getY(p) + this.getHeight(p) / 2 - child.getHeight(p) / 2;
-                x = (getCenterX(child, p))
+                x = getCenterX(child, p)
             } else if (align === Align.CENTER_LEFT) {
                 x = (this.getX(p))
                 y = (this.getHeight(p) / 2 - child.getHeight(p) / 2)
@@ -96,8 +96,8 @@ class Free extends View implements Container {
                 x = (getCenterX(child, p))
                 y = (this.getY(p))
             } else if (align === Align.CENTER_BOTTOM) {
-                x = (getCenterX(child, p))
-                y = (this.getHeight(p) - child.getHeight(p))
+                x = getCenterX(child, p)
+                y = this.getHeight(p) - child.getHeight(p)
             } else {
                 throw new Error("Unknown align value at Free: " + align)
             }
@@ -108,6 +108,9 @@ class Free extends View implements Container {
     }
 
     render(p: import("p5")): void {
+
+        //drawPurpleDebugViewRect(this, p)
+
         super.render(p)
 
         drawDebugViewRect(this, p)
