@@ -4,6 +4,7 @@ import TextView from "../../text/TextView";
 import {ColorDrawable} from "../../drawable/ColorDrawable";
 import Vertical from "../../containers/Vertical";
 import {AnimationValue, Ease} from "../../animation/AnimationValue";
+import {drawDebugViewRect} from "../../debug/drawDebugViewRect";
 
 class BasicTreeView extends View {
 
@@ -91,23 +92,29 @@ class BasicTreeView extends View {
     }
 
     getWidth(p: p5): number {
-        return this.parent?.getWidth(p)
+
+        let minX = 0
+        let maxX = 0
+
+        this.views.forEach(view => {
+            minX = Math.min(view.view.getX(p), minX)
+            maxX = Math.max(view.view.getX(p) + view.view.getWidth(p), maxX)
+        })
+
+        return maxX - minX
     }
 
     getHeight(p: p5): number {
-        return this.parent?.getHeight(p)
+        let minY = 0
+        let maxY = 0
+
+        this.views.forEach(view => {
+            minY = Math.min(view.view.getY(p), minY)
+            maxY = Math.max(view.view.getY(p) + view.view.getHeight(p), maxY)
+        })
+
+        return maxY - minY
     }
-
-
-    getX(p: p5): number {
-        return this.parent?.getX(p)
-    }
-
-
-    getY(p: p5): number {
-        return this.parent?.getY(p)
-    }
-
 
     layout(p: p5) {
 
@@ -138,8 +145,10 @@ class BasicTreeView extends View {
     render(p: p5) {
         super.render(p)
 
-        let midX = this.getWidth(p) / 2 + this.translationX.calculate();
-        let midY = this.getHeight(p) / 2 + this.translationY.calculate();
+        //console.log("this.x: " + this.getX(p))
+
+        let midX = this.getX(p) + this.translationX.calculate();
+        let midY = this.getY(p) + this.getHeight(p) / 2 + this.translationY.calculate();
 
         p.push()
         //p.scale(3)
@@ -147,15 +156,18 @@ class BasicTreeView extends View {
         p.translate(midX, midY)
 
         this.views.forEach(v => {
-            this.drawNode(v, p)
+            this.renderNode(v, p)
         })
 
         drawConnections(this.root, this.views, this.defaultBackgroundAlpha, p)
 
         p.pop()
+
+        drawDebugViewRect(this, p)
+        //drawYellowDebugViewRect(this, p)
     }
 
-    drawNode(node: NodeView, p: p5) {
+    renderNode(node: NodeView, p: p5) {
         if (node == null) return
         p.push()
 

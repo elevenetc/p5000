@@ -1,12 +1,30 @@
 import {BasicTreeNode} from "./BasicTreeView";
 import {PlaybackFrame} from "../../playback/PlaybackTimelineView";
 
-function parseTree(filePath: string, loadHandler: (result: ParseResult) => void) {
+
+function loadAndParseTree(filePath: string, loadHandler: (result: ParseResult) => void) {
 
     parseJsonToObject(filePath)
-        .then((node) => {
-            loadHandler(node)
-            //node.forEach((person) => console.log(person));
+        .then((result) => {
+            loadHandler(result)
+        })
+        .catch((error) => console.error(error));
+}
+
+export function loadAndParseTrees(filePath: string[], loadHandler: (result: Map<String, ParseResult>) => void) {
+
+    const promises = filePath.map(async (path) => {
+        const result = await parseJsonToObject(path);
+        return [path, result] as [string, ParseResult];
+    });
+
+    Promise.all(promises)
+        .then((results) => {
+            const resultMap = new Map<String, ParseResult>();
+            results.forEach(([path, result]) => {
+                resultMap.set(path, result);
+            });
+            loadHandler(resultMap);
         })
         .catch((error) => console.error(error));
 }
@@ -66,5 +84,5 @@ class ParseResult {
 }
 
 export {
-    parseTree, ParseResult
+    loadAndParseTree, ParseResult
 }
