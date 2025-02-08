@@ -1,23 +1,23 @@
 import {PlaybackFrame, PlaybackTimelineView} from './PlaybackTimelineView';
 import {PlaybackControlsView} from "./PlaybackControlsView";
-import {BasicTreeView} from "../tree/basic/BasicTreeView";
+import {TreeGroup} from "../tree/basic/TreeGroup";
 
 class PlaybackController {
 
     private timeline: PlaybackTimelineView;
-    private tree: BasicTreeView;
+    private treeGroup: TreeGroup;
     private handler: ((selected: PlaybackFrame) => void) | null = null;
 
     constructor(
         timeline: PlaybackTimelineView,
         controls: PlaybackControlsView,
-        tree: BasicTreeView,
+        treeGroup: TreeGroup,
         interval: number,
         handler: (selected: PlaybackFrame) => void
     ) {
         this.timeline = timeline;
         this.handler = handler;
-        this.tree = tree;
+        this.treeGroup = treeGroup;
 
         controls.next.clickListener = () => {
             this.selectNext()
@@ -50,11 +50,7 @@ class PlaybackController {
     private updateViews() {
         let currentFrame = this.timeline.getCurrentFrame();
         this.handler(currentFrame)
-        this.tree.setSelectedNode(currentFrame.id)
-    }
-
-    onRender(): void {
-
+        this.treeGroup.setSelectedNode(currentFrame.id)
     }
 }
 

@@ -5,6 +5,8 @@ import Align from "../../Align";
 
 export class TreeGroup extends Vertical {
 
+    private trees: Array<BasicTreeView> = [];
+
     constructor() {
         super();
         this.alignContent = Align.CENTER
@@ -17,8 +19,15 @@ export class TreeGroup extends Vertical {
                 const result = resultMap.get(source)
                 const tree = new BasicTreeView()
                 tree.setRoot(result.root)
+                this.trees.push(tree)
                 this.addChild(tree)
             })
+        })
+    }
+
+    setSelectedNode(nodeId: string) {
+        this.trees.forEach(tree => {
+            tree.setSelectedNode(nodeId)
         })
     }
 }

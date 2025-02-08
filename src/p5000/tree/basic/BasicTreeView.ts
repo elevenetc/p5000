@@ -62,6 +62,11 @@ class BasicTreeView extends View {
             return
         }
 
+
+        if (!this.views.has(nodeId)) {
+            return
+        }
+
         let selectedKey = this.selectedNodeId;
         if (nodeId == selectedKey) return
 
