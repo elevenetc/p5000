@@ -4,7 +4,6 @@ import TextView from "../../text/TextView";
 import {ColorDrawable} from "../../drawable/ColorDrawable";
 import Vertical from "../../containers/Vertical";
 import {AnimationValue, Ease} from "../../animation/AnimationValue";
-import {drawDebugViewRect} from "../../debug/drawDebugViewRect";
 
 class BasicTreeView extends View {
 
@@ -64,6 +63,7 @@ class BasicTreeView extends View {
 
 
         if (!this.views.has(nodeId)) {
+            this.clearCurrentSelection()
             return
         }
 
@@ -71,12 +71,7 @@ class BasicTreeView extends View {
         if (nodeId == selectedKey) return
 
         if (selectedKey != nodeId && selectedKey != null) {
-            if (this.views.has(selectedKey)) {
-                this.views.get(selectedKey).selected = false
-            } else {
-                console.log("no key: " + selectedKey)
-            }
-
+            this.clearCurrentSelection()
         }
 
         this.selectedNodeId = nodeId
@@ -85,6 +80,31 @@ class BasicTreeView extends View {
         } else {
             console.log("failed attempt to selected node: " + nodeId + ", views count: " + this.views.size)
         }
+    }
+
+    render(p: p5) {
+        super.render(p)
+
+        //console.log("this.x: " + this.getX(p))
+
+        let midX = this.getX(p) + this.translationX.calculate();
+        let midY = this.getY(p) + this.getHeight(p) / 2 + this.translationY.calculate();
+
+        p.push()
+        //p.scale(3)
+
+        p.translate(midX, midY)
+
+        this.views.forEach(v => {
+            this.renderNode(v, p)
+        })
+
+        drawConnections(this.root, this.views, this.defaultBackgroundAlpha, p)
+
+        p.pop()
+
+        //drawDebugViewRect(this, p)
+        //drawYellowDebugViewRect(this, p)
     }
 
     getViewNode(nodeId: string): NodeView | null {
@@ -147,29 +167,13 @@ class BasicTreeView extends View {
         this.layouted = true
     }
 
-    render(p: p5) {
-        super.render(p)
-
-        //console.log("this.x: " + this.getX(p))
-
-        let midX = this.getX(p) + this.translationX.calculate();
-        let midY = this.getY(p) + this.getHeight(p) / 2 + this.translationY.calculate();
-
-        p.push()
-        //p.scale(3)
-
-        p.translate(midX, midY)
-
-        this.views.forEach(v => {
-            this.renderNode(v, p)
-        })
-
-        drawConnections(this.root, this.views, this.defaultBackgroundAlpha, p)
-
-        p.pop()
-
-        drawDebugViewRect(this, p)
-        //drawYellowDebugViewRect(this, p)
+    private clearCurrentSelection() {
+        if (this.selectedNodeId != null) {
+            if (this.views.has(this.selectedNodeId)) {
+                this.views.get(this.selectedNodeId).selected = false
+            }
+            this.selectedNodeId = null
+        }
     }
 
     renderNode(node: NodeView, p: p5) {

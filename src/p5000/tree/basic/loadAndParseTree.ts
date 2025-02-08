@@ -44,7 +44,12 @@ async function loadJSON(filePath: string): Promise<any> {
 
 function jsonToBasicTreeNode(json: any): ParseResult {
     let result = new ParseResult()
-    result.root = parseNode(json.treeRoot)
+
+    json.threadsRoots.forEach(threadRoot => {
+        let name = threadRoot.name
+        let root = parseNode(threadRoot.root)
+        result.roots.set(name, root)
+    })
     result.history = parseHistory(json.history)
     return result
 }
@@ -79,7 +84,7 @@ function parseNode(json: any): BasicTreeNode {
 }
 
 class ParseResult {
-    root: BasicTreeNode | null = null
+    roots = new Map<String, BasicTreeNode>();
     history: PlaybackFrame[] = []
 }
 

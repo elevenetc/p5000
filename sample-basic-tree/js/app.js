@@ -9,18 +9,17 @@ import Vertical from "../../src/p5000/containers/Vertical";
 import {PlaybackControlsView} from "../../src/p5000/playback/PlaybackControlsView";
 import {TreeGroup} from "../../src/p5000/tree/basic/TreeGroup";
 import {PlaybackController} from "../../src/p5000/playback/PlaybackController";
+import {loadAndParseTree} from "../../src/p5000/tree/basic/loadAndParseTree";
 
 const follow = false
 
 const root = new Free()
 const treesContainer = new Vertical()
-//const tre0 = new BasicTreeView()
-//const tre1 = new BasicTreeView()
+
 const treeGroup = new TreeGroup()
 let timeline = new PlaybackTimelineView();
 let navigationView = new NavigationView();
 
-//treesContainer.setScale(new WrapContent())
 treesContainer.alignContent = Align.CENTER
 
 let playbackGroup = new Vertical()
@@ -71,14 +70,6 @@ navigationView.setClickHandler((direction) => {
 //tre0.setTranslationX(getNumberOrDefault("transX", 0))
 //tre0.setTranslationY(getNumberOrDefault("transY", 0))
 
-
-treeGroup.loadTrees([
-    "tree-data-sample-small.json",
-    "tree-data-sample-mid.json"
-])
-
-//treesContainer.addChild(tre0)
-//treesContainer.addChild(tre1)
 root.addChild(treeGroup, Align.CENTER)
 
 playbackGroup.addChild(controls)
@@ -86,20 +77,11 @@ playbackGroup.addChild(timeline)
 
 root.addChild(playbackGroup, Align.CENTER_BOTTOM)
 root.addChild(fpsView, Align.LEFT_TOP)
+root.addChild(navigationView, Align.LEFT_BOTTOM)
 
-//root.addChild(navigationView, Align.LEFT_BOTTOM)
+loadAndParseTree("multi-thread-tree.json", (result) => {
+    timeline.setFrames(result.history)
+    treeGroup.setRoots(result.roots)
+})
 
-const treeSourceMid = "tree-data-sample-mid.json"
-const treeSourceSmall = "tree-data-sample-small.json"
-
-// loadAndParseTree(treeSourceSmall, (result) => {
-//     tre0.setRoot(result.root)
-//     timeline.setFrames(result.history)
-// })
-//
-// loadAndParseTree(treeSourceMid, (result) => {
-//     tre1.setRoot(result.root)
-//     timeline.setFrames(result.history)
-// })
-
-let p = initP5000(root)
+const p = initP5000(root)
