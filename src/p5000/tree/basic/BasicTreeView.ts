@@ -20,6 +20,7 @@ class BasicTreeView extends View {
     private translationX = new AnimationValue(0)
     private translationY = new AnimationValue(0)
     private defaultBackgroundAlpha = 50
+    private tint: [number, number, number] = [255, 0, 0]
 
     constructor() {
         super();
@@ -27,6 +28,10 @@ class BasicTreeView extends View {
         this.translationX.setDuration(350)
         this.translationY.setEasing(Ease.IN_OUT)
         this.translationY.setDuration(350)
+    }
+
+    setTint(tint: [number, number, number]) {
+        this.tint = tint
     }
 
     translateX(value: number) {
@@ -99,7 +104,7 @@ class BasicTreeView extends View {
             this.renderNode(v, p)
         })
 
-        drawConnections(this.root, this.views, this.defaultBackgroundAlpha, p)
+        drawConnections(this.root, this.views, this.defaultBackgroundAlpha, this.tint, p)
 
         p.pop()
 
@@ -184,20 +189,25 @@ class BasicTreeView extends View {
         node.view.render(p)
 
         let alpha: AnimationValue = node.alpha
-
+        let backgroundAlpha = alpha.calculate() + this.defaultBackgroundAlpha;
         if (node.selected) {
             if (alpha.getTarget() != 255) {
                 alpha.setDuration(45)
                 alpha.setValue(255, true)
             }
-            (node.view.background as ColorDrawable).color = [255, 0, 0, alpha.calculate() + this.defaultBackgroundAlpha]
         } else {
             if (!alpha.isActive()) {
                 alpha.setDuration(500)
                 alpha.setValue(0, true)
             }
-            (node.view.background as ColorDrawable).color = [255, 0, 0, alpha.calculate() + this.defaultBackgroundAlpha]
         }
+
+        (node.view.background as ColorDrawable).color = [
+            this.tint[0],
+            this.tint[1],
+            this.tint[2],
+            backgroundAlpha
+        ]
 
         p.pop()
     }
@@ -223,21 +233,32 @@ function fillLevels(node: BasicTreeNode, level: number, map: Map<number, BasicTr
     })
 }
 
-function drawConnections(n: BasicTreeNode, views: Map<string, NodeView>, defaultBackgroundAlpha: number, p: p5) {
+function drawConnections(
+    n: BasicTreeNode,
+    views: Map<string, NodeView>,
+    defaultBackgroundAlpha: number,
+    tint: [number, number, number],
+    p: p5) {
     if (n == null) return
     let parentId = n.id
     n.children.forEach(child => {
         let childId = child.id
-        drawConnection(views.get(parentId), views.get(childId), defaultBackgroundAlpha, p)
-        drawConnections(child, views, defaultBackgroundAlpha, p)
+        drawConnection(views.get(parentId), views.get(childId), defaultBackgroundAlpha, tint, p)
+        drawConnections(child, views, defaultBackgroundAlpha, tint, p)
     })
 }
 
-function drawConnection(parent: NodeView, child: NodeView, defaultBackgroundAlpha: number, p: p5) {
+function drawConnection(
+    parent: NodeView,
+    child: NodeView,
+    defaultBackgroundAlpha: number,
+    tint: [number, number, number],
+    p: p5
+) {
     let parentWidth = parent.view.getWidth(p)
     let parentHeight = parent.view.getHeight(p)
-    let parentColor = p.color(255, 0, 0, parent.alpha.calculate() + defaultBackgroundAlpha)
-    let childColor = p.color(255, 0, 0, child.alpha.calculate() + defaultBackgroundAlpha)
+    let parentColor = p.color(tint[0], tint[1], tint[2], parent.alpha.calculate() + defaultBackgroundAlpha)
+    let childColor = p.color(tint[0], tint[1], tint[2], child.alpha.calculate() + defaultBackgroundAlpha)
     drawGradientLine(
         parent.x + parentWidth, parent.y + parentHeight,
         child.x, child.y + parentHeight / 2,

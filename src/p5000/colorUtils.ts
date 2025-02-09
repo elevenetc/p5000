@@ -14,7 +14,16 @@ function hexToRGB(hex: string): [number, number, number] {
   return [r, g, b];
 }
 
-function stringToRGB(input: string): [number, number, number] {
+export function rgbaToRgb(rgba: [number, number, number, number]): [number, number, number] {
+  return [rgba[0], rgba[1], rgba[2]]
+}
+
+export function stringToRgba(input: string, alpha = 255): [number, number, number, number] {
+  let result = stringToRgb(input)
+  return [result[0], result[1], result[2], alpha]
+}
+
+function stringToRgb(input: string): [number, number, number] {
   let hash = 0;
 
   // Generate a hash code from the input string
@@ -107,4 +116,4 @@ function hslToRgb(h: number, s: number, l: number): [number, number, number] {
   return [r * 255, g * 255, b * 255];
 }
 
-export { hexToRGB, stringToRGB, lightenColor, rgbToHsl, hslToRgb };
+export {hexToRGB, stringToRgb, lightenColor, rgbToHsl, hslToRgb};
