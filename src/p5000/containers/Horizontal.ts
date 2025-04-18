@@ -2,7 +2,6 @@ import p5 from 'p5';
 import View from "../View";
 import Align from "../Align"
 import {handleChildrenClick, handleChildrenHover} from "../utils/viewUtils";
-import {drawDebugViewRect} from "../debug/drawDebugViewRect";
 import {Container} from "./Container";
 
 export class Horizontal extends View implements Container {
@@ -104,7 +103,7 @@ export class Horizontal extends View implements Container {
             this.children[i].render(p)
         }
 
-        drawDebugViewRect(this, p)
+        //drawDebugViewRect(this, p)
     }
 
     handleHover(mouseX: number, mouseY: number, p: p5): boolean {

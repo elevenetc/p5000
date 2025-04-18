@@ -27,10 +27,10 @@ class PlaybackController {
             this.selectPrevious()
         }
 
-        // setInterval(() => {
-        //     this.timeline.selectNext()
-        //     handler(this.timeline.currentFrame())
-        // }, interval);
+        setInterval(() => {
+            this.timeline.selectNext()
+            handler(this.timeline.getCurrentFrame())
+        }, interval);
     }
 
     setPlaybackView(view: PlaybackTimelineView): void {

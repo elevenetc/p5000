@@ -25,7 +25,6 @@ treesContainer.alignContent = Align.CENTER
 let playbackGroup = new Vertical()
 playbackGroup.alignContent = Align.CENTER
 
-
 let controls = new PlaybackControlsView()
 
 timeline.background = new ColorDrawable([255, 0, 0])
@@ -34,8 +33,13 @@ let controller = new PlaybackController(
     timeline,
     controls,
     treeGroup,
-    50, (frame) => {
+    200, (frame) => {
         //tre0.setSelectedNode(frame.id)
+        if (frame !== undefined) {
+            treeGroup.setSelectedNode(frame.id)
+            console.log(">" + frame.id)
+        }
+
 
         if (follow) {
             let node = tre0.getViewNode(frame.id)

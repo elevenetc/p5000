@@ -35,20 +35,28 @@ function drawDebugViewRect(view: View, p:p5) {
 }
 
 export function drawPurpleDebugViewRect(view: View, p: p5) {
+    drawColorDebugViewRect(view, "rgb(102,0,255)", p)
+}
+
+export function drawYellowDebugViewRect(view: View, p: p5) {
+    drawColorDebugViewRect(view, "rgb(255,183,0)", p)
+}
+
+export function drawColorDebugViewRect(view: View, color: string, p: p5) {
     p.push()
     let x = view.getX(p);
     let y = view.getY(p);
     let width = view.getWidth(p);
     let height = view.getHeight(p);
-    p.stroke("rgb(102,0,255)")
+    p.stroke(color)
     p.noFill()
     p.rect(x, y, width, height)
     p.rect(x + 5, y + 5, width - 10, height - 10)
     p.pop()
 }
 
-const enableDebugView = false
-const enableCoordinatesData = false
+const enableDebugView = true
+const enableCoordinatesData = true
 
 export {
     drawDebugViewRect

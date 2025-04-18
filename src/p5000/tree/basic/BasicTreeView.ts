@@ -302,7 +302,7 @@ function createAndLayoutNodeViews(
         let classNameView = new TextView(className, "class-" + id)
         let methodNameView = new TextView(methodName, "method-" + id)
         classNameView.color = [255, 255, 255, 255]
-        methodNameView.color = [255, 255, 255, 255]
+        methodNameView.color = [255, 190, 255, 255]
         classNameView.textSize = textSize
         methodNameView.textSize = textSize
 

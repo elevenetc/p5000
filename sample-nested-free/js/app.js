@@ -1,54 +1,31 @@
-import p5 from "p5";
 import {Free, WrapContent} from "../../src/p5000/containers/Free";
 import TextView from "../../src/p5000/text/TextView";
 import Align from "../../src/p5000/Align";
 import {ColorDrawable} from "../../src/p5000/drawable/ColorDrawable";
-import {layoutAndRender} from "../../src/p5000/layoutAndRender";
+import {initP5000} from "../../src/p5000/initP5000";
 
 const root = new Free()
 
 
-function buildText(align) {
+function buildNestedFree(align) {
     const result = new Free()
     let textView = new TextView(Align[align]);
     textView.color = [180, 0, 0]
+    result.align = align;
     result.setScale(new WrapContent())
-    result.align = align
     result.background = new ColorDrawable([0, 100, 0, 255])
     result.addChild(textView)
     return result
 }
 
-root.addChild(buildText(Align.CENTER))
-root.addChild(buildText(Align.CENTER_BOTTOM))
-root.addChild(buildText(Align.CENTER_TOP))
-root.addChild(buildText(Align.CENTER_LEFT))
-root.addChild(buildText(Align.CENTER_RIGHT))
-root.addChild(buildText(Align.LEFT_TOP))
-root.addChild(buildText(Align.RIGHT_TOP))
-root.addChild(buildText(Align.RIGHT_BOTTOM))
-root.addChild(buildText(Align.LEFT_BOTTOM))
+root.addChild(buildNestedFree(Align.CENTER))
+root.addChild(buildNestedFree(Align.CENTER_BOTTOM))
+root.addChild(buildNestedFree(Align.CENTER_TOP))
+root.addChild(buildNestedFree(Align.CENTER_LEFT))
+root.addChild(buildNestedFree(Align.CENTER_RIGHT))
+root.addChild(buildNestedFree(Align.LEFT_TOP))
+root.addChild(buildNestedFree(Align.RIGHT_TOP))
+root.addChild(buildNestedFree(Align.RIGHT_BOTTOM))
+root.addChild(buildNestedFree(Align.LEFT_BOTTOM))
 
-function setup(p) {
-    p.createCanvas(p.windowWidth, p.windowHeight);
-    p.textSize(32);
-}
-
-function draw(p) {
-    p.background(0, 0, 0);
-    layoutAndRender(root, p)
-
-    if (root.handleHover(p.mouseX, p.mouseY, p)) {
-        p.cursor('pointer');
-    } else {
-        p.cursor('default');
-    }
-}
-
-const sketch = (p) => {
-    p.setup = () => setup(p)
-    p.draw = () => draw(p)
-    p.windowResized = () => p.resizeCanvas(p.windowWidth, p.windowHeight)
-};
-
-new p5(sketch)
+initP5000(root)

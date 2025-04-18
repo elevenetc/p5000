@@ -1,7 +1,6 @@
 import {ImageButton} from "../button/ImageButton";
 import p5 from "p5";
 import {Free, WrapContent} from "../containers/Free";
-import {drawDebugViewRect} from "../debug/drawDebugViewRect";
 
 export enum Direction {
     Up,
@@ -62,7 +61,7 @@ export class NavigationView extends Free {
 
     render(p: p5) {
         super.render(p);
-        drawDebugViewRect(this, p)
+        //drawDebugViewRect(this, p)
     }
 
     getWidth(p: p5): number {

@@ -3,7 +3,6 @@ import p5, {HORIZ_ALIGN} from "p5";
 import TextOverlay from "./TextOverlay";
 import {TextStyle} from "./TextStyle";
 import Align from "../Align";
-import {drawDebugViewRect} from "../debug/drawDebugViewRect";
 import {getValueSafe} from "../utils/getValueSafe";
 
 const alphaStep = 25;
@@ -91,7 +90,7 @@ class TextView extends View {
             overlay.render(this, p)
         })
 
-        drawDebugViewRect(this, p)
+        //drawDebugViewRect(this, p)
     }
 
     getWidth(p: p5): number {
