@@ -2,100 +2,86 @@
   "timestamp": 1738446185740,
   "history": [
     {
-      "id": "c9984c2f-7390-46d8-b35d-f04f899b8995",
-      "start": 1738446176043,
-      "end": -1,
-      "threadName": "main",
-      "fqn": "main"
+      "id": "a0"
     },
     {
-      "id": "508065dd-44d7-4aeb-8c7b-edc543608654",
-      "start": 1738446176045,
-      "end": 1738446176045,
-      "threadName": "a",
-      "fqn": "Foo.threadA"
+      "id": "a1"
     },
     {
-      "id": "c9984c2f-7390-46d8-b35d-f04f899b8995",
-      "start": 1738446176043,
-      "end": -1,
-      "threadName": "main",
-      "fqn": "main"
+      "id": "a2"
     },
     {
-      "id": "d8b53778-911a-4444-b9bb-9f06b313d71f",
-      "start": 1738446176046,
-      "end": 1738446176046,
-      "threadName": "b",
-      "fqn": "Foo.threadB"
+      "id": "a3"
     },
     {
-      "id": "c9984c2f-7390-46d8-b35d-f04f899b8995",
-      "start": 1738446176043,
-      "end": -1,
-      "threadName": "main",
-      "fqn": "main"
+      "id": "a4"
     },
     {
-      "id": "c9984c2f-7390-46d8-b35d-b-0",
-      "start": 1738446176043,
-      "end": -1,
-      "threadName": "thread-b",
-      "fqn": "main-b-0"
+      "id": "a5"
     },
     {
-      "id": "508065dd-44d7-4aeb-8c7b-b-1",
-      "start": 1738446176045,
-      "end": 1738446176045,
-      "fqn": "main-b-1",
-      "threadName": "thread-b",
-      "children": []
+      "id": "a6"
     }
   ],
   "threadsRoots": [
     {
-      "name": "thread-ABC",
+      "name": "Background thread (200590)",
       "root": {
-        "id": "c9984c2f-7390-46d8-b35d-f04f899b8995",
+        "id": "a0",
         "start": 1738446176043,
         "end": -1,
-        "fqn": "main",
+        "fqn": "App.main",
         "threadName": "main",
         "children": [
           {
-            "id": "508065dd-44d7-4aeb-8c7b-edc543608654",
+            "id": "a2",
             "start": 1738446176045,
             "end": 1738446176045,
-            "fqn": "Foo.threadA",
+            "fqn": "App.createFragment",
             "threadName": "a",
-            "children": []
+            "children": [
+              {
+                "id": "a3",
+                "start": 1738446176045,
+                "end": 1738446176045,
+                "fqn": "App.onFragmentCreated",
+                "threadName": "a",
+                "children": [
+                  {
+                    "id": "a4",
+                    "start": 1738446176045,
+                    "end": 1738446176045,
+                    "fqn": "Fragment.addLogger",
+                    "threadName": "a",
+                    "children": [
+                      {
+                        "id": "a5",
+                        "start": 1738446176045,
+                        "end": 1738446176045,
+                        "fqn": "Database.createInst",
+                        "threadName": "a",
+                        "children": []
+                      },
+                      {
+                        "id": "a6",
+                        "start": 1738446176045,
+                        "end": 1738446176045,
+                        "fqn": "Database.init",
+                        "threadName": "a",
+                        "children": []
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
           },
           {
-            "id": "d8b53778-911a-4444-b9bb-9f06b313d71f",
+            "id": "a1",
             "start": 1738446176046,
             "end": 1738446176046,
-            "fqn": "Foo.threadB",
+            "fqn": "Logger.init",
             "threadName": "b",
-            "children": []
-          }
-        ]
-      }
-    },
-    {
-      "name": "thread-XYZ",
-      "root": {
-        "id": "c9984c2f-7390-46d8-b35d-b-0",
-        "start": 1738446176043,
-        "end": -1,
-        "fqn": "main-b-0",
-        "threadName": "thread-b",
-        "children": [
-          {
-            "id": "508065dd-44d7-4aeb-8c7b-b-1",
-            "start": 1738446176045,
-            "end": 1738446176045,
-            "fqn": "main-b-1",
-            "threadName": "thread-b",
             "children": []
           }
         ]
