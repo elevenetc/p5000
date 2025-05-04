@@ -45,11 +45,11 @@ async function loadJSON(filePath: string): Promise<any> {
 function jsonToBasicTreeNode(json: any): ParseResult {
     let result = new ParseResult()
 
-    json.threadsRoots.forEach(threadRoot => {
-        let name = threadRoot.name
-        let root = parseNode(threadRoot.root)
+    for (const key of Object.keys(json.threadsRoots)) {
+        let name = json.threadsNamesMap[key]
+        let root = parseNode(json.threadsRoots[key])
         result.roots.set(name, root)
-    })
+    }
     result.history = parseHistory(json.history)
     return result
 }
