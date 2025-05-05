@@ -4,6 +4,7 @@ import LinearAnimationValue from "./animation/LinearAnimationValue";
 import ViewTransformer from "./transformers/ViewTransformer"
 import {Drawable} from "./drawable/Drawable";
 import {Container} from "./containers/Container";
+import {AnimationValue, Ease} from "./animation/AnimationValue";
 
 class View {
 
@@ -27,6 +28,42 @@ class View {
 
     hoverHandler: (id: string, hovered: boolean, p: p5) => void;
 
+    private translationX = new AnimationValue(0)
+    private translationY = new AnimationValue(0)
+
+    scale = 1
+
+    constructor() {
+        this.translationX.setEasing(Ease.IN_OUT)
+        this.translationX.setDuration(350)
+        this.translationY.setEasing(Ease.IN_OUT)
+        this.translationY.setDuration(350)
+    }
+
+    translateX(value: number) {
+        this.translationX.addValue(value)
+    }
+
+    translateY(value: number) {
+        this.translationY.addValue(value)
+    }
+
+    setTranslationX(value: number, animate: boolean = false) {
+        this.translationX.setValue(value, animate)
+    }
+
+    setTranslationY(value: number, animate: boolean = false) {
+        this.translationY.setValue(value, animate)
+    }
+
+    getTranslationX() {
+        return this.translationX.getTarget()
+    }
+
+    getTranslationY() {
+        return this.translationY.getTarget()
+    }
+
     setVisible(value: boolean) {
         this.visible = value
     }
@@ -48,11 +85,11 @@ class View {
     }
 
     getX(p: p5): number {
-        return this.x;
+        return this.x + this.translationX.calculate();
     }
 
     getY(p: p5): number {
-        return this.y;
+        return this.y + this.translationY.calculate();
     }
 
     setX(x: number) {

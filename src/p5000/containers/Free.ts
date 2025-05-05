@@ -3,12 +3,13 @@ import Align from "../Align";
 import p5 from "p5";
 import {handleChildrenClick, handleChildrenHover} from "../utils/viewUtils";
 import {Container} from "./Container";
+import {drawDebugViewRect, drawPurpleDebugViewRect} from "../debug/drawDebugViewRect";
 
 class Free extends View implements Container {
 
 
     children: View[] = [];
-    private scale: Scale
+    private groupScale: Scale
 
     constructor() {
         super();
@@ -29,8 +30,8 @@ class Free extends View implements Container {
     }
 
     setScale(scale: Scale) {
-        this.scale = scale
-        this.scale.setContainer(this)
+        this.groupScale = scale
+        this.groupScale.setContainer(this)
     }
 
     addChild(child: View, align: Align = null): void {
@@ -41,19 +42,19 @@ class Free extends View implements Container {
     }
 
     getX(p: p5): number {
-        return this.scale.getX(p)
+        return this.groupScale.getX(p)
     }
 
     getY(p: p5): number {
-        return this.scale.getY(p)
+        return this.groupScale.getY(p)
     }
 
     getWidth(p: import("p5")): number {
-        return this.scale.getWidth(p) + this.padding * 2
+        return this.groupScale.getWidth(p) + this.padding * 2
     }
 
     getHeight(p: import("p5")): number {
-        return this.scale.getHeight(p) + this.padding * 2
+        return this.groupScale.getHeight(p) + this.padding * 2
     }
 
     layout(p: p5) {
@@ -107,9 +108,9 @@ class Free extends View implements Container {
     }
 
     render(p: import("p5")): void {
-        //drawPurpleDebugViewRect(this, p)
+        drawPurpleDebugViewRect(this, p)
         super.render(p)
-        //drawDebugViewRect(this, p)
+        drawDebugViewRect(this, p)
 
         for (let i = 0; i < this.children.length; i++) {
             this.children[i].render(p)
@@ -143,11 +144,11 @@ class Free extends View implements Container {
     }
 
     setX(x: number) {
-        this.scale.setX(x)
+        this.groupScale.setX(x)
     }
 
     setY(y: number) {
-        this.scale.setY(y)
+        this.groupScale.setY(y)
     }
 }
 

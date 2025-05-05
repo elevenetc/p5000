@@ -70,19 +70,19 @@ class Vertical extends View implements Container {
             this.children[i].layout(p)
         }
 
-        let currentY = this.y;
+        let currentY = this.getY(p);
 
         for (let i = 0; i < this.children.length; i++) {
             const child = this.children[i];
             const childHeight = child.getHeight(p);
             if (this.alignContent === Align.LEFT) {
-                child.setX(this.x)
+                child.setX(this.getX(p))
             } else if (this.alignContent == Align.RIGHT) {
                 const maxChildWidth = this.getWidth(p)
-                child.setX(this.x + maxChildWidth - child.getWidth(p))
+                child.setX(this.getX(p) + maxChildWidth - child.getWidth(p))
             } else if (this.alignContent == Align.CENTER) {
                 const maxChildWidth = this.getWidth(p)
-                child.setX(this.x + maxChildWidth / 2 - child.getWidth(p) / 2)
+                child.setX(this.getX(p) + maxChildWidth / 2 - child.getWidth(p) / 2)
             } else {
                 throw new Error("Unknown alignContent in Vertical: " + Align[this.alignContent])
             }

@@ -10,59 +10,29 @@ class BasicTreeView extends View {
     root: BasicTreeNode | null = null
     views = new Map<string, NodeView>();
 
-    scale = 0.5
     textSize = 22 * this.scale
     horizontalMargin = 40 * this.scale
     verticalMargin = 40 * this.scale
     selectedNodeId: string = null
     layouted = false
-
-    private translationX = new AnimationValue(0)
-    private translationY = new AnimationValue(0)
     private defaultBackgroundAlpha = 50
     private tint: [number, number, number] = [255, 0, 0]
 
     constructor() {
         super();
-        this.translationX.setEasing(Ease.IN_OUT)
-        this.translationX.setDuration(350)
-        this.translationY.setEasing(Ease.IN_OUT)
-        this.translationY.setDuration(350)
     }
 
     setTint(tint: [number, number, number]) {
         this.tint = tint
     }
 
-    translateX(value: number) {
-        this.translationX.addValue(value)
-    }
 
-    translateY(value: number) {
-        this.translationY.addValue(value)
-    }
-
-    setTranslationX(value: number, animate: boolean = false) {
-        this.translationX.setValue(value, animate)
-    }
-
-    setTranslationY(value: number, animate: boolean = false) {
-        this.translationY.setValue(value, animate)
-    }
-
-    getTranslationX() {
-        return this.translationX.getTarget()
-    }
-
-    getTranslationY() {
-        return this.translationY.getTarget()
-    }
 
     setSelectedNode(nodeId: string) {
-        console.log("set selected node: " + nodeId)
+        //console.log("set selected node: " + nodeId)
 
         if (!this.layouted) {
-            console.log(`layout isn't passed yet, skip node selection: ${nodeId}`)
+            //console.log(`layout isn't passed yet, skip node selection: ${nodeId}`)
             return
         }
 
@@ -92,11 +62,11 @@ class BasicTreeView extends View {
 
         //console.log("this.x: " + this.getX(p))
 
-        let midX = this.getX(p) + this.translationX.calculate();
-        let midY = this.getY(p) + this.getHeight(p) / 2 + this.translationY.calculate();
+        let midX = this.getX(p);
+        let midY = this.getY(p) + this.getHeight(p) / 2;
 
         p.push()
-        //p.scale(3)
+        p.scale(this.scale)
 
         p.translate(midX, midY)
 
