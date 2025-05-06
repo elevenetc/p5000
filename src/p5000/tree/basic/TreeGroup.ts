@@ -1,9 +1,10 @@
 import Vertical from "../../containers/Vertical";
-import {BasicTreeNode, BasicTreeView} from "./BasicTreeView";
+import {BasicTreeView} from "./BasicTreeView";
 import Align from "../../Align";
 import TextView from "../../text/TextView";
 import {rgbaToRgb, stringToRgba} from "../../colorUtils";
 import p5 from "p5";
+import {BasicTreeNode} from "./TreeModel";
 
 export class TreeGroup extends Vertical {
 

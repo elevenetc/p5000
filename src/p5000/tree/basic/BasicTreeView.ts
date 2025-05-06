@@ -4,17 +4,20 @@ import TextView from "../../text/TextView";
 import {ColorDrawable} from "../../drawable/ColorDrawable";
 import Vertical from "../../containers/Vertical";
 import {AnimationValue, Ease} from "../../animation/AnimationValue";
+import {BasicTreeNode, NodeView, TreeModel} from "./TreeModel";
 
 class BasicTreeView extends View {
 
-    root: BasicTreeNode | null = null
-    views = new Map<string, NodeView>();
+    //root: BasicTreeNode | null = null
+    //views = new Map<string, NodeView>();
 
-    textSize = 22 * this.scale
-    horizontalMargin = 40 * this.scale
-    verticalMargin = 40 * this.scale
-    selectedNodeId: string = null
-    layouted = false
+    model = new TreeModel()
+
+    // textSize = 22 * this.scale
+    // horizontalMargin = 40 * this.scale
+    // verticalMargin = 40 * this.scale
+    //selectedNodeId: string = null
+    //layouted = false
     private defaultBackgroundAlpha = 50
     private tint: [number, number, number] = [255, 0, 0]
 
@@ -29,31 +32,29 @@ class BasicTreeView extends View {
 
 
     setSelectedNode(nodeId: string) {
-        //console.log("set selected node: " + nodeId)
 
-        if (!this.layouted) {
+        if (!this.model.initialized) {
             //console.log(`layout isn't passed yet, skip node selection: ${nodeId}`)
             return
         }
 
-
-        if (!this.views.has(nodeId)) {
+        if (!this.model.views.has(nodeId)) {
             this.clearCurrentSelection()
             return
         }
 
-        let selectedKey = this.selectedNodeId;
+        let selectedKey = this.model.selectedNodeId;
         if (nodeId == selectedKey) return
 
         if (selectedKey != nodeId && selectedKey != null) {
             this.clearCurrentSelection()
         }
 
-        this.selectedNodeId = nodeId
-        if (this.views.has(this.selectedNodeId)) {
-            this.views.get(this.selectedNodeId).selected = true
+        this.model.selectedNodeId = nodeId
+        if (this.model.views.has(this.model.selectedNodeId)) {
+            this.model.views.get(this.model.selectedNodeId).selected = true
         } else {
-            console.log("failed attempt to selected node: " + nodeId + ", views count: " + this.views.size)
+            console.log("failed attempt to selected node: " + nodeId + ", views count: " + this.model.views.size)
         }
     }
 
@@ -70,11 +71,11 @@ class BasicTreeView extends View {
 
         p.translate(midX, midY)
 
-        this.views.forEach(v => {
+        this.model.views.forEach(v => {
             this.renderNode(v, p)
         })
 
-        drawConnections(this.root, this.views, this.defaultBackgroundAlpha, this.tint, p)
+        drawConnections(this.model.root, this.model.views, this.defaultBackgroundAlpha, this.tint, p)
 
         p.pop()
 
@@ -83,12 +84,12 @@ class BasicTreeView extends View {
     }
 
     getViewNode(nodeId: string): NodeView | null {
-        return this.views.get(nodeId)
+        return this.model.views.get(nodeId)
     }
 
     setRoot(root: BasicTreeNode) {
-        this.root = root;
-        this.layouted = false
+        this.model.root = root;
+        this.model.initialized = false
     }
 
     getWidth(p: p5): number {
@@ -96,7 +97,7 @@ class BasicTreeView extends View {
         let minX = 0
         let maxX = 0
 
-        this.views.forEach(view => {
+        this.model.views.forEach(view => {
             minX = Math.min(view.view.getX(p), minX)
             maxX = Math.max(view.view.getX(p) + view.view.getWidth(p), maxX)
         })
@@ -108,7 +109,7 @@ class BasicTreeView extends View {
         let minY = 0
         let maxY = 0
 
-        this.views.forEach(view => {
+        this.model.views.forEach(view => {
             minY = Math.min(view.view.getY(p), minY)
             maxY = Math.max(view.view.getY(p) + view.view.getHeight(p), maxY)
         })
@@ -119,35 +120,37 @@ class BasicTreeView extends View {
     layout(p: p5) {
 
         //TODO: optimize layout, shouldn't be called if tree isn't changed
-        if (this.layouted) return
+        if (this.model.initialized) return
 
         super.layout(p);
 
-        if (this.root == null) return
+        if (this.model.root == null) return
 
-        let levels = new Map<number, BasicTreeNode[]>();
-        fillLevels(this.root, 0, levels, p)
+        //let levels = new Map<number, BasicTreeNode[]>();
+        //fillLevels(this.root, 0, levels, p)
 
-        this.selectedNodeId = this.root.id
+        // this.selectedNodeId = this.root.id
+        //
+        // this.views = createAndLayoutNodeViews(
+        //     levels,
+        //     this.textSize,
+        //     this.verticalMargin,
+        //     this.horizontalMargin,
+        //     this.selectedNodeId,
+        //     p
+        // )
 
-        this.views = createAndLayoutNodeViews(
-            levels,
-            this.textSize,
-            this.verticalMargin,
-            this.horizontalMargin,
-            this.selectedNodeId,
-            p
-        )
+        this.model.initAndLayout(this.model.root, p)
 
-        this.layouted = true
+        //this.layouted = true
     }
 
     private clearCurrentSelection() {
-        if (this.selectedNodeId != null) {
-            if (this.views.has(this.selectedNodeId)) {
-                this.views.get(this.selectedNodeId).selected = false
+        if (this.model.selectedNodeId != null) {
+            if (this.model.views.has(this.model.selectedNodeId)) {
+                this.model.views.get(this.model.selectedNodeId).selected = false
             }
-            this.selectedNodeId = null
+            this.model.selectedNodeId = null
         }
     }
 
@@ -188,20 +191,7 @@ class BasicTreeView extends View {
     }
 }
 
-function fillLevels(node: BasicTreeNode, level: number, map: Map<number, BasicTreeNode[]>, p: p5) {
-    let currentList: BasicTreeNode[] = [];
-    if (map.has(level)) {
-        currentList = map.get(level)
-    } else {
-        map.set(level, currentList)
-    }
 
-    currentList.push(node)
-
-    node.children.forEach(child => {
-        fillLevels(child, level + 1, map, p)
-    })
-}
 
 function drawConnections(
     n: BasicTreeNode,
@@ -255,126 +245,6 @@ function drawGradientLine(
     p.pop()
 }
 
-function createAndLayoutNodeViews(
-    map: Map<number, BasicTreeNode[]>,
-    textSize: number,
-    verticalMargin: number,
-    horizontalMargin: number,
-    selectedNodeId: string | null,
-    p: p5
-): Map<string, NodeView> {
-    let result = new Map<string, NodeView>()
-    let level = 0
-    let currentX = 0
-
-    function makeView(className: string, methodName: string, id: string): View {
-        let vertical = new Vertical()
-        let classNameView = new TextView(className, "class-" + id)
-        let methodNameView = new TextView(methodName, "method-" + id)
-        classNameView.color = [255, 255, 255, 255]
-        methodNameView.color = [255, 190, 255, 255]
-        classNameView.textSize = textSize
-        methodNameView.textSize = textSize
-
-        vertical.addChild(classNameView)
-        vertical.addChild(methodNameView)
-        vertical.background = new ColorDrawable([0, 0, 0, 255])
-
-        return vertical
-    }
-
-    let nodeHeight = makeView("A", "A", "A").getHeight(p)//temp workaround
-
-    while (map.has(level)) {
-        let nodes = map.get(level)
-        let maxWidth = 0//getMaxNodeWidth(nodes, textSize, p)
-        let totalHeight = nodes.length * nodeHeight + (verticalMargin) * (nodes.length - 1)
-        let currentY = totalHeight / 2 * -1
-
-
-        nodes.forEach(n => {
-            let nodeView = new NodeView()
-            nodeView.view = makeView(getClassName(n.fqn), getMethodName(n.fqn), n.id)
-            nodeView.view.setX(currentX)
-            nodeView.view.setY(currentY)
-            nodeView.node = n
-            nodeView.id = n.id
-            nodeView.fqn = n.fqn
-            nodeView.x = currentX
-            nodeView.y = currentY
-            currentY += nodeHeight + verticalMargin
-
-
-            if (selectedNodeId != null && selectedNodeId == nodeView.id) {
-                nodeView.selected = true
-            }
-
-            nodeView.view.layout(p)
-
-            maxWidth = Math.max(maxWidth, nodeView.view.getWidth(p))
-
-            result.set(nodeView.id, nodeView)
-        })
-
-        currentX += maxWidth + horizontalMargin
-        level++
-    }
-
-    return result
-}
-
-class NodeView {
-
-    id: string = ""
-    fqn: string = ""
-    x: number = 0
-    y: number = 0
-
-    parent?: NodeView = null
-    children: NodeView[] = []
-
-    node: BasicTreeNode
-
-    view: View
-
-    selected: boolean = false
-
-    alpha: AnimationValue = new AnimationValue()
-
-    constructor() {
-
-    }
-}
-
-class BasicTreeNode {
-    id: string = ""
-    fqn: string = ""
-    parent?: BasicTreeNode = null
-    children: BasicTreeNode[] = []
-
-    constructor(id: string = "") {
-        this.id = id;
-    }
-}
-
-function getClassName(fqn: string): string {
-    let name = fqn
-    if (name.indexOf(".") > -1) {
-        let separated = name.split(".")
-        name = separated[separated.length - 2]
-    }
-    return name
-}
-
-function getMethodName(fqn: string): string {
-    let name = fqn
-    if (name.indexOf(".") > -1) {
-        let separated = name.split(".")
-        name = separated[separated.length - 1]
-    }
-    return name
-}
-
 export {
-    BasicTreeView, BasicTreeNode, NodeView
+    BasicTreeView
 }
