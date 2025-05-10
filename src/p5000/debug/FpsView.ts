@@ -3,7 +3,7 @@ import p5 from "p5";
 
 class FpsView extends View {
     private textSize: number = 12;
-    private color: [number, number, number] = [0, 255, 0]; // Green color for FPS
+    private color: [number, number, number] = [0, 255, 0];
 
     constructor() {
         super();

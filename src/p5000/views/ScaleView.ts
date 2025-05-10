@@ -1,7 +1,5 @@
 import {Free, WrapContent} from "../containers/Free";
-import {ImageButton} from "../button/ImageButton";
 import p5 from "p5";
-import {drawDebugViewRect} from "../debug/drawDebugViewRect";
 import {EmojiButton} from "../button/EmojiButton";
 
 export enum ScaleAction {

@@ -89,8 +89,6 @@ class TextView extends View {
         this.overlays.forEach((overlay) => {
             overlay.render(this, p)
         })
-
-        //drawDebugViewRect(this, p)
     }
 
     getWidth(p: p5): number {

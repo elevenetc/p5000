@@ -55,8 +55,8 @@ export function drawColorDebugViewRect(view: View, color: string, p: p5) {
     p.pop()
 }
 
-const enableDebugView = true
-const enableCoordinatesData = true
+const enableDebugView = false
+const enableCoordinatesData = false
 
 export {
     drawDebugViewRect
