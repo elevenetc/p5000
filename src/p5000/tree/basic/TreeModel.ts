@@ -18,9 +18,14 @@ export class TreeModel {
 
     initialized = false
 
-    initAndLayout(root: BasicTreeNode, p: p5) {
-        if(this.initialized) return
+    init(root: BasicTreeNode) {
         this.root = root
+    }
+
+    layout(p: p5) {
+        if(this.initialized) return
+        if(this.root == null) return
+        console.log("layout: tree model")
         fillLevels(this.root, 0, this.levels)
         this.views = createAndLayoutNodeViews(
             this.levels,
@@ -32,6 +37,41 @@ export class TreeModel {
         )
 
         this.initialized = true
+    }
+
+    setSelectedNode(nodeId: string) {
+
+        if (!this.initialized) {
+            return
+        }
+
+        if (!this.views.has(nodeId)) {
+            this.clearCurrentSelection()
+            return
+        }
+
+        let selectedKey = this.selectedNodeId;
+        if (nodeId == selectedKey) return
+
+        if (selectedKey != nodeId && selectedKey != null) {
+            this.clearCurrentSelection()
+        }
+
+        this.selectedNodeId = nodeId
+        if (this.views.has(this.selectedNodeId)) {
+            this.views.get(this.selectedNodeId).selected = true
+        } else {
+            console.log("failed attempt to selected node: " + nodeId + ", views count: " + this.views.size)
+        }
+    }
+
+    private clearCurrentSelection() {
+        if (this.selectedNodeId != null) {
+            if (this.views.has(this.selectedNodeId)) {
+                this.views.get(this.selectedNodeId).selected = false
+            }
+            this.selectedNodeId = null
+        }
     }
 }
 
@@ -112,7 +152,7 @@ function createAndLayoutNodeViews(
 
     while (map.has(level)) {
         let nodes = map.get(level)
-        let maxWidth = 0//getMaxNodeWidth(nodes, textSize, p)
+        let maxWidth = 0
         let totalHeight = nodes.length * nodeHeight + (verticalMargin) * (nodes.length - 1)
         let currentY = totalHeight / 2 * -1
 

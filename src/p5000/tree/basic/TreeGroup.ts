@@ -11,20 +11,28 @@ export class TreeGroup extends Vertical {
     private trees: Array<BasicTreeView> = [];
     buffer = null
     drawnFalse = false
-    useCache = true
+    useCache = false
 
     constructor() {
         super();
         this.alignContent = Align.CENTER
     }
 
+    bufferCreated = false
+
     layout(p: p5) {
 
 
         if (this.useCache) {
-            if (this.buffer == null) {
+            if (!this.bufferCreated) {
+                this.bufferCreated = true
                 super.layout(p);
-                this.buffer = p.createGraphics(this.getWidth(p), this.getHeight(p))
+                let width = -1
+                let height = -1
+                width = this.getWidth(p);
+                height = this.getHeight(p);
+                this.buffer = p.createGraphics(width, height)
+                console.log("created buffer: " + width + " x " + height)
             }
         } else {
             super.layout(p);
@@ -43,6 +51,28 @@ export class TreeGroup extends Vertical {
         } else {
             super.render(p)
         }
+
+        let midX = this.getX(p);
+        let midY = this.getY(p) + this.getHeight(p) / 2;
+
+        p.push()
+        p.translate(midX, midY)
+        this.renderSelection(p)
+        p.pop()
+    }
+
+    renderSelection(p: p5) {
+        this.trees.forEach((tree) => {
+            tree.model.views.forEach((view) => {
+                //if(view.selected) {
+                if(view.selected || view.alpha.isActive()) {
+                    console.log("render selection")
+                    //view.view.render(p)
+                }
+
+                view.view.render(p)
+            })
+        })
     }
 
     setRoots(threadsRoots: Map<string, BasicTreeNode>) {
@@ -71,7 +101,7 @@ export class TreeGroup extends Vertical {
 
     setSelectedNode(nodeId: string) {
         this.trees.forEach(tree => {
-            tree.setSelectedNode(nodeId)
+            tree.model.setSelectedNode(nodeId)
         })
     }
 
@@ -82,5 +112,6 @@ export class TreeGroup extends Vertical {
         })
         this.buffer = null
         this.drawnFalse = false
+        this.bufferCreated = false
     }
 }
