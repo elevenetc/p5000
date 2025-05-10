@@ -4,6 +4,7 @@ import {ColorDrawable} from "../../drawable/ColorDrawable";
 import {AnimationValue} from "../../animation/AnimationValue";
 import {BasicTreeNode, NodeView, TreeModel} from "./TreeModel";
 import {drawConnections} from "./connections/drawConnections";
+import {drawDebugRect, drawDebugViewRect} from "../../debug/drawDebugViewRect";
 
 class BasicTreeView extends View {
     model = new TreeModel()
@@ -21,21 +22,28 @@ class BasicTreeView extends View {
     render(p: p5) {
         super.render(p)
 
-        let midX = this.getX(p);
+        let width = this.getWidth(p)
+        let widthScaleShift = width - width * this.scale
+
+        let midX = this.getX(p) + widthScaleShift / 2;
         let midY = this.getY(p) + this.getHeight(p) / 2;
 
         p.push()
-        p.scale(this.scale)
 
         p.translate(midX, midY)
+        p.scale(this.scale)
 
         this.model.views.forEach(v => {
             this.renderNode(v, p)
         })
 
+
+
         drawConnections(this.model.root, this.model.views, this.defaultBackgroundAlpha, this.tint, p)
 
         p.pop()
+
+        drawDebugViewRect(this, p)
     }
 
     getViewNode(nodeId: string): NodeView | null {
@@ -82,35 +90,9 @@ class BasicTreeView extends View {
 
     renderNode(node: NodeView, p: p5) {
         if (node == null) return
-        p.push()
-
-
+        //p.push()
         node.view.render(p)
-
-        let alpha: AnimationValue = node.alpha
-        let backgroundAlpha = alpha.calculate() + this.defaultBackgroundAlpha;
-        if (node.selected) {
-            console.log("selected!!")
-            if (alpha.getTarget() != 255) {
-                alpha.setDuration(45)
-                alpha.setValue(255, true)
-            }
-        } else {
-            console.log("not selected!!")
-            if (!alpha.isActive()) {
-                alpha.setDuration(500)
-                alpha.setValue(0, true)
-            }
-        }
-
-        (node.view.background as ColorDrawable).color = [
-            this.tint[0],
-            this.tint[1],
-            this.tint[2],
-            backgroundAlpha
-        ]
-
-        p.pop()
+        //p.pop()
     }
 
 

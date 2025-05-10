@@ -143,7 +143,8 @@ function createAndLayoutNodeViews(
 
         vertical.addChild(classNameView)
         vertical.addChild(methodNameView)
-        vertical.background = new ColorDrawable([0, 0, 0, 255])
+        // vertical.background = new ColorDrawable([0, 0, 0, 255])
+        vertical.background = new ColorDrawable([50, 0, 0, 255])
 
         return vertical
     }

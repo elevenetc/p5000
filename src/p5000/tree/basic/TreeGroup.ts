@@ -4,7 +4,10 @@ import Align from "../../Align";
 import TextView from "../../text/TextView";
 import {rgbaToRgb, stringToRgba} from "../../colorUtils";
 import p5 from "p5";
-import {BasicTreeNode} from "./TreeModel";
+import {BasicTreeNode, NodeView} from "./TreeModel";
+import {AnimationValue} from "../../animation/AnimationValue";
+import {ColorDrawable} from "../../drawable/ColorDrawable";
+import {drawDebugRect} from "../../debug/drawDebugViewRect";
 
 export class TreeGroup extends Vertical {
 
@@ -12,6 +15,10 @@ export class TreeGroup extends Vertical {
     buffer = null
     drawnFalse = false
     useCache = false
+    // useCache = true
+
+    private defaultBackgroundAlpha = 50
+    private tint: [number, number, number] = [255, 0, 0]
 
     constructor() {
         super();
@@ -27,10 +34,8 @@ export class TreeGroup extends Vertical {
             if (!this.bufferCreated) {
                 this.bufferCreated = true
                 super.layout(p);
-                let width = -1
-                let height = -1
-                width = this.getWidth(p);
-                height = this.getHeight(p);
+                let width = this.getWidth(p) * this.scale;
+                let height = this.getHeight(p) * this.scale
                 this.buffer = p.createGraphics(width, height)
                 console.log("created buffer: " + width + " x " + height)
             }
@@ -41,38 +46,75 @@ export class TreeGroup extends Vertical {
 
     render(p: p5) {
 
+        let midX = this.getX(p);
+        let midY = this.getY(p) + this.getHeight(p) / 2;
+
+
         if (this.useCache) {
             if (!this.drawnFalse) {
+                console.log("render buffer")
                 super.render(this.buffer)
                 this.drawnFalse = true
             }
 
-            p.image(this.buffer, this.getX(p), this.getY(p))
+            p.image(this.buffer, this.getX(p), this.getY(p), this.getWidth(p), this.getHeight(p))
+            drawDebugRect(this.getX(p), this.getY(p), this.getWidth(p), this.getHeight(p), p)
         } else {
             super.render(p)
         }
 
-        let midX = this.getX(p);
-        let midY = this.getY(p) + this.getHeight(p) / 2;
-
         p.push()
         p.translate(midX, midY)
-        this.renderSelection(p)
+        this.calculateSelectedNodesStyle(p)
         p.pop()
     }
 
-    renderSelection(p: p5) {
+    calculateSelectedNodesStyle(p: p5) {
         this.trees.forEach((tree) => {
-            tree.model.views.forEach((view) => {
-                //if(view.selected) {
-                if(view.selected || view.alpha.isActive()) {
-                    console.log("render selection")
-                    //view.view.render(p)
-                }
-
-                view.view.render(p)
+            tree.model.views.forEach((nodeView) => {
+                this.calculateSelectedNodeStyle(nodeView, p)
+                this.drawSelection(nodeView, p)
             })
         })
+    }
+
+    calculateSelectedNodeStyle(node: NodeView, p: p5) {
+        p.push()
+        let alpha: AnimationValue = node.alpha
+        let backgroundAlpha = alpha.calculate() + this.defaultBackgroundAlpha;
+        if (node.selected) {
+            if (alpha.getTarget() != 255) {
+                alpha.setDuration(45)
+                alpha.setValue(255, true)
+            }
+        } else {
+            if (!alpha.isActive()) {
+                alpha.setDuration(500)
+                alpha.setValue(0, true)
+            }
+        }
+
+        // (node.view.background as ColorDrawable).color = [
+        //     this.tint[0],
+        //     this.tint[1],
+        //     this.tint[2],
+        //     backgroundAlpha
+        // ]
+        p.pop()
+    }
+
+    drawSelection(node: NodeView, p: p5) {
+        let x = node.view.getX(p)
+        let y = node.view.getY(p)
+        let w = node.view.getWidth(p)
+        let h = node.view.getHeight(p)
+        if(node.selected){
+            p.push()
+            p.stroke("rgba(0,255,0,0.21)")
+            p.rect(x, y, w, h)
+            p.pop()
+        }
+
     }
 
     setRoots(threadsRoots: Map<string, BasicTreeNode>) {
@@ -81,21 +123,22 @@ export class TreeGroup extends Vertical {
             const tree = new BasicTreeView()
             tree.setRoot(thread)
 
-            let container = new Vertical()
-            let title = new TextView(threadName)
+            //let container = new Vertical()
+            //let title = new TextView(threadName)
             let tint = stringToRgba(threadName);
-            title.color = tint
-            title.textSize = 12
+            //title.color = tint
+            //title.textSize = 12
             tree.setTint(rgbaToRgb(tint))
 
 
-            container.alignContent = Align.CENTER
-            container.addChild(title)
-            container.addChild(tree)
-            title.setPadding(25)
+            //container.alignContent = Align.CENTER
+            //container.addChild(title)
+            //container.addChild(tree)
+            //title.setPadding(25)
 
             this.trees.push(tree)
-            this.addChild(container)
+            //this.addChild(container)
+            this.addChild(tree)
         })
     }
 
@@ -107,11 +150,16 @@ export class TreeGroup extends Vertical {
 
     setScale(scale: number) {
 
+        this.scale = scale
+
+
         this.trees.forEach(tree => {
             tree.scale = scale
         })
         this.buffer = null
         this.drawnFalse = false
         this.bufferCreated = false
+
+        console.log("set scale: " + scale)
     }
 }
