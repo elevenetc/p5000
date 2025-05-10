@@ -30,12 +30,17 @@ class Vertical extends View implements Container {
     }
 
     getHeight(p: p5): number {
-        let h = 0;
-        for (let i = 0; i < this.children.length; i++) {
-            const child = this.children[i];
-            h += child.getHeight(p)
+
+        if(this.cacheState.height == -1){
+            let h = 0;
+            for (let i = 0; i < this.children.length; i++) {
+                const child = this.children[i];
+                h += child.getHeight(p)
+            }
+            this.cacheState.height = h;
         }
-        return h;
+
+        return this.cacheState.height
     }
 
     getWidth(p: p5): number {
@@ -50,6 +55,7 @@ class Vertical extends View implements Container {
     public addChild(child: View) {
         this.children.push(child);
         child.parent = this;
+        this.cacheState.height = -1
     }
 
     public contains(x: number, y: number, p: p5): boolean {
@@ -67,7 +73,8 @@ class Vertical extends View implements Container {
         super.layout(p)
 
         for (let i = 0; i < this.children.length; i++) {
-            this.children[i].layout(p)
+            let child = this.children[i];
+            child.layout(p)
         }
 
         let currentY = this.getY(p);
@@ -118,6 +125,12 @@ class Vertical extends View implements Container {
     public onHoverOut(p: p5) {
 
     }
+
+    cacheState = new CacheState()
+}
+
+class CacheState {
+    height = -1
 }
 
 function indexOfChild(child: View, children: View[]): number {
