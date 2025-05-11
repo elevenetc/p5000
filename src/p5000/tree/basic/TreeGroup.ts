@@ -1,13 +1,10 @@
 import Vertical from "../../containers/Vertical";
 import {BasicTreeView} from "./BasicTreeView";
 import Align from "../../Align";
-import TextView from "../../text/TextView";
 import {rgbaToRgb, stringToRgba} from "../../colorUtils";
 import p5 from "p5";
 import {BasicTreeNode, NodeView} from "./TreeModel";
 import {AnimationValue} from "../../animation/AnimationValue";
-import {ColorDrawable} from "../../drawable/ColorDrawable";
-import {drawDebugRect} from "../../debug/drawDebugViewRect";
 
 export class TreeGroup extends Vertical {
 
@@ -26,6 +23,8 @@ export class TreeGroup extends Vertical {
     }
 
     bufferCreated = false
+    bufferWidth = -1
+    bufferHeight = -1
 
     layout(p: p5) {
 
@@ -34,10 +33,13 @@ export class TreeGroup extends Vertical {
             if (!this.bufferCreated) {
                 this.bufferCreated = true
                 super.layout(p);
-                let width = this.getWidth(p) * this.scale;
-                let height = this.getHeight(p) * this.scale
-                this.buffer = p.createGraphics(width, height)
-                console.log("created buffer: " + width + " x " + height)
+                let width = this.getWidth(p);
+                let height = this.getHeight(p);
+                this.bufferWidth = width * this.scale;
+                this.bufferHeight = height * this.scale;
+                //this.buffer = p.createGraphics(width, height)
+                this.buffer = p.createGraphics(this.bufferWidth, this.bufferHeight)
+                console.log("created buffer: " + this.bufferWidth + " x " + this.bufferHeight)
             }
         } else {
             super.layout(p);
@@ -46,30 +48,47 @@ export class TreeGroup extends Vertical {
 
     render(p: p5) {
 
-        let midX = this.getX(p);
-        let midY = this.getY(p) + this.getHeight(p) / 2;
+        let width = this.getWidth(p)
+        let height = this.getHeight(p);
+        // let width = this.bufferWidth
+        // let height = this.bufferHeight;
 
+        let widthScaleShift = width - width * this.scale
+
+        let midX = this.getX(p) + widthScaleShift / 2;
+        let midY = this.getY(p) + height / 2;
+
+        p.push()
 
         if (this.useCache) {
+
+            p.translate(midX, midY - height / 2)
+            p.scale(this.scale)
+
             if (!this.drawnFalse) {
+
                 console.log("render buffer")
+                this.buffer.translate(0, this.bufferHeight / 2)
                 super.render(this.buffer)
                 this.drawnFalse = true
             }
 
-            p.image(this.buffer, this.getX(p), this.getY(p), this.getWidth(p), this.getHeight(p))
-            drawDebugRect(this.getX(p), this.getY(p), this.getWidth(p), this.getHeight(p), p)
+            p.image(this.buffer, 0, 0, width, height)
+            //p.image(this.buffer, this.getX(p), this.getY(p), this.bufferWidth, this.bufferHeight)
+            //drawDebugRect(this.getX(p), this.getY(p), this.getWidth(p), this.getHeight(p), p)
         } else {
+            p.translate(midX, midY)
+            p.scale(this.scale)
             super.render(p)
         }
 
-        p.push()
-        p.translate(midX, midY)
-        this.calculateSelectedNodesStyle(p)
+
+        //p.translate(midX, midY)
+        //this.calculateAndRenderSelection(p)
         p.pop()
     }
 
-    calculateSelectedNodesStyle(p: p5) {
+    calculateAndRenderSelection(p: p5) {
         this.trees.forEach((tree) => {
             tree.model.views.forEach((nodeView) => {
                 this.calculateSelectedNodeStyle(nodeView, p)
@@ -108,7 +127,7 @@ export class TreeGroup extends Vertical {
         let y = node.view.getY(p)
         let w = node.view.getWidth(p)
         let h = node.view.getHeight(p)
-        if(node.selected){
+        if (node.selected) {
             p.push()
             p.stroke("rgba(0,255,0,0.21)")
             p.rect(x, y, w, h)
@@ -140,6 +159,8 @@ export class TreeGroup extends Vertical {
             //this.addChild(container)
             this.addChild(tree)
         })
+
+        this.setScale(this.scale)
     }
 
     setSelectedNode(nodeId: string) {
@@ -148,18 +169,21 @@ export class TreeGroup extends Vertical {
         })
     }
 
+    setScaleAndReload(scale: number) {
+        this.setScale(scale)
+        this.reload()
+    }
+
     setScale(scale: number) {
-
         this.scale = scale
-
-
         this.trees.forEach(tree => {
             tree.scale = scale
         })
+    }
+
+    reload() {
         this.buffer = null
         this.drawnFalse = false
         this.bufferCreated = false
-
-        console.log("set scale: " + scale)
     }
 }

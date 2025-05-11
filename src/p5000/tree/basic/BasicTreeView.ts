@@ -22,16 +22,16 @@ class BasicTreeView extends View {
     render(p: p5) {
         super.render(p)
 
-        let width = this.getWidth(p)
-        let widthScaleShift = width - width * this.scale
-
-        let midX = this.getX(p) + widthScaleShift / 2;
-        let midY = this.getY(p) + this.getHeight(p) / 2;
+        // let width = this.getWidth(p)
+        // let widthScaleShift = width - width * this.scale
+        //
+        // let midX = this.getX(p) + widthScaleShift / 2;
+        // let midY = this.getY(p) + this.getHeight(p) / 2;
 
         p.push()
 
-        p.translate(midX, midY)
-        p.scale(this.scale)
+        //p.translate(midX, midY)
+        //p.scale(this.scale)
 
         this.model.views.forEach(v => {
             this.renderNode(v, p)
