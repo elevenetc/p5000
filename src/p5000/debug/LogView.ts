@@ -1,7 +1,8 @@
 import View from "../View";
 import p5 from "p5";
 
-class FpsView extends View {
+class LogView extends View {
+
     private textSize: number = 12;
     private color: [number, number, number] = [0, 255, 0];
 
@@ -18,15 +19,25 @@ class FpsView extends View {
         p.textSize(this.textSize);
         p.textAlign(p.LEFT);
 
-        const fps = Math.round(p.frameRate());
-        const text = `FPS: ${fps}`;
+        logViewData["fps"] = this.getFps(p)
+        let h = 0;
 
-        p.text(
-            text,
-            this.getX(p) + this.padding,
-            this.getY(p) + this.getHeight(p) - this.padding
-        );
+        for (const [key, value] of Object.entries(logViewData)) {
+            let logValue = key + ": " + value;
+            h += this.getHeight(p)
+            p.text(
+                logValue,
+                this.getX(p) + this.padding,
+                this.getY(p) + this.getHeight(p) - this.padding + h
+            );
+        }
+
+
         p.pop();
+    }
+
+    private getFps(p: p5) {
+        return Math.round(p.frameRate()).toString();
     }
 
     getWidth(p: p5): number {
@@ -55,4 +66,6 @@ class FpsView extends View {
     }
 }
 
-export default FpsView;
+export default LogView;
+
+export const logViewData: Record<string, any> = {};
