@@ -5,14 +5,16 @@ import {rgbaToRgb, stringToRgba} from "../../colorUtils";
 import p5 from "p5";
 import {BasicTreeNode, NodeView} from "./TreeModel";
 import {AnimationValue} from "../../animation/AnimationValue";
+import {logViewData} from "../../debug/LogView";
+import {drawDebugRect} from "../../debug/drawDebugViewRect";
 
 export class TreeGroup extends Vertical {
 
     private trees: Array<BasicTreeView> = [];
     buffer = null
     drawnFalse = false
-    useCache = false
-    // useCache = true
+    // useCache = false
+    useCache = true
 
     private defaultBackgroundAlpha = 50
     private tint: [number, number, number] = [255, 0, 0]
@@ -37,7 +39,6 @@ export class TreeGroup extends Vertical {
                 let height = this.getHeight(p);
                 this.bufferWidth = width * this.scale;
                 this.bufferHeight = height * this.scale;
-                //this.buffer = p.createGraphics(width, height)
                 this.buffer = p.createGraphics(this.bufferWidth, this.bufferHeight)
                 console.log("created buffer: " + this.bufferWidth + " x " + this.bufferHeight)
             }
@@ -50,42 +51,60 @@ export class TreeGroup extends Vertical {
 
         let width = this.getWidth(p)
         let height = this.getHeight(p);
-        // let width = this.bufferWidth
-        // let height = this.bufferHeight;
-
-        let widthScaleShift = width - width * this.scale
-
-        let midX = this.getX(p) + widthScaleShift / 2;
-        let midY = this.getY(p) + height / 2;
 
         p.push()
 
+        let x = this.getX(p)
+        let y = this.getY(p)
+
+        logViewData["x"] = x
+
         if (this.useCache) {
 
-            p.translate(midX, midY - height / 2)
-            p.scale(this.scale)
+
 
             if (!this.drawnFalse) {
-
                 console.log("render buffer")
                 this.buffer.translate(0, this.bufferHeight / 2)
+                this.buffer.scale(this.scale)
                 super.render(this.buffer)
                 this.drawnFalse = true
             }
 
-            p.image(this.buffer, 0, 0, width, height)
-            //p.image(this.buffer, this.getX(p), this.getY(p), this.bufferWidth, this.bufferHeight)
-            //drawDebugRect(this.getX(p), this.getY(p), this.getWidth(p), this.getHeight(p), p)
+            let bWidth = this.buffer.width
+            let bHeight = this.buffer.height
+
+            let bWidthScaled = (bWidth - bWidth * this.scale) / 2
+
+            let scaledWidth = width - width * this.scale
+            let scaledHeight = height - height * this.scale
+            let finalX = x + scaledWidth / 2;
+            let finalY = y + scaledHeight / 2;
+            //let finalY = y + height / 2;
+
+            this.buffer.translate(bWidth / 2, bHeight / 2)
+            p.image(this.buffer, finalX, finalY)
+
+            logViewData["bWidth"] = bWidth
+            logViewData["bWidthScaled"] = bWidthScaled
+
+            drawDebugRect(finalX, finalY, bWidth, bHeight, p)
+
         } else {
-            p.translate(midX, midY)
+
+            let scaledWidth = width - width * this.scale
+            let finalX = x + scaledWidth / 2;
+            let finalY = y + height / 2;
+
+            p.translate(finalX, finalY)
             p.scale(this.scale)
             super.render(p)
         }
 
-
-        //p.translate(midX, midY)
-        //this.calculateAndRenderSelection(p)
         p.pop()
+
+        logViewData["scale"] = this.scale
+        logViewData["useCache"] = this.useCache
     }
 
     calculateAndRenderSelection(p: p5) {
