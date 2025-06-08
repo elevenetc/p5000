@@ -129,7 +129,8 @@ export class TreeGroup extends Vertical {
     calculateSelectedNodeStyle(node: NodeView, p: p5) {
         p.push()
         let alpha: AnimationValue = node.alpha
-        let backgroundAlpha = alpha.calculate() + this.defaultBackgroundAlpha;
+        let calculatedAlpha = alpha.calculate();
+        let backgroundAlpha = calculatedAlpha + this.defaultBackgroundAlpha;
         if (node.selected) {
             if (alpha.getTarget() != 255) {
                 alpha.setDuration(45)
@@ -137,7 +138,7 @@ export class TreeGroup extends Vertical {
             }
         } else {
             if (!alpha.isActive()) {
-                alpha.setDuration(500)
+                alpha.setDuration(2500)
                 alpha.setValue(0, true)
             }
         }
@@ -156,12 +157,12 @@ export class TreeGroup extends Vertical {
         let y = node.view.getY(p)
         let w = node.view.getWidth(p)
         let h = node.view.getHeight(p)
-        if (node.selected) {
-            p.push()
-            p.stroke("rgba(0,255,0,0.21)")
-            p.rect(x, y, w, h)
-            p.pop()
-        }
+        let a = node.alpha.calculate()
+
+        p.push()
+        p.fill(255, 0, 0, a)
+        p.rect(x, y, w, h)
+        p.pop()
 
     }
 
