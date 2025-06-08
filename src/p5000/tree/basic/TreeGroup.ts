@@ -88,18 +88,28 @@ export class TreeGroup extends Vertical {
             logViewData["bWidth"] = bWidth
             logViewData["bWidthScaled"] = bWidthScaled
 
+            //p.scale(this.scale)
+            //p.translate(finalX, finalY)
+            //this.calculateAndRenderSelection(p)
+
             drawDebugRect(finalX, finalY, bWidth, bHeight, p)
 
-        } else {
+        }
 
-            let scaledWidth = width - width * this.scale
-            let finalX = x + scaledWidth / 2;
-            let finalY = y + height / 2;
 
-            p.translate(finalX, finalY)
-            p.scale(this.scale)
+        let scaledWidth = width - width * this.scale
+        let finalX = x + scaledWidth / 2;
+        let finalY = y + height / 2;
+
+        p.translate(finalX, finalY)
+        p.scale(this.scale)
+
+        if (!this.useCache) {
             super.render(p)
         }
+
+
+        this.calculateAndRenderSelection(p)
 
         p.pop()
 
