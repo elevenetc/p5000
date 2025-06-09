@@ -16,8 +16,10 @@ export function initP5000(root: View, useWebGL: boolean = false, onSetup: (p: p5
             root.setY(-p.windowHeight / 2)
         }
 
+        initTextStyle()
+
         p.disableFriendlyErrors = true
-        p.textSize(32)
+        p.textSize(config.textStyle.titleSize1)
 
         canvas.mousePressed((event: { x: number; y: number; }) => {
             root.handleClick(event.x, event.y, p)
@@ -60,6 +62,16 @@ export function initP5000(root: View, useWebGL: boolean = false, onSetup: (p: p5
         )
     }
 
+    function initTextStyle() {
+        config.textStyle.color = [255, 255, 255, 255]
+        config.textStyle.background = [0, 0, 0, 0]
+
+        config.textStyle.basicSize = 18
+        config.textStyle.titleSize1 = 32
+        config.textStyle.titleSize2 = 28
+        config.textStyle.titleSize3 = 24
+    }
+
     function subscribeToKeyboard(p: p5) {
         p.keyPressed = () => {
             if (p.key === ' ') {
@@ -98,6 +110,18 @@ export class P5000Config {
 
     grabX = -1
     grabY = -1
-
     isGrabbing = false
+
+    textStyle: TextStyle = new TextStyle()
+}
+
+export class TextStyle {
+    color: [number, number, number, number]
+    background: [number, number, number, number]
+
+    basicSize: number
+
+    titleSize1: number
+    titleSize2: number
+    titleSize3: number
 }
