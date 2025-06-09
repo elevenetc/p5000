@@ -47,10 +47,14 @@ function jsonToBasicTreeNode(json: any): ParseResult {
 
     for (const key of Object.keys(json.threadsRoots)) {
         let name = json.threadsNamesMap[key]
-        let root = parseNode(json.threadsRoots[key])
+        let root = parseNode(json.threadsRoots[key], (execTime) => {
+            result.maxExecTime = Math.max(result.maxExecTime, execTime)
+            result.minExecTime = Math.min(result.minExecTime, execTime)
+        })
         result.roots.set(name, root)
     }
     result.history = parseHistory(json.history)
+
     return result
 }
 
@@ -65,20 +69,32 @@ function parseHistory(history: any): PlaybackFrame[] {
     return result
 }
 
-function parseNode(json: any): BasicTreeNode {
+function parseNode(json: any, measureExecTime: (execTime: number) => void): BasicTreeNode {
     let id = json.id
     let fqn = json.fqn
+    let start = json.start
+    let end = json.end
     let result = new BasicTreeNode()
 
 
     let children: BasicTreeNode[] = []
-    json.children.forEach(child => {
-        children.push(parseNode(child))
+    json.children.forEach((child: any) => {
+        children.push(parseNode(child, measureExecTime))
     })
 
     result.id = id
     result.fqn = fqn
     result.children = children
+    result.start = start
+    result.end = end
+
+    if (start != -1 && end != -1) {
+        result.execTime = end - start
+        measureExecTime(result.execTime)
+    }
+
+
+    //console.log("exec time: " + result.execTime + "")
 
     return result
 }
@@ -86,6 +102,8 @@ function parseNode(json: any): BasicTreeNode {
 class ParseResult {
     roots = new Map<String, BasicTreeNode>();
     history: PlaybackFrame[] = []
+    maxExecTime = Number.MIN_VALUE
+    minExecTime = Number.MAX_VALUE
 }
 
 export {

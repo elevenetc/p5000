@@ -7,6 +7,7 @@ import {BasicTreeNode, NodeView} from "./TreeModel";
 import {AnimationValue} from "../../animation/AnimationValue";
 import {logViewData} from "../../debug/LogView";
 import {drawDebugRect} from "../../debug/drawDebugViewRect";
+import {P5000Config} from "../../initP5000";
 
 export class TreeGroup extends Vertical {
 
@@ -15,6 +16,8 @@ export class TreeGroup extends Vertical {
     drawnFalse = false
     // useCache = false
     useCache = true
+
+    enableHistory = false
 
     private defaultBackgroundAlpha = 50
     private tint: [number, number, number] = [255, 0, 0]
@@ -43,11 +46,19 @@ export class TreeGroup extends Vertical {
                 this.bufferWidth = width * this.scale;
                 this.bufferHeight = height * this.scale;
                 this.buffer = p.createGraphics(this.bufferWidth, this.bufferHeight)
-                console.log("created buffer: " + this.bufferWidth + " x " + this.bufferHeight)
             }
         } else {
             super.layout(p);
         }
+    }
+
+    initTransX = -1
+    initTransY = -1
+
+    init(p: p5, config: P5000Config) {
+        super.init(p, config)
+        console.log("init")
+        this.config = config
     }
 
     render(p: p5) {
@@ -65,9 +76,7 @@ export class TreeGroup extends Vertical {
         if (this.useCache) {
 
 
-
             if (!this.drawnFalse) {
-                console.log("render buffer")
                 this.buffer.translate(0, this.bufferHeight / 2)
                 this.buffer.scale(this.scale)
                 super.render(this.buffer)
@@ -112,10 +121,26 @@ export class TreeGroup extends Vertical {
         }
 
 
-        this.calculateAndRenderSelection(p)
+        if (this.enableHistory) {
+            this.calculateAndRenderSelection(p)
+        }
+
 
         p.pop()
 
+        // if (this.spacePressed) {
+        //     console.log("cursor: pointer")
+        //     p.cursor('pointer');
+        //     //p.cursor(p.HAND);
+        // } else {
+        //     console.log("cursor: arrow")
+        //     p.cursor('default');
+        // }
+
+        logViewData["grab x"] = this.config.grabY
+        logViewData["grab y    "] = this.config.grabY
+        logViewData["translationX"] = this.getTranslationX()
+        logViewData["translationY"] = this.getTranslationY()
         logViewData["scale"] = this.scale
         logViewData["useCache"] = this.useCache
 
@@ -189,10 +214,15 @@ export class TreeGroup extends Vertical {
 
     }
 
-    setRoots(threadsRoots: Map<string, BasicTreeNode>) {
+    setRoots(threadsRoots: Map<string, BasicTreeNode>, maxExecTime: number, minExecTime: number) {
+
+        logViewData["max exec time"] = maxExecTime
+        logViewData["min exec time"] = minExecTime
 
         threadsRoots.forEach((thread, threadName) => {
             const tree = new BasicTreeView()
+            tree.model.maxExecTime = maxExecTime
+            tree.model.minExecTime = minExecTime
             tree.setRoot(thread)
 
             //let container = new Vertical()

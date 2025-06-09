@@ -4,6 +4,7 @@ import {AnimationValue} from "../../animation/AnimationValue";
 import Vertical from "../../containers/Vertical";
 import TextView from "../../text/TextView";
 import {ColorDrawable} from "../../drawable/ColorDrawable";
+import {numberToScale} from "../../utils/numberToScale";
 
 export class TreeModel {
 
@@ -18,6 +19,9 @@ export class TreeModel {
 
     initialized = false
 
+    maxExecTime = -1
+    minExecTime = -1
+
     init(root: BasicTreeNode) {
         this.root = root
     }
@@ -25,7 +29,6 @@ export class TreeModel {
     layout(p: p5) {
         if(this.initialized) return
         if(this.root == null) return
-        console.log("layout: tree model")
         fillLevels(this.root, 0, this.levels)
         this.views = createAndLayoutNodeViews(
             this.levels,
@@ -33,6 +36,8 @@ export class TreeModel {
             this.verticalMargin,
             this.horizontalMargin,
             this.selectedNodeId,
+            this.minExecTime,
+            this.maxExecTime,
             p
         )
 
@@ -81,6 +86,10 @@ export class BasicTreeNode {
     parent?: BasicTreeNode = null
     children: BasicTreeNode[] = []
 
+    start: number = -1
+    end: number = -1
+    execTime: number = -1
+
     constructor(id: string = "") {
         this.id = id;
     }
@@ -126,13 +135,15 @@ function createAndLayoutNodeViews(
     verticalMargin: number,
     horizontalMargin: number,
     selectedNodeId: string | null,
+    minExecTime: number,
+    maxExecTime: number,
     p: p5
 ): Map<string, NodeView> {
     let result = new Map<string, NodeView>()
     let level = 0
     let currentX = 0
 
-    function makeView(className: string, methodName: string, id: string): View {
+    function makeView(className: string, methodName: string, id: string, execTime: number): View {
         let vertical = new Vertical()
         let classNameView = new TextView(className, "class-" + id)
         let methodNameView = new TextView(methodName, "method-" + id)
@@ -144,12 +155,20 @@ function createAndLayoutNodeViews(
         vertical.addChild(classNameView)
         vertical.addChild(methodNameView)
         // vertical.background = new ColorDrawable([0, 0, 0, 255])
-        vertical.background = new ColorDrawable([50, 0, 0, 255])
+
+        let execAlpha = 0
+
+        if (execTime != -1) {
+            execAlpha = numberToScale(execTime, minExecTime, maxExecTime)
+        }
+
+        vertical.background = new ColorDrawable([255, 0, 0, execAlpha])
+        //vertical.background = new ColorDrawable([50, 0, 0, 255])
 
         return vertical
     }
 
-    let nodeHeight = makeView("A", "A", "A").getHeight(p)//temp workaround
+    let nodeHeight = makeView("A", "A", "A", -1).getHeight(p)//temp workaround
 
     while (map.has(level)) {
         let nodes = map.get(level)
@@ -160,7 +179,7 @@ function createAndLayoutNodeViews(
 
         nodes.forEach(n => {
             let nodeView = new NodeView()
-            nodeView.view = makeView(getClassName(n.fqn), getMethodName(n.fqn), n.id)
+            nodeView.view = makeView(getClassName(n.fqn), getMethodName(n.fqn), n.id, n.execTime)
             nodeView.view.setX(currentX)
             nodeView.view.setY(currentY)
             nodeView.node = n
