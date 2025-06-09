@@ -27,6 +27,17 @@ function handleHover(
     } else {
         offHover?.(root, p)
     }
+
+
+    if (config?.spacePressed) {
+        p.cursor('grab')
+    } else {
+        if (root.handleHover(p.mouseX, p.mouseY, p)) {
+            p.cursor('pointer');
+        } else {
+            p.cursor('default')
+        }
+    }
 }
 
 export {

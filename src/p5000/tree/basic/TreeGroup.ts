@@ -118,6 +118,26 @@ export class TreeGroup extends Vertical {
 
         logViewData["scale"] = this.scale
         logViewData["useCache"] = this.useCache
+
+        this.handleDrag(p)
+    }
+
+    handleDrag(p: p5) {
+
+        if (this.config.spacePressed && p.mouseIsPressed) {
+
+            if (!this.initDrag) {
+                this.initDrag = true
+                this.initTransX = this.getTranslationX()
+                this.initTransY = this.getTranslationY()
+            }
+
+            this.setTranslationX(this.initTransX + (this.config.grabX - p.mouseX) * -1)
+            this.setTranslationY(this.initTransY + (this.config.grabY - p.mouseY) * -1)
+            //this.setTranslationX(this.getTranslationX() + this.config.grabX)
+        } else {
+            this.initDrag = false
+        }
     }
 
     calculateAndRenderSelection(p: p5) {

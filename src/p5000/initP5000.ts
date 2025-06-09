@@ -2,8 +2,12 @@ import {layoutAndRender} from "./layoutAndRender";
 import View from "./View";
 import p5 from "p5";
 
-function initP5000(root: View, useWebGL: boolean = false): p5 {
-    function setup(p) {
+export function initP5000(root: View, useWebGL: boolean = false, onSetup: (p: p5) => void = () => {
+}): p5 {
+
+    let config = new P5000Config()
+
+    function setup(p: p5) {
         const canvas = p.createCanvas(p.windowWidth, p.windowHeight, useWebGL ? p.WEBGL : p.P2D)
 
         if (useWebGL) {
@@ -15,12 +19,33 @@ function initP5000(root: View, useWebGL: boolean = false): p5 {
         p.disableFriendlyErrors = true
         p.textSize(32)
 
-        canvas.mousePressed((event) => {
+        canvas.mousePressed((event: { x: number; y: number; }) => {
             root.handleClick(event.x, event.y, p)
         })
+
+        subscribeToKeyboard(p)
+        root.init(p, config)
+
+        onSetup(p)
     }
 
     function draw(p) {
+        p.config = config
+
+        if (config.spacePressed) {
+            if (!config.isGrabbing) {
+                if (p.mouseIsPressed) {
+                    config.isGrabbing = true
+                    config.grabX = p.mouseX
+                    config.grabY = p.mouseY
+                }
+            }
+        }
+
+        if (!p.mouseIsPressed) {
+            config.isGrabbing = false
+        }
+
         p.background(0, 0, 0);
         layoutAndRender(
             root,
@@ -30,8 +55,26 @@ function initP5000(root: View, useWebGL: boolean = false): p5 {
             },
             (view, p) => {
                 root.onHoverOut(p)
-            }
+            },
+            config
         )
+    }
+
+    function subscribeToKeyboard(p: p5) {
+        p.keyPressed = () => {
+            if (p.key === ' ') {
+                config.spacePressed = true
+
+            }
+        }
+
+        p.keyReleased = () => {
+            if (p.key === ' ') {
+                config.spacePressed = false;
+                config.grabX = -1
+                config.grabY = -1
+            }
+        }
     }
 
     const sketch = (p) => {
@@ -50,6 +93,11 @@ function initP5000(root: View, useWebGL: boolean = false): p5 {
     return new p5(sketch)
 }
 
-export {
-    initP5000
+export class P5000Config {
+    spacePressed = false
+
+    grabX = -1
+    grabY = -1
+
+    isGrabbing = false
 }
