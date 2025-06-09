@@ -28,6 +28,9 @@ export class TreeGroup extends Vertical {
     bufferWidth = -1
     bufferHeight = -1
 
+    config: P5000Config
+    initDrag = false
+
     layout(p: p5) {
 
 

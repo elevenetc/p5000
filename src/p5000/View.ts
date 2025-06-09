@@ -5,6 +5,7 @@ import ViewTransformer from "./transformers/ViewTransformer"
 import {Drawable} from "./drawable/Drawable";
 import {Container} from "./containers/Container";
 import {AnimationValue, Ease} from "./animation/AnimationValue";
+import {P5000Config} from "./initP5000";
 
 class View {
 
@@ -106,6 +107,10 @@ class View {
 
     getHeight(p: p5): number {
         return this.padding * 2
+    }
+
+    init(p: p5, config: P5000Config) {
+
     }
 
     layout(p: p5): void {

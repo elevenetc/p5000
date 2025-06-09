@@ -4,6 +4,7 @@ import p5 from "p5";
 import {handleChildrenClick, handleChildrenHover} from "../utils/viewUtils";
 import {Container} from "./Container";
 import {drawDebugViewRect, drawPurpleDebugViewRect} from "../debug/drawDebugViewRect";
+import {P5000Config} from "../initP5000";
 
 class Free extends View implements Container {
 
@@ -55,6 +56,13 @@ class Free extends View implements Container {
 
     getHeight(p: import("p5")): number {
         return this.groupScale.getHeight(p) + this.padding * 2
+    }
+
+    init(p: p5, config: P5000Config) {
+        super.init(p, config);
+        this.children.forEach(child => {
+            child.init(p, config)
+        })
     }
 
     layout(p: p5) {

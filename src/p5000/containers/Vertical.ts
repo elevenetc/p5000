@@ -3,6 +3,7 @@ import View from "../View";
 import Align from "../Align"
 import {handleChildrenClick, handleChildrenHover} from "../utils/viewUtils";
 import {Container} from "./Container";
+import {P5000Config} from "../initP5000";
 
 class Vertical extends View implements Container {
 
@@ -31,7 +32,7 @@ class Vertical extends View implements Container {
 
     getHeight(p: p5): number {
 
-        if(this.cacheState.height == -1){
+        if (this.cacheState.height == -1) {
             let h = 0;
             for (let i = 0; i < this.children.length; i++) {
                 const child = this.children[i];
@@ -68,6 +69,12 @@ class Vertical extends View implements Container {
         return false;
     }
 
+    init(p: p5, config: P5000Config) {
+        super.init(p, config);
+        this.children.forEach(child => {
+            child.init(p, config)
+        })
+    }
 
     layout(p: p5) {
         super.layout(p)
