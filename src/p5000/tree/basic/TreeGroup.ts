@@ -176,15 +176,23 @@ export class TreeGroup extends Vertical {
 
     }
 
-    setRoots(threadsRoots: Map<string, BasicTreeNode>, maxExecTime: number, minExecTime: number) {
+    setRoots(
+        threadsRoots: Map<string, BasicTreeNode>,
+        minExecTime: number, maxExecTime: number,
+        minChildren: number, maxChildren: number
+    ) {
 
-        logViewData["max exec time"] = maxExecTime
         logViewData["min exec time"] = minExecTime
+        logViewData["max exec time"] = maxExecTime
+        logViewData["min children"] = minChildren
+        logViewData["max children"] = maxChildren
 
         threadsRoots.forEach((thread, threadName) => {
             const tree = new BasicTreeView()
-            tree.model.maxExecTime = maxExecTime
             tree.model.minExecTime = minExecTime
+            tree.model.maxExecTime = maxExecTime
+            tree.model.minChildren = minChildren
+            tree.model.maxChildren = maxChildren
             tree.setRoot(thread)
 
             //let container = new Vertical()
@@ -241,7 +249,6 @@ export class TreeGroup extends Vertical {
 }
 
 export class TreeConfig {
-    useCachedRender = false
     mode = TreeMode.DEFAULT
 }
 

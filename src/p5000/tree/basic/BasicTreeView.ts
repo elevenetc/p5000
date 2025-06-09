@@ -85,6 +85,8 @@ class BasicTreeView extends View {
 
         if (mode == TreeMode.EXEC_TIME) {
             node.view.background = node.execBackground
+        } else if (mode == TreeMode.CALL_COUNT) {
+            node.view.background = node.callCountBackground
         } else {
             node.view.background = node.defaultBackground
         }

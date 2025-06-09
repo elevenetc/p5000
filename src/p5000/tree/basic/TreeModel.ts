@@ -19,8 +19,11 @@ export class TreeModel {
 
     initialized = false
 
-    maxExecTime = -1
     minExecTime = -1
+    maxExecTime = -1
+
+    minChildren = -1
+    maxChildren = -1
 
     init(root: BasicTreeNode) {
         this.root = root
@@ -36,8 +39,7 @@ export class TreeModel {
             this.verticalMargin,
             this.horizontalMargin,
             this.selectedNodeId,
-            this.minExecTime,
-            this.maxExecTime,
+            this,
             p
         )
 
@@ -139,8 +141,7 @@ function createAndLayoutNodeViews(
     verticalMargin: number,
     horizontalMargin: number,
     selectedNodeId: string | null,
-    minExecTime: number,
-    maxExecTime: number,
+    model: TreeModel,
     p: p5
 ): Map<string, NodeView> {
 
@@ -177,13 +178,23 @@ function createAndLayoutNodeViews(
     }
 
     function buildExecBackground(execTime: number): ColorDrawable {
-        let execAlpha = 0
+        let alpha = 0
 
         if (execTime != -1) {
-            execAlpha = numberToScale(execTime, minExecTime, maxExecTime)
+            alpha = numberToScale(execTime, model.minExecTime, model.maxExecTime)
         }
 
-        return new ColorDrawable([255, 0, 0, execAlpha])
+        return new ColorDrawable([255, 0, 0, alpha])
+    }
+
+    function buildCallCountBackground(callsCount: number): ColorDrawable {
+        let alpha = 0
+
+        if (callsCount != -1) {
+            alpha = numberToScale(callsCount, model.minChildren, model.maxChildren)
+        }
+
+        return new ColorDrawable([255, 0, 0, alpha])
     }
 
     while (map.has(level)) {
@@ -206,6 +217,7 @@ function createAndLayoutNodeViews(
 
             nodeView.defaultBackground = buildDefaultBackground()
             nodeView.execBackground = buildExecBackground(n.execTime)
+            nodeView.callCountBackground = buildCallCountBackground(n.children.length)
 
             currentY += nodeHeight + verticalMargin
 

@@ -47,10 +47,17 @@ function jsonToBasicTreeNode(json: any): ParseResult {
 
     for (const key of Object.keys(json.threadsRoots)) {
         let name = json.threadsNamesMap[key]
-        let root = parseNode(json.threadsRoots[key], (execTime) => {
-            result.maxExecTime = Math.max(result.maxExecTime, execTime)
-            result.minExecTime = Math.min(result.minExecTime, execTime)
-        })
+        let root = parseNode(
+            json.threadsRoots[key],
+            (execTime) => {
+                result.maxExecTime = Math.max(result.maxExecTime, execTime)
+                result.minExecTime = Math.min(result.minExecTime, execTime)
+            },
+            (childrenCount) => {
+                result.maxChildren = Math.max(result.maxChildren, childrenCount)
+                result.minChildren = Math.min(result.minChildren, childrenCount)
+            }
+        )
         result.roots.set(name, root)
     }
     result.history = parseHistory(json.history)
@@ -69,7 +76,11 @@ function parseHistory(history: any): PlaybackFrame[] {
     return result
 }
 
-function parseNode(json: any, measureExecTime: (execTime: number) => void): BasicTreeNode {
+function parseNode(
+    json: any,
+    measureExecTime: (execTime: number) => void,
+    measureMaxChildren: (childrenCount: number) => void
+): BasicTreeNode {
     let id = json.id
     let fqn = json.fqn
     let start = json.start
@@ -79,7 +90,7 @@ function parseNode(json: any, measureExecTime: (execTime: number) => void): Basi
 
     let children: BasicTreeNode[] = []
     json.children.forEach((child: any) => {
-        children.push(parseNode(child, measureExecTime))
+        children.push(parseNode(child, measureExecTime, measureMaxChildren))
     })
 
     result.id = id
@@ -93,8 +104,7 @@ function parseNode(json: any, measureExecTime: (execTime: number) => void): Basi
         measureExecTime(result.execTime)
     }
 
-
-    //console.log("exec time: " + result.execTime + "")
+    measureMaxChildren(children.length)
 
     return result
 }
@@ -102,8 +112,12 @@ function parseNode(json: any, measureExecTime: (execTime: number) => void): Basi
 class ParseResult {
     roots = new Map<String, BasicTreeNode>();
     history: PlaybackFrame[] = []
-    maxExecTime = Number.MIN_VALUE
+
     minExecTime = Number.MAX_VALUE
+    maxExecTime = Number.MIN_VALUE
+
+    minChildren = Number.MAX_VALUE
+    maxChildren = Number.MIN_VALUE
 }
 
 export {
