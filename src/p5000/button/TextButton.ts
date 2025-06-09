@@ -1,28 +1,63 @@
-import {Free, WrapContent} from "../containers/Free";
 import TextView from "../text/TextView";
-import Align from "../Align";
 import p5 from "p5";
 import {viewContains} from "../View";
 import {AnimationValue, Ease} from "../animation/AnimationValue";
+import {P5000Config} from "../initP5000";
+import {Horizontal} from "../containers/Horizontal";
+import Align from "../Align";
+import {EmojiButton} from "./EmojiButton";
 
-export class TextButton extends Free {
+export class TextButton extends Horizontal {
 
     private textView = new TextView("")
     private backgroundAlpha = new AnimationValue()
     private backgroundColor = [255, 0, 0, 0]
 
-    constructor(title: string = "") {
+    private endIcon = new EmojiButton("");
+
+    constructor(title: string = "", endIcon: string = "") {
         super();
         this.textView.title = title
         this.textView.color = [255, 0, 0, 255]
         this.textView.textSize = 20
-        this.padding = 10
-        this.addChild(this.textView, Align.CENTER)
-        this.setScale(new WrapContent())
+        //this.padding = 10
+        this.addChild(this.textView)
+        this.addChild(this.endIcon)
+
+        this.endIcon.setEmoji(endIcon)
+
+        //this.setScale(new WrapContent())
+        this.alignContent = Align.CENTER
+        this.align = Align.CENTER
         this.clickable = true
+
+        //this.textView.textAlign = Align.BOTTOM
 
         this.backgroundAlpha.setDuration(100)
         this.backgroundAlpha.setEasing(Ease.IN_OUT)
+
+        //this.debugRender = true
+        //this.textView.debugRender = true
+        this.textView.setPadding(12)
+    }
+
+    init(p: p5, config: P5000Config) {
+        super.init(p, config);
+
+        this.textView.textSize = config.textStyle.basicSize
+        this.endIcon.size = config.textStyle.basicSize
+    }
+
+    setEndIcon(endIcon: string) {
+        this.endIcon.setEmoji(endIcon)
+    }
+
+    setTitle(title: string) {
+        this.textView.title = title
+    }
+
+    getTitle(): string {
+        return this.textView.title
     }
 
     handleHover(mouseX: number, mouseY: number, p: p5): boolean {

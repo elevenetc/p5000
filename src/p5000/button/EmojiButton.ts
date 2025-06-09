@@ -1,10 +1,11 @@
 import View from "../View";
 import p5 from "p5";
-import {drawDebugViewRect} from "../debug/drawDebugViewRect";
+import {getTextHeight} from "../utils/getTextHeight";
 
 class EmojiButton extends View {
 
-    private readonly emoji: string;
+    size = 30
+    private emoji: string;
 
     constructor(emoji: string) {
         super();
@@ -12,12 +13,18 @@ class EmojiButton extends View {
         this.emoji = emoji;
     }
 
+    setEmoji(emoji: string) {
+        this.emoji = emoji
+    }
+
     getWidth(p: p5): number {
-        return 50;
+        if (this.emoji == "") return 0
+        return getTextHeight(this.size, p);
     }
 
     getHeight(p: p5): number {
-        return 50;
+        if (this.emoji == "") return 0
+        return getTextHeight(this.size, p);
     }
 
     layout(p: p5) {
@@ -25,12 +32,16 @@ class EmojiButton extends View {
     }
 
     render(p: p5) {
-        if (this.emoji == null) return
+        if (this.emoji == null || this.emoji == "") return
         super.render(p);
+
+        let h = this.getHeight(p)
+        let w = this.getWidth(p)
+
         p.push()
-        p.text(this.emoji, this.getX(p) + 8, this.getY(p) + 35)
+        p.textSize(this.size)
+        p.text(this.emoji, this.getX(p) + w * .08, this.getY(p) + h * .83)
         p.pop()
-        //drawDebugViewRect(this, p)
     }
 }
 
