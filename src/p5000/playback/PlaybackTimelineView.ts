@@ -37,6 +37,7 @@ class PlaybackTimelineView extends View {
     }
 
     render(p: p5) {
+        if (!this.visible) return
         super.render(p);
         p.push()
         if (this.frames.length === 0) {

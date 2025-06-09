@@ -108,6 +108,7 @@ class Vertical extends View implements Container {
     }
 
     public render(p: p5) {
+        if (!this.visible) return
         super.render(p)
 
         for (let i = 0; i < this.children.length; i++) {

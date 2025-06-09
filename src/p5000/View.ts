@@ -6,6 +6,7 @@ import {Drawable} from "./drawable/Drawable";
 import {Container} from "./containers/Container";
 import {AnimationValue, Ease} from "./animation/AnimationValue";
 import {P5000Config} from "./initP5000";
+import {drawDebugViewRect} from "./debug/drawDebugViewRect";
 
 class View {
 
@@ -33,6 +34,8 @@ class View {
     private translationY = new AnimationValue(0)
 
     scale = 1
+
+    debugRender = false
 
     constructor() {
         this.translationX.setEasing(Ease.IN_OUT)
@@ -122,6 +125,10 @@ class View {
     render(p: p5): void {
         if (!this.visible) return
         this.background?.draw(this, p)
+
+        if (this.debugRender) {
+            drawDebugViewRect(this, p)
+        }
     }
 
     onHoverIn(p: p5): void {

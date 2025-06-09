@@ -34,7 +34,7 @@ export class Horizontal extends View implements Container {
             const child = this.children[i];
             maxH = Math.max(child.getHeight(p) + child.margin * 2, maxH)
         }
-        return maxH;
+        return maxH + this.padding * 2;
     }
 
     getWidth(p: p5): number {
@@ -43,7 +43,7 @@ export class Horizontal extends View implements Container {
             const child = this.children[i];
             w += child.getWidth(p) + child.margin * 2
         }
-        return w;
+        return w + this.padding * 2;
     }
 
     public addChild(child: View) {
@@ -102,6 +102,7 @@ export class Horizontal extends View implements Container {
         for (let i = 0; i < this.children.length; i++) {
             this.children[i].render(p)
         }
+
 
         //drawDebugViewRect(this, p)
     }
