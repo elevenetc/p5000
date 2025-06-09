@@ -6,7 +6,6 @@ import p5 from "p5";
 import {BasicTreeNode, NodeView} from "./TreeModel";
 import {AnimationValue} from "../../animation/AnimationValue";
 import {logViewData} from "../../debug/LogView";
-import {drawDebugRect} from "../../debug/drawDebugViewRect";
 import {P5000Config} from "../../initP5000";
 
 export class TreeGroup extends Vertical {
@@ -17,7 +16,7 @@ export class TreeGroup extends Vertical {
     // useCache = false
     useCache = true
 
-    enableHistory = false
+    //enableHistory = false
 
     private defaultBackgroundAlpha = 50
     private tint: [number, number, number] = [255, 0, 0]
@@ -31,11 +30,16 @@ export class TreeGroup extends Vertical {
     bufferWidth = -1
     bufferHeight = -1
 
-    config: P5000Config
+
     initDrag = false
 
-    layout(p: p5) {
+    initTransX = -1
+    initTransY = -1
 
+    config: P5000Config
+    treeConfig = new TreeConfig()
+
+    layout(p: p5) {
 
         if (this.useCache) {
             if (!this.bufferCreated) {
@@ -52,12 +56,8 @@ export class TreeGroup extends Vertical {
         }
     }
 
-    initTransX = -1
-    initTransY = -1
-
     init(p: p5, config: P5000Config) {
         super.init(p, config)
-        console.log("init")
         this.config = config
     }
 
@@ -70,8 +70,6 @@ export class TreeGroup extends Vertical {
 
         let x = this.getX(p)
         let y = this.getY(p)
-
-        logViewData["x"] = x
 
         if (this.useCache) {
 
@@ -93,9 +91,6 @@ export class TreeGroup extends Vertical {
 
             this.buffer.translate(bWidth / 2, bHeight / 2)
             p.image(this.buffer, finalX, finalY)
-
-            drawDebugRect(finalX, finalY, bWidth, bHeight, p)
-
         }
 
 
@@ -111,7 +106,7 @@ export class TreeGroup extends Vertical {
         }
 
 
-        if (this.enableHistory) {
+        if (this.treeConfig.mode == TreeMode.HISTORY) {
             this.calculateAndRenderSelection(p)
         }
 
@@ -205,6 +200,8 @@ export class TreeGroup extends Vertical {
             //container.addChild(tree)
             //title.setPadding(25)
 
+            tree.config = this.treeConfig
+
             this.trees.push(tree)
             //this.addChild(container)
             this.addChild(tree)
@@ -221,7 +218,7 @@ export class TreeGroup extends Vertical {
 
     setScaleAndReload(scale: number) {
         this.setScale(scale)
-        this.reload()
+        this.rerenderCache()
     }
 
     setScale(scale: number) {
@@ -231,9 +228,26 @@ export class TreeGroup extends Vertical {
         })
     }
 
-    reload() {
+    rerenderCache() {
         this.buffer = null
         this.drawnFalse = false
         this.bufferCreated = false
     }
+
+    setMode(mode: string) {
+        this.treeConfig.mode = mode
+        this.rerenderCache()
+    }
+}
+
+export class TreeConfig {
+    useCachedRender = false
+    mode = TreeMode.DEFAULT
+}
+
+export class TreeMode {
+    static HISTORY = "history"
+    static EXEC_TIME = "exec-time"
+    static CALL_COUNT = "call-count"
+    static DEFAULT = "default"
 }

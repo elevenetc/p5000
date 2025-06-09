@@ -27,8 +27,8 @@ export class TreeModel {
     }
 
     layout(p: p5) {
-        if(this.initialized) return
-        if(this.root == null) return
+        if (this.initialized) return
+        if (this.root == null) return
         fillLevels(this.root, 0, this.levels)
         this.views = createAndLayoutNodeViews(
             this.levels,
@@ -112,6 +112,10 @@ export class NodeView {
     selected: boolean = false
 
     alpha: AnimationValue = new AnimationValue()
+
+    defaultBackground: ColorDrawable
+    execBackground: ColorDrawable
+    callCountBackground: ColorDrawable
 }
 
 function fillLevels(node: BasicTreeNode, level: number, map: Map<number, BasicTreeNode[]>) {
@@ -139,11 +143,18 @@ function createAndLayoutNodeViews(
     maxExecTime: number,
     p: p5
 ): Map<string, NodeView> {
+
     let result = new Map<string, NodeView>()
     let level = 0
     let currentX = 0
+    let nodeHeight = makeView("A", "A", "A", -1).getHeight(p)//temp workaround
 
-    function makeView(className: string, methodName: string, id: string, execTime: number): View {
+    function makeView(
+        className: string, methodName: string,
+        id: string,
+        execTime: number
+    ): View {
+
         let vertical = new Vertical()
         let classNameView = new TextView(className, "class-" + id)
         let methodNameView = new TextView(methodName, "method-" + id)
@@ -155,20 +166,25 @@ function createAndLayoutNodeViews(
         vertical.addChild(classNameView)
         vertical.addChild(methodNameView)
         // vertical.background = new ColorDrawable([0, 0, 0, 255])
+        //vertical.background = new ColorDrawable([255, 0, 0, execAlpha])
+        //vertical.background = new ColorDrawable([50, 0, 0, 255])
 
+        return vertical
+    }
+
+    function buildDefaultBackground(): ColorDrawable {
+        return new ColorDrawable([50, 0, 0, 255])
+    }
+
+    function buildExecBackground(execTime: number): ColorDrawable {
         let execAlpha = 0
 
         if (execTime != -1) {
             execAlpha = numberToScale(execTime, minExecTime, maxExecTime)
         }
 
-        vertical.background = new ColorDrawable([255, 0, 0, execAlpha])
-        //vertical.background = new ColorDrawable([50, 0, 0, 255])
-
-        return vertical
+        return new ColorDrawable([255, 0, 0, execAlpha])
     }
-
-    let nodeHeight = makeView("A", "A", "A", -1).getHeight(p)//temp workaround
 
     while (map.has(level)) {
         let nodes = map.get(level)
@@ -187,6 +203,10 @@ function createAndLayoutNodeViews(
             nodeView.fqn = n.fqn
             nodeView.x = currentX
             nodeView.y = currentY
+
+            nodeView.defaultBackground = buildDefaultBackground()
+            nodeView.execBackground = buildExecBackground(n.execTime)
+
             currentY += nodeHeight + verticalMargin
 
 

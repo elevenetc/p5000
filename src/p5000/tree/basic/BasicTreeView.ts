@@ -1,13 +1,15 @@
 import View from "../../View";
 import p5 from "p5";
-import {ColorDrawable} from "../../drawable/ColorDrawable";
-import {AnimationValue} from "../../animation/AnimationValue";
 import {BasicTreeNode, NodeView, TreeModel} from "./TreeModel";
 import {drawConnections} from "./connections/drawConnections";
-import {drawDebugRect, drawDebugViewRect} from "../../debug/drawDebugViewRect";
+import {drawDebugViewRect} from "../../debug/drawDebugViewRect";
+import {TreeConfig, TreeMode} from "./TreeGroup";
 
 class BasicTreeView extends View {
+
+    config: TreeConfig = null
     model = new TreeModel()
+
     private defaultBackgroundAlpha = 50
     private tint: [number, number, number] = [255, 0, 0]
 
@@ -21,23 +23,11 @@ class BasicTreeView extends View {
 
     render(p: p5) {
         super.render(p)
-
-        // let width = this.getWidth(p)
-        // let widthScaleShift = width - width * this.scale
-        //
-        // let midX = this.getX(p) + widthScaleShift / 2;
-        // let midY = this.getY(p) + this.getHeight(p) / 2;
-
         p.push()
-
-        //p.translate(midX, midY)
-        //p.scale(this.scale)
 
         this.model.views.forEach(v => {
             this.renderNode(v, p)
         })
-
-
 
         drawConnections(this.model.root, this.model.views, this.defaultBackgroundAlpha, this.tint, p)
 
@@ -90,9 +80,16 @@ class BasicTreeView extends View {
 
     renderNode(node: NodeView, p: p5) {
         if (node == null) return
-        //p.push()
+
+        let mode = this.config?.mode;
+
+        if (mode == TreeMode.EXEC_TIME) {
+            node.view.background = node.execBackground
+        } else {
+            node.view.background = node.defaultBackground
+        }
+
         node.view.render(p)
-        //p.pop()
     }
 
 
