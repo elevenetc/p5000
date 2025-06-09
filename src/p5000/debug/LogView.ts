@@ -1,5 +1,6 @@
 import View from "../View";
 import p5 from "p5";
+import {lightenColor, stringToColor} from "../colorUtils";
 
 class LogView extends View {
 
@@ -20,24 +21,27 @@ class LogView extends View {
         p.textAlign(p.LEFT);
 
         logViewData["fps"] = this.getFps(p)
+        logViewData["mouseX"] = p.mouseX
+        logViewData["mouseY"] = p.mouseY
         let h = 0;
 
         for (const [key, value] of Object.entries(logViewData)) {
             let logValue = key + ": " + value;
             h += this.getHeight(p)
+
+            let color = lightenColor(stringToColor(key), 25)
+
+            p.fill(color)
+
             p.text(
                 logValue,
-                this.getX(p) + this.padding,
+                this.getX(p) + this.padding + 30,
                 this.getY(p) + this.getHeight(p) - this.padding + h
             );
         }
 
 
         p.pop();
-    }
-
-    private getFps(p: p5) {
-        return Math.round(p.frameRate()).toString();
     }
 
     getWidth(p: p5): number {
@@ -63,6 +67,15 @@ class LogView extends View {
 
     setColor(r: number, g: number, b: number) {
         this.color = [r, g, b];
+    }
+
+
+    onHoverIn(p: p5) {
+        super.onHoverIn(p);
+    }
+
+    private getFps(p: p5) {
+        return Math.round(p.frameRate()).toString();
     }
 }
 

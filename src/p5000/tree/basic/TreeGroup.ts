@@ -86,23 +86,13 @@ export class TreeGroup extends Vertical {
             let bWidth = this.buffer.width
             let bHeight = this.buffer.height
 
-            let bWidthScaled = (bWidth - bWidth * this.scale) / 2
-
             let scaledWidth = width - width * this.scale
             let scaledHeight = height - height * this.scale
             let finalX = x + scaledWidth / 2;
             let finalY = y + scaledHeight / 2;
-            //let finalY = y + height / 2;
 
             this.buffer.translate(bWidth / 2, bHeight / 2)
             p.image(this.buffer, finalX, finalY)
-
-            logViewData["bWidth"] = bWidth
-            logViewData["bWidthScaled"] = bWidthScaled
-
-            //p.scale(this.scale)
-            //p.translate(finalX, finalY)
-            //this.calculateAndRenderSelection(p)
 
             drawDebugRect(finalX, finalY, bWidth, bHeight, p)
 
@@ -125,22 +115,7 @@ export class TreeGroup extends Vertical {
             this.calculateAndRenderSelection(p)
         }
 
-
         p.pop()
-
-        // if (this.spacePressed) {
-        //     console.log("cursor: pointer")
-        //     p.cursor('pointer');
-        //     //p.cursor(p.HAND);
-        // } else {
-        //     console.log("cursor: arrow")
-        //     p.cursor('default');
-        // }
-
-        logViewData["grab x"] = this.config.grabY
-        logViewData["grab y    "] = this.config.grabY
-        logViewData["translationX"] = this.getTranslationX()
-        logViewData["translationY"] = this.getTranslationY()
         logViewData["scale"] = this.scale
         logViewData["useCache"] = this.useCache
 
@@ -159,7 +134,6 @@ export class TreeGroup extends Vertical {
 
             this.setTranslationX(this.initTransX + (this.config.grabX - p.mouseX) * -1)
             this.setTranslationY(this.initTransY + (this.config.grabY - p.mouseY) * -1)
-            //this.setTranslationX(this.getTranslationX() + this.config.grabX)
         } else {
             this.initDrag = false
         }
@@ -190,13 +164,6 @@ export class TreeGroup extends Vertical {
                 alpha.setValue(0, true)
             }
         }
-
-        // (node.view.background as ColorDrawable).color = [
-        //     this.tint[0],
-        //     this.tint[1],
-        //     this.tint[2],
-        //     backgroundAlpha
-        // ]
         p.pop()
     }
 

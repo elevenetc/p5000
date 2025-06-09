@@ -4,13 +4,19 @@ import Align from "../../src/p5000/Align";
 import {ColorDrawable} from "../../src/p5000/drawable/ColorDrawable";
 import {Direction, NavigationView} from "../../src/p5000/navigation/NavigationView";
 import {initP5000} from "../../src/p5000/initP5000";
-import FpsView from "../../src/p5000/debug/FpsView";
+import LogView from "../../src/p5000/debug/LogView";
 import Vertical from "../../src/p5000/containers/Vertical";
 import {PlaybackControlsView} from "../../src/p5000/playback/PlaybackControlsView";
 import {TreeGroup} from "../../src/p5000/tree/basic/TreeGroup";
 import {PlaybackController} from "../../src/p5000/playback/PlaybackController";
 import {loadAndParseTree} from "../../src/p5000/tree/basic/loadAndParseTree";
 import {ScaleAction, ScaleView} from "../../src/p5000/views/ScaleView";
+
+let fileName = "objc-export-k2.json";
+//let fileName = "tree-data-sample-small.json";
+// let fileName = "tree-data-sample-super-small.json";
+const scaleDiff = .1
+const historySelectInterval = 200
 
 const follow = false
 
@@ -31,23 +37,21 @@ let controls = new PlaybackControlsView()
 
 timeline.background = new ColorDrawable([255, 0, 0])
 
-var scaleValue = 1.0
-
 scaleView.setClickHandler((scale) => {
-    console.log("scale: " + scale + " > " + scaleValue)
+    let scaleValue = treeGroup.scale
     if (scale === ScaleAction.ZoomIn) {
-        scaleValue += 0.1
+        scaleValue += scaleDiff
     } else {
-        scaleValue -= 0.1
+        scaleValue -= scaleDiff
     }
-    treeGroup.setScale(scaleValue)
+    treeGroup.setScaleAndReload(scaleValue)
 })
 
 let controller = new PlaybackController(
     timeline,
     controls,
     treeGroup,
-    200, (frame) => {
+    historySelectInterval, (frame) => {
         //tre0.setSelectedNode(frame.id)
         if (frame !== undefined) {
             treeGroup.setSelectedNode(frame.id)
@@ -64,12 +68,12 @@ let controller = new PlaybackController(
         }
     })
 
-let fpsView = new FpsView()
+let fpsView = new LogView()
 
 
 navigationView.setClickHandler((direction) => {
-    let xDiff = p.width / 10
-    let yDiff = p.height / 10
+    let xDiff = p.width / 3 * treeGroup.scale
+    let yDiff = p.height / 3 * treeGroup.scale
     if (direction === Direction.Left) {
         treeGroup.translateX(xDiff)
     } else if (direction === Direction.Right) {
@@ -96,11 +100,13 @@ root.addChild(fpsView, Align.LEFT_TOP)
 root.addChild(navigationView, Align.LEFT_BOTTOM)
 root.addChild(scaleView, Align.RIGHT_BOTTOM)
 
-let fileName = "objc-export-k2.json";
-// let fileName = "tree-data-sample-small.json";
+
 loadAndParseTree(fileName, (result) => {
     timeline.setFrames(result.history)
-    treeGroup.setRoots(result.roots)
+    treeGroup.setRoots(result.roots, result.maxExecTime, result.minExecTime)
 })
 
-const p = initP5000(root)
+const p = initP5000(root, false, (p) => {
+    treeGroup.setScale(1)
+    // treeGroup.setScale(1)
+})

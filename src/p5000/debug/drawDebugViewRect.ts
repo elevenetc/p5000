@@ -7,6 +7,11 @@ function drawDebugViewRect(view: View, p:p5) {
     let y = view.getY(p);
     let width = view.getWidth(p);
     let height = view.getHeight(p);
+    drawDebugRect(x, y, width, height, p)
+}
+
+export function drawDebugRect(x: number, y: number, width: number, height: number, p: p5) {
+    if (!enableDebugView) return
     p.push()
     p.stroke("rgba(0,255,0,0.21)")
     p.noFill()

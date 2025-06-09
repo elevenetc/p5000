@@ -1,6 +1,5 @@
 import View from "../../View";
 import p5 from "p5";
-import {SegmentPart} from "./SegmentPart";
 import {renderCircularNodePlaceholders} from "./renderCircularNodePlaceholders";
 import {getMaxKey} from "../../utils/getMaxKey";
 
@@ -79,15 +78,6 @@ function buildViewTree(
     node.children.forEach(child => {
         buildViewTree(child, depth + 1, levels)
     })
-}
-
-class TreeNodeView {
-
-    parent?: TreeNodeView = null
-    children: TreeNodeView[] = []
-
-    node: TreeNode
-    segmentParts: SegmentPart
 }
 
 class TreeNode {

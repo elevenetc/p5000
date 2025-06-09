@@ -36,7 +36,6 @@ class SelectionTextOverlay implements TextOverlay {
             const width = p.textWidth(match) + padding * 2
 
             const height = textHeight
-            console.log("w(" + match + "): " + width)
             p.push()
             p.blendMode("difference")
             p.fill(255, 255, 255)
