@@ -4,6 +4,7 @@ import TextOverlay from "./TextOverlay";
 import {TextStyle} from "./TextStyle";
 import Align from "../Align";
 import {getValueSafe} from "../utils/getValueSafe";
+import {getTextHeight} from "../utils/getTextHeight";
 
 const alphaStep = 25;
 const maxAlpha = 200;
@@ -106,16 +107,8 @@ class TextView extends View {
          * Fits most single line cases
          */
         let heightScale = 1.5
-        let h = this.getTextHeight(p)
+        let h = getTextHeight(this.textSize, p)
         return (h + this.padding * 2) / heightScale
-    }
-
-    getTextHeight(p: p5): number {
-        p.push()
-        if (this.textSize != -1) p.textSize(this.textSize)
-        let h = p.textAscent() + p.textDescent()
-        p.pop()
-        return h
     }
 
     public onHoverIn(p: p5) {
