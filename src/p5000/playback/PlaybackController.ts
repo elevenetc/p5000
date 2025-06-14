@@ -28,8 +28,8 @@ class PlaybackController {
         }
 
         setInterval(() => {
-            this.timeline.selectNext()
             handler(this.timeline.getCurrentFrame())
+            this.timeline.selectNext()
         }, interval);
     }
 
@@ -49,6 +49,11 @@ class PlaybackController {
 
     private updateViews() {
         let currentFrame = this.timeline.getCurrentFrame();
+
+        if (currentFrame.index === 0) {
+            this.treeGroup.resetStack()
+        }
+
         this.handler(currentFrame)
         this.treeGroup.setSelectedNode(currentFrame.id)
     }

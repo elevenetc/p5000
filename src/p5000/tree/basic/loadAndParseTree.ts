@@ -1,20 +1,28 @@
 import {PlaybackFrame} from "../../playback/PlaybackTimelineView";
 import {BasicTreeNode} from "./TreeModel";
+import {arrayToMap} from "../../utils/arrayToMap";
 
 
-function loadAndParseTree(filePath: string, loadHandler: (result: ParseResult) => void) {
+function loadAndParseTree(
+    filePath: string,
+    loadHandler: (result: ParseResult) => void,
+    errorHandler: () => void
+) {
 
-    parseJsonToObject(filePath)
+    loadAndParseJsonToObject(filePath)
         .then((result) => {
             loadHandler(result)
         })
-        .catch((error) => console.error(error));
+        .catch((error) => {
+            errorHandler();
+            console.error(error);
+        });
 }
 
 export function loadAndParseTrees(filePath: string[], loadHandler: (result: Map<String, ParseResult>) => void) {
 
     const promises = filePath.map(async (path) => {
-        const result = await parseJsonToObject(path);
+        const result = await loadAndParseJsonToObject(path);
         return [path, result] as [string, ParseResult];
     });
 
@@ -29,7 +37,7 @@ export function loadAndParseTrees(filePath: string[], loadHandler: (result: Map<
         .catch((error) => console.error(error));
 }
 
-async function parseJsonToObject(filePath: string): Promise<ParseResult> {
+async function loadAndParseJsonToObject(filePath: string): Promise<ParseResult> {
     const jsonData = await loadJSON(filePath);
     return jsonToBasicTreeNode(jsonData);
 }
@@ -67,10 +75,12 @@ function jsonToBasicTreeNode(json: any): ParseResult {
 
 function parseHistory(history: any): PlaybackFrame[] {
     let result: PlaybackFrame[] = [];
+    let idx = 0
     history.forEach((item) => {
         let frame = new PlaybackFrame()
         frame.id = item.id
         frame.name = item.fqn
+        frame.index = idx++
         result.push(frame);
     })
     return result
@@ -96,8 +106,11 @@ function parseNode(
     result.id = id
     result.fqn = fqn
     result.children = children
+    result.childrenMap = arrayToMap(result.children, (child) => child.id)
     result.start = start
     result.end = end
+
+    bindParentWithChildren(result)
 
     if (start != -1 && end != -1) {
         result.execTime = end - start
@@ -107,6 +120,12 @@ function parseNode(
     measureMaxChildren(children.length)
 
     return result
+}
+
+function bindParentWithChildren(node: BasicTreeNode) {
+    node.children.forEach((child) => {
+        child.parent = node
+    })
 }
 
 class ParseResult {

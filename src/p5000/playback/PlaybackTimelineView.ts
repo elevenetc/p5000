@@ -24,6 +24,10 @@ class PlaybackTimelineView extends View {
         return this.frames[this.selected];
     }
 
+    indexOfFrame(frame: PlaybackFrame): number {
+        return this.frames.indexOf(frame)
+    }
+
     getWidth(p: p5): number {
         return 400
     }
@@ -89,6 +93,7 @@ class PlaybackTimelineView extends View {
 class PlaybackFrame {
     id: string = ""
     name: string = ""
+    index: number = -1
 }
 
 export {

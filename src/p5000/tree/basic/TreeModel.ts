@@ -5,6 +5,7 @@ import Vertical from "../../containers/Vertical";
 import TextView from "../../text/TextView";
 import {ColorDrawable} from "../../drawable/ColorDrawable";
 import {numberToScale} from "../../utils/numberToScale";
+import {CallStack} from "./CallStack";
 
 export class TreeModel {
 
@@ -24,6 +25,8 @@ export class TreeModel {
 
     minChildren = -1
     maxChildren = -1
+
+    stack = new CallStack()
 
     init(root: BasicTreeNode) {
         this.root = root
@@ -48,27 +51,39 @@ export class TreeModel {
 
     setSelectedNode(nodeId: string) {
 
-        if (!this.initialized) {
-            return
-        }
+        if (!this.initialized) return
 
         if (!this.views.has(nodeId)) {
             this.clearCurrentSelection()
+            console.warn("Failed attempt to selected node: " + nodeId + ", views count: " + this.views.size)
             return
         }
 
-        let selectedKey = this.selectedNodeId;
-        if (nodeId == selectedKey) return
+        updateStack(nodeId, this.stack, this.views)
 
-        if (selectedKey != nodeId && selectedKey != null) {
+        let prevNodeId = this.selectedNodeId;
+        if (nodeId == prevNodeId) return //already selected
+
+        if (prevNodeId != nodeId && prevNodeId != null) {
+            //clear current selection
+
+            // let prevStack = this.stack.pop()
+            //
+            // if (prevStack.id != prevNodeId) {
+            //     console.warn("Stack is corrupted, prevNodeId: " + prevNodeId + ", prevStack: " + prevStack.id)
+            // }
+
             this.clearCurrentSelection()
         }
 
+
         this.selectedNodeId = nodeId
         if (this.views.has(this.selectedNodeId)) {
-            this.views.get(this.selectedNodeId).selected = true
+            let nodeView = this.views.get(this.selectedNodeId);
+            //this.stack.push(nodeView)
+            nodeView.selected = true
         } else {
-            console.log("failed attempt to selected node: " + nodeId + ", views count: " + this.views.size)
+            console.warn("Failed attempt to selected node: " + nodeId + ", views count: " + this.views.size)
         }
     }
 
@@ -82,11 +97,51 @@ export class TreeModel {
     }
 }
 
+let pushId = 0
+
+function updateStack(nodeId: string, stack: CallStack, views: Map<string, NodeView>) {
+    let nodeView = views.get(nodeId);
+    let node = nodeView.node
+
+    //console.log("stack update: " + node.fqn)
+    //console.log("stack update: " + node.id + ", parent: " + node?.parent?.id)
+
+    if (stack.isEmpty()) {
+        stack.push(nodeView)
+        console.log((pushId++) + ": stack: push first")
+    } else {
+
+        let topCallView = stack.peek()
+        let topNode = topCallView.node
+        if (topCallView.id == nodeId) return
+
+        if (topNode.parent?.id === node.id) {
+            /**
+             * If parent is the same for current top and new top, then we change top
+             */
+            console.log("stack: pop")
+            stack.pop()
+        }
+
+        let fqnsEqual = topNode?.parent?.fqn === node?.parent?.fqn
+        let idsEqual = topNode?.parent?.id === node?.parent?.id
+
+        console.log((pushId++) + ": stack: push next: " + node.fqn +
+            "\nparent of top `" + topNode?.parent?.fqn + "`, parent of new `" + node?.parent?.fqn +
+            "`\nfqns equal: " + fqnsEqual + ", ids equal: " + idsEqual
+        )
+        stack.push(nodeView)
+
+
+    }
+}
+
 export class BasicTreeNode {
     id: string = ""
     fqn: string = ""
     parent?: BasicTreeNode = null
     children: BasicTreeNode[] = []
+    childrenMap: Map<String, BasicTreeNode> = new Map<String, BasicTreeNode>()
 
     start: number = -1
     end: number = -1
@@ -105,13 +160,13 @@ export class NodeView {
     y: number = 0
 
     parent?: NodeView = null
-    children: NodeView[] = []
 
     node: BasicTreeNode
 
     view: View
 
     selected: boolean = false
+    activeInStack = false
 
     alpha: AnimationValue = new AnimationValue()
 
@@ -202,7 +257,6 @@ function createAndLayoutNodeViews(
         let maxWidth = 0
         let totalHeight = nodes.length * nodeHeight + (verticalMargin) * (nodes.length - 1)
         let currentY = totalHeight / 2 * -1
-
 
         nodes.forEach(n => {
             let nodeView = new NodeView()

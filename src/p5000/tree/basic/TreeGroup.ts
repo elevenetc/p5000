@@ -7,6 +7,7 @@ import {BasicTreeNode, NodeView} from "./TreeModel";
 import {AnimationValue} from "../../animation/AnimationValue";
 import {logViewData} from "../../debug/LogView";
 import {P5000Config} from "../../initP5000";
+import {drawRectConnection} from "../../utils/drawRectConnection";
 
 export class TreeGroup extends Vertical {
 
@@ -66,6 +67,14 @@ export class TreeGroup extends Vertical {
         let width = this.getWidth(p)
         let height = this.getHeight(p);
 
+        if (width == 0 || height == 0) {
+            p.push()
+            p.fill(255, 255, 255)
+            p.text("Tree data is not set", this.getX(p), this.getY(p))
+            p.pop()
+            return
+        }
+
         p.push()
 
         let x = this.getX(p)
@@ -108,11 +117,13 @@ export class TreeGroup extends Vertical {
 
         if (this.treeConfig.mode == TreeMode.HISTORY) {
             this.calculateAndRenderSelection(p)
+            this.renderStack(p)
         }
 
         p.pop()
         logViewData["scale"] = this.scale
         logViewData["useCache"] = this.useCache
+        logViewData["stack size"] = this.trees[0].model.stack.getSize()
 
         this.handleDrag(p)
     }
@@ -132,6 +143,28 @@ export class TreeGroup extends Vertical {
         } else {
             this.initDrag = false
         }
+    }
+
+    renderStack(p: p5) {
+        p.push()
+        p.stroke(255, 255, 255, 255)
+        p.strokeWeight(5)
+        p.noFill()
+        let prevNode: NodeView | null = null
+        this.trees.forEach((tree) => {
+            tree.model.stack.forEach((node) => {
+                let x = node.view.getX(p)
+                let y = node.view.getY(p)
+                p.rect(x, y, node.view.getWidth(p), node.view.getHeight(p))
+
+
+                if (prevNode != null) {
+                    drawRectConnection(prevNode.view, node.view, p)
+                }
+                prevNode = node
+            })
+        })
+        p.pop()
     }
 
     calculateAndRenderSelection(p: p5) {
@@ -216,6 +249,13 @@ export class TreeGroup extends Vertical {
         })
 
         this.setScale(this.scale)
+    }
+
+    resetStack() {
+        console.log("reset stack ---------------------------")
+        this.trees.forEach(tree => {
+            tree.model.stack.clear()
+        })
     }
 
     setSelectedNode(nodeId: string) {
