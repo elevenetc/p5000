@@ -1,41 +1,45 @@
-import {PlaybackFrame} from "../../playback/PlaybackTimelineView";
 import {BasicTreeNode} from "./TreeModel";
 import {arrayToMap} from "../../utils/arrayToMap";
+import {PopStackInstruction, PushStackInstruction, StackData, StackInstruction} from "./CallStack";
 
 
 function loadAndParseTree(
     filePath: string,
     loadHandler: (result: ParseResult) => void,
-    errorHandler: () => void
+    errorHandler: (error) => void
 ) {
 
     loadAndParseJsonToObject(filePath)
         .then((result) => {
-            loadHandler(result)
-        })
+                loadHandler(result)
+            }
+        )
         .catch((error) => {
-            errorHandler();
-            console.error(error);
-        });
+                errorHandler(error);
+                console.error(error);
+            }
+        );
 }
 
-export function loadAndParseTrees(filePath: string[], loadHandler: (result: Map<String, ParseResult>) => void) {
-
-    const promises = filePath.map(async (path) => {
-        const result = await loadAndParseJsonToObject(path);
-        return [path, result] as [string, ParseResult];
-    });
-
-    Promise.all(promises)
-        .then((results) => {
-            const resultMap = new Map<String, ParseResult>();
-            results.forEach(([path, result]) => {
-                resultMap.set(path, result);
-            });
-            loadHandler(resultMap);
-        })
-        .catch((error) => console.error(error));
-}
+// export function loadAndParseTrees(filePath: string[], loadHandler: (result: Map<String, ParseResult>) => void) {
+//
+//     const promises = filePath.map(async (path) => {
+//         const result = await loadAndParseJsonToObject(path);
+//         return [path, result] as [string, ParseResult];
+//     });
+//
+//     Promise.all(promises)
+//         .then((results) => {
+//             const resultMap = new Map<String, ParseResult>();
+//             results.forEach(([path, result]) => {
+//                 resultMap.set(path, result);
+//             });
+//             loadHandler(resultMap);
+//         })
+//         .catch((error) => {
+//             console.error(error);
+//         });
+// }
 
 async function loadAndParseJsonToObject(filePath: string): Promise<ParseResult> {
     const jsonData = await loadJSON(filePath);
@@ -53,42 +57,80 @@ async function loadJSON(filePath: string): Promise<any> {
 function jsonToBasicTreeNode(json: any): ParseResult {
     let result = new ParseResult()
 
-    for (const key of Object.keys(json.threadsRoots)) {
-        let name = json.threadsNamesMap[key]
-        let root = parseNode(
-            json.threadsRoots[key],
-            (execTime) => {
-                result.maxExecTime = Math.max(result.maxExecTime, execTime)
-                result.minExecTime = Math.min(result.minExecTime, execTime)
-            },
-            (childrenCount) => {
-                result.maxChildren = Math.max(result.maxChildren, childrenCount)
-                result.minChildren = Math.min(result.minChildren, childrenCount)
-            }
+    for (const rootId of Object.keys(json.roots)) {
+        result.roots.set(
+            rootId,
+            parseNode(
+                json.roots[rootId],
+                (childrenCount) => {
+                    result.analytics.maxChildren = Math.max(result.analytics.maxChildren, childrenCount)
+                    result.analytics.minChildren = Math.min(result.analytics.minChildren, childrenCount)
+                }
+            )
         )
-        result.roots.set(name, root)
     }
-    result.history = parseHistory(json.history)
+
+    for (const stackId of Object.keys(json.stacks)) {
+        result.stacks.set(stackId, parseStack(
+                json.stacks[stackId],
+                stackId,
+                (execTime) => {
+                    result.analytics.maxExecTime = Math.max(result.analytics.maxExecTime, execTime)
+                    result.analytics.minExecTime = Math.min(result.analytics.minExecTime, execTime)
+                }
+            )
+        )
+    }
+
+    // console.log(
+    //     "parse result: " +
+    //     "\nroots: " + result.roots.size +
+    //     "\nstacks size: " + result.stacks.size
+    // )
+
+    //printType(result, "result-pre")
+    //console.log("!!: " + result.stacks.keys())
 
     return result
 }
 
-function parseHistory(history: any): PlaybackFrame[] {
-    let result: PlaybackFrame[] = [];
+function parseStack(
+    stack: any,
+    id: string,
+    measureExecTime: (execTime: number) => void
+): StackData {
+    let frames: StackInstruction[] = [];
+    //let frames = new Stack<StackCmd>();
     let idx = 0
-    history.forEach((item) => {
-        let frame = new PlaybackFrame()
-        frame.id = item.id
-        frame.name = item.fqn
-        frame.index = idx++
-        result.push(frame);
+    stack.forEach((rawStackCmd: any) => {
+        let cmd: StackInstruction
+
+        if (rawStackCmd.type == "push") {
+            cmd = new PushStackInstruction(rawStackCmd.nodeId)
+        } else if (rawStackCmd.type == "pop") {
+            cmd = new PopStackInstruction()
+        } else {
+            console.warn("unknown stack command type: " + rawStackCmd.type)
+        }
+
+        cmd.id = rawStackCmd.id
+
+        //cmd.index = idx++
+        cmd.start = rawStackCmd.start
+        cmd.end = rawStackCmd.end
+        frames.push(cmd);
+
+        measureExecTime(rawStackCmd.end - rawStackCmd.start)
     })
+    let result = new StackData()
+
+    result.id = id
+    result.instructions = frames
     return result
 }
 
 function parseNode(
     json: any,
-    measureExecTime: (execTime: number) => void,
     measureMaxChildren: (childrenCount: number) => void
 ): BasicTreeNode {
     let id = json.id
@@ -100,7 +142,7 @@ function parseNode(
 
     let children: BasicTreeNode[] = []
     json.children.forEach((child: any) => {
-        children.push(parseNode(child, measureExecTime, measureMaxChildren))
+        children.push(parseNode(child, measureMaxChildren))
     })
 
     result.id = id
@@ -112,10 +154,7 @@ function parseNode(
 
     bindParentWithChildren(result)
 
-    if (start != -1 && end != -1) {
-        result.execTime = end - start
-        measureExecTime(result.execTime)
-    }
+    if (start != -1 && end != -1) result.execTime = end - start
 
     measureMaxChildren(children.length)
 
@@ -129,9 +168,12 @@ function bindParentWithChildren(node: BasicTreeNode) {
 }
 
 class ParseResult {
-    roots = new Map<String, BasicTreeNode>();
-    history: PlaybackFrame[] = []
+    roots = new Map<string, BasicTreeNode>();
+    stacks = new Map<string, StackData>();
+    analytics = new TraceAnalytics()
+}
 
+export class TraceAnalytics {
     minExecTime = Number.MAX_VALUE
     maxExecTime = Number.MIN_VALUE
 

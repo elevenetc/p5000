@@ -5,7 +5,7 @@ export class CallStack {
     stack = new Stack<NodeView>()
     map = new Map<string, NodeView>();
 
-    clear() {
+    reset() {
         this.stack.clear()
         this.map.clear()
     }
@@ -39,4 +39,32 @@ export class CallStack {
     peek() {
         return this.stack.peek()
     }
+}
+
+export class StackData {
+    id: string = ""
+    instructions: StackInstruction[]
+    //frames = new Stack<PlaybackFrame>()
+}
+
+export class StackInstruction {
+    id: string
+    type: string
+    start: number
+    end: number
+}
+
+export class PushStackInstruction extends StackInstruction {
+    nodeId: string
+
+    constructor(nodeId: string) {
+        super()
+        this.nodeId = nodeId
+    }
+}
+
+export class PopStackInstruction extends StackInstruction {
+}
+
+export class ResetStackInstruction extends StackInstruction {
 }

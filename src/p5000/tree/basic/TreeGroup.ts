@@ -8,6 +8,7 @@ import {AnimationValue} from "../../animation/AnimationValue";
 import {logViewData} from "../../debug/LogView";
 import {P5000Config} from "../../initP5000";
 import {drawRectConnection} from "../../utils/drawRectConnection";
+import {StackInstruction} from "./CallStack";
 
 export class TreeGroup extends Vertical {
 
@@ -254,7 +255,13 @@ export class TreeGroup extends Vertical {
     resetStack() {
         console.log("reset stack ---------------------------")
         this.trees.forEach(tree => {
-            tree.model.stack.clear()
+            tree.model.stack.reset()
+        })
+    }
+
+    addStackInstruction(instruction: StackInstruction) {
+        this.trees.forEach(tree => {
+            tree.model.addStackInstruction(instruction)
         })
     }
 

@@ -5,7 +5,15 @@ import Vertical from "../../containers/Vertical";
 import TextView from "../../text/TextView";
 import {ColorDrawable} from "../../drawable/ColorDrawable";
 import {numberToScale} from "../../utils/numberToScale";
-import {CallStack} from "./CallStack";
+import {
+    CallStack,
+    PopStackInstruction,
+    PushStackInstruction,
+    ResetStackInstruction,
+    StackInstruction
+} from "./CallStack";
+import {mapValues} from "../../utils/mapValues";
+import {typeToString} from "../../debug/printType";
 
 export class TreeModel {
 
@@ -49,13 +57,32 @@ export class TreeModel {
         this.initialized = true
     }
 
+    addStackInstruction(instruction: StackInstruction) {
+        if (!this.initialized) return
+
+        if (instruction instanceof PushStackInstruction) {
+            let nodeId = instruction.nodeId
+            let nodeView = this.views.get(nodeId)
+            this.stack.push(nodeView)
+        } else if (instruction instanceof PopStackInstruction) {
+            this.stack.pop()
+        } else if (instruction instanceof ResetStackInstruction) {
+            this.stack.reset()
+        } else {
+            console.warn("Unknown stack instruction: ", instruction)
+        }
+    }
+
     setSelectedNode(nodeId: string) {
 
         if (!this.initialized) return
 
         if (!this.views.has(nodeId)) {
             this.clearCurrentSelection()
-            console.warn("Failed attempt to selected node: " + nodeId + ", views count: " + this.views.size)
+            let ids = mapValues(this.views, (view: NodeView) => {
+                return view.id
+            })
+            console.warn("Failed(1) attempt to selected nodeId: " + nodeId + ", views ids: " + typeToString(ids))
             return
         }
 
