@@ -1,0 +1,53 @@
+{
+  "timestamp": 1737494262844,
+  "stacks": {
+    "stack-0": [
+      {
+        "id": "s:0",
+        "type": "push",
+        "start": 0,
+        "end": 10,
+        "nodeId": "id:A"
+      },
+      {
+        "id": "s:1",
+        "type": "push",
+        "start": 10,
+        "end": 30,
+        "nodeId": "id:B"
+      },
+      {
+        "id": "s:2",
+        "type": "push",
+        "start": 30,
+        "end": 60,
+        "nodeId": "id:C"
+      },
+      {
+        "id": "s:3",
+        "type": "pop",
+        "start": 60,
+        "end": 70
+      }
+    ]
+  },
+  "roots": {
+    "rootID:Foo.AAAA": {
+      "id": "id:A",
+      "fqn": "Foo.AAAA",
+      "children": [
+        {
+          "id": "id:B",
+          "fqn": "Foo.BBBB",
+          "children": [
+            {
+              "id": "id:C",
+              "fqn": "Foo.CCCC",
+              "children": []
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

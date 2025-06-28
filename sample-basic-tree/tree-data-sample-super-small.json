@@ -1,0 +1,45 @@
+{
+  "timestamp": 1737494262844,
+  "history": [
+    {
+      "id": "id:A"
+    },
+    {
+      "id": "id:B"
+    },
+    {
+      "id": "id:C"
+    }
+  ],
+  "threadsRoots": {
+    "1": {
+      "id": "id:A",
+      "start": 0,
+      "end": 10,
+      "fqn": "Foo.AAAA",
+      "threadName": "main",
+      "children": [
+        {
+          "id": "id:B",
+          "start": 10,
+          "end": 30,
+          "fqn": "Foo.BBBB",
+          "threadName": "main",
+          "children": [
+            {
+              "id": "id:C",
+              "start": 30,
+              "end": 60,
+              "fqn": "Foo.CCCC",
+              "threadName": "main",
+              "children": []
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "threadsNamesMap": {
+    "1": "Main thread"
+  }
+}

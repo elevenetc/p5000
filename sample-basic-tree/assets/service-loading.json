@@ -1,0 +1,160 @@
+{
+  "timestamp": 1749851791136,
+  "history": [
+    {
+      "id": "513ed24f-e2df-40f3-a9d0-db14b92cf380",
+      "start": 1749851791109,
+      "end": 1749851791113,
+      "threadName": "main",
+      "fqn": "main"
+    },
+    {
+      "id": "3e88253f-7749-44ad-8b0f-da4a82beba47",
+      "start": 1749851791111,
+      "end": 1749851791113,
+      "threadName": "main",
+      "fqn": "test data loading"
+    },
+    {
+      "id": "9c26b08a-475d-45c9-b7ee-59adfcd55b49",
+      "start": 1749851791112,
+      "end": 1749851791112,
+      "threadName": "main",
+      "fqn": "ApiService.getData"
+    },
+    {
+      "id": "3e88253f-7749-44ad-8b0f-da4a82beba47",
+      "start": 1749851791111,
+      "end": 1749851791113,
+      "threadName": "main",
+      "fqn": "test data loading"
+    },
+    {
+      "id": "260081fa-7de0-4ca4-a482-95fe89d1e130",
+      "start": 1749851791112,
+      "end": 1749851791113,
+      "threadName": "main",
+      "fqn": "ApiService.loadData"
+    },
+    {
+      "id": "3d45e2f4-ac9c-4d2a-ad01-e49fa278d7ee",
+      "start": 1749851791112,
+      "end": 1749851791113,
+      "threadName": "main",
+      "fqn": "Cache.<get-cache>"
+    },
+    {
+      "id": "260081fa-7de0-4ca4-a482-95fe89d1e130",
+      "start": 1749851791112,
+      "end": 1749851791113,
+      "threadName": "main",
+      "fqn": "ApiService.loadData"
+    },
+    {
+      "id": "f9bcc87c-b35f-4428-90ad-d437af64e8cd",
+      "start": 1749851791113,
+      "end": 1749851791113,
+      "threadName": "main",
+      "fqn": "Database.getData"
+    },
+    {
+      "id": "260081fa-7de0-4ca4-a482-95fe89d1e130",
+      "start": 1749851791112,
+      "end": 1749851791113,
+      "threadName": "main",
+      "fqn": "ApiService.loadData"
+    },
+    {
+      "id": "06095dcc-f8ea-4c1d-978f-78456736ac45",
+      "start": 1749851791113,
+      "end": 1749851791113,
+      "threadName": "main",
+      "fqn": "Cache.<get-cache>"
+    },
+    {
+      "id": "260081fa-7de0-4ca4-a482-95fe89d1e130",
+      "start": 1749851791112,
+      "end": 1749851791113,
+      "threadName": "main",
+      "fqn": "ApiService.loadData"
+    },
+    {
+      "id": "3e88253f-7749-44ad-8b0f-da4a82beba47",
+      "start": 1749851791111,
+      "end": 1749851791113,
+      "threadName": "main",
+      "fqn": "test data loading"
+    },
+    {
+      "id": "513ed24f-e2df-40f3-a9d0-db14b92cf380",
+      "start": 1749851791109,
+      "end": 1749851791113,
+      "threadName": "main",
+      "fqn": "main"
+    }
+  ],
+  "threadsRoots": {
+    "1": {
+      "id": "513ed24f-e2df-40f3-a9d0-db14b92cf380",
+      "start": 1749851791109,
+      "end": 1749851791113,
+      "fqn": "main",
+      "threadId": 1,
+      "children": [
+        {
+          "id": "3e88253f-7749-44ad-8b0f-da4a82beba47",
+          "start": 1749851791111,
+          "end": 1749851791113,
+          "fqn": "test data loading",
+          "threadId": 1,
+          "children": [
+            {
+              "id": "9c26b08a-475d-45c9-b7ee-59adfcd55b49",
+              "start": 1749851791112,
+              "end": 1749851791112,
+              "fqn": "ApiService.getData",
+              "threadId": 1,
+              "children": []
+            },
+            {
+              "id": "260081fa-7de0-4ca4-a482-95fe89d1e130",
+              "start": 1749851791112,
+              "end": 1749851791113,
+              "fqn": "ApiService.loadData",
+              "threadId": 1,
+              "children": [
+                {
+                  "id": "3d45e2f4-ac9c-4d2a-ad01-e49fa278d7ee",
+                  "start": 1749851791112,
+                  "end": 1749851791113,
+                  "fqn": "Cache.<get-cache>",
+                  "threadId": 1,
+                  "children": []
+                },
+                {
+                  "id": "f9bcc87c-b35f-4428-90ad-d437af64e8cd",
+                  "start": 1749851791113,
+                  "end": 1749851791113,
+                  "fqn": "Database.getData",
+                  "threadId": 1,
+                  "children": []
+                },
+                {
+                  "id": "06095dcc-f8ea-4c1d-978f-78456736ac45",
+                  "start": 1749851791113,
+                  "end": 1749851791113,
+                  "fqn": "Cache.<get-cache>",
+                  "threadId": 1,
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "threadsNamesMap": {
+    "1": "main"
+  }
+}
