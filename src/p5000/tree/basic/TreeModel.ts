@@ -12,8 +12,6 @@ import {
     ResetStackInstruction,
     StackInstruction
 } from "./CallStack";
-import {mapValues} from "../../utils/mapValues";
-import {typeToString} from "../../debug/printType";
 
 export class TreeModel {
 
@@ -34,7 +32,8 @@ export class TreeModel {
     minChildren = -1
     maxChildren = -1
 
-    stack = new CallStack()
+    //stack = new CallStack()
+    stacks = new Map<string, CallStack>()
 
     init(root: BasicTreeNode) {
         this.root = root
@@ -60,58 +59,65 @@ export class TreeModel {
     addStackInstruction(instruction: StackInstruction) {
         if (!this.initialized) return
 
+        let stack = this.stacks.get(instruction.stackId)
+
+        if (stack === undefined) {
+            stack = new CallStack()
+            this.stacks.set(instruction.stackId, stack)
+        }
+
         if (instruction instanceof PushStackInstruction) {
             let nodeId = instruction.nodeId
             let nodeView = this.views.get(nodeId)
-            this.stack.push(nodeView)
+            stack.push(nodeView)
         } else if (instruction instanceof PopStackInstruction) {
-            this.stack.pop()
+            stack.pop()
         } else if (instruction instanceof ResetStackInstruction) {
-            this.stack.reset()
+            stack.reset()
         } else {
             console.warn("Unknown stack instruction: ", instruction)
         }
     }
 
     setSelectedNode(nodeId: string) {
-
-        if (!this.initialized) return
-
-        if (!this.views.has(nodeId)) {
-            this.clearCurrentSelection()
-            let ids = mapValues(this.views, (view: NodeView) => {
-                return view.id
-            })
-            console.warn("Failed(1) attempt to selected nodeId: " + nodeId + ", views ids: " + typeToString(ids))
-            return
-        }
-
-        updateStack(nodeId, this.stack, this.views)
-
-        let prevNodeId = this.selectedNodeId;
-        if (nodeId == prevNodeId) return //already selected
-
-        if (prevNodeId != nodeId && prevNodeId != null) {
-            //clear current selection
-
-            // let prevStack = this.stack.pop()
-            //
-            // if (prevStack.id != prevNodeId) {
-            //     console.warn("Stack is corrupted, prevNodeId: " + prevNodeId + ", prevStack: " + prevStack.id)
-            // }
-
-            this.clearCurrentSelection()
-        }
-
-
-        this.selectedNodeId = nodeId
-        if (this.views.has(this.selectedNodeId)) {
-            let nodeView = this.views.get(this.selectedNodeId);
-            //this.stack.push(nodeView)
-            nodeView.selected = true
-        } else {
-            console.warn("Failed attempt to selected node: " + nodeId + ", views count: " + this.views.size)
-        }
+        //
+        // if (!this.initialized) return
+        //
+        // if (!this.views.has(nodeId)) {
+        //     this.clearCurrentSelection()
+        //     let ids = mapValues(this.views, (view: NodeView) => {
+        //         return view.id
+        //     })
+        //     console.warn("Failed(1) attempt to selected nodeId: " + nodeId + ", views ids: " + typeToString(ids))
+        //     return
+        // }
+        //
+        // updateStack(nodeId, this.stack, this.views)
+        //
+        // let prevNodeId = this.selectedNodeId;
+        // if (nodeId == prevNodeId) return //already selected
+        //
+        // if (prevNodeId != nodeId && prevNodeId != null) {
+        //     //clear current selection
+        //
+        //     // let prevStack = this.stack.pop()
+        //     //
+        //     // if (prevStack.id != prevNodeId) {
+        //     //     console.warn("Stack is corrupted, prevNodeId: " + prevNodeId + ", prevStack: " + prevStack.id)
+        //     // }
+        //
+        //     this.clearCurrentSelection()
+        // }
+        //
+        //
+        // this.selectedNodeId = nodeId
+        // if (this.views.has(this.selectedNodeId)) {
+        //     let nodeView = this.views.get(this.selectedNodeId);
+        //     //this.stack.push(nodeView)
+        //     nodeView.selected = true
+        // } else {
+        //     console.warn("Failed attempt to selected node: " + nodeId + ", views count: " + this.views.size)
+        // }
     }
 
     private clearCurrentSelection() {
@@ -126,42 +132,42 @@ export class TreeModel {
 
 let pushId = 0
 
-function updateStack(nodeId: string, stack: CallStack, views: Map<string, NodeView>) {
-    let nodeView = views.get(nodeId);
-    let node = nodeView.node
-
-    //console.log("stack update: " + node.fqn)
-    //console.log("stack update: " + node.id + ", parent: " + node?.parent?.id)
-
-    if (stack.isEmpty()) {
-        stack.push(nodeView)
-        console.log((pushId++) + ": stack: push first")
-    } else {
-
-        let topCallView = stack.peek()
-        let topNode = topCallView.node
-        if (topCallView.id == nodeId) return
-
-        if (topNode.parent?.id === node.id) {
-            /**
-             * If parent is the same for current top and new top, then we change top
-             */
-            console.log("stack: pop")
-            stack.pop()
-        }
-
-        let fqnsEqual = topNode?.parent?.fqn === node?.parent?.fqn
-        let idsEqual = topNode?.parent?.id === node?.parent?.id
-
-        console.log((pushId++) + ": stack: push next: " + node.fqn +
-            "\nparent of top `" + topNode?.parent?.fqn + "`, parent of new `" + node?.parent?.fqn +
-            "`\nfqns equal: " + fqnsEqual + ", ids equal: " + idsEqual
-        )
-        stack.push(nodeView)
-
-
-    }
-}
+// function updateStack(nodeId: string, stack: CallStack, views: Map<string, NodeView>) {
+//     let nodeView = views.get(nodeId);
+//     let node = nodeView.node
+//
+//     //console.log("stack update: " + node.fqn)
+//     //console.log("stack update: " + node.id + ", parent: " + node?.parent?.id)
+//
+//     if (stack.isEmpty()) {
+//         stack.push(nodeView)
+//         console.log((pushId++) + ": stack: push first")
+//     } else {
+//
+//         let topCallView = stack.peek()
+//         let topNode = topCallView.node
+//         if (topCallView.id == nodeId) return
+//
+//         if (topNode.parent?.id === node.id) {
+//             /**
+//              * If parent is the same for current top and new top, then we change top
+//              */
+//             console.log("stack: pop")
+//             stack.pop()
+//         }
+//
+//         let fqnsEqual = topNode?.parent?.fqn === node?.parent?.fqn
+//         let idsEqual = topNode?.parent?.id === node?.parent?.id
+//
+//         console.log((pushId++) + ": stack: push next: " + node.fqn +
+//             "\nparent of top `" + topNode?.parent?.fqn + "`, parent of new `" + node?.parent?.fqn +
+//             "`\nfqns equal: " + fqnsEqual + ", ids equal: " + idsEqual
+//         )
+//         stack.push(nodeView)
+//
+//
+//     }
+// }
 
 export class BasicTreeNode {
     id: string = ""

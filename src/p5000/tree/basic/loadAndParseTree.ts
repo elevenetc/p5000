@@ -116,6 +116,7 @@ function parseStack(
         cmd.id = rawStackCmd.id
 
         //cmd.index = idx++
+        cmd.stackId = id
         cmd.start = rawStackCmd.start
         cmd.end = rawStackCmd.end
         frames.push(cmd);

@@ -49,7 +49,7 @@ export class StackData {
 
 export class StackInstruction {
     id: string
-    type: string
+    stackId: string
     start: number
     end: number
 }

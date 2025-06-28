@@ -1,7 +1,7 @@
 import Vertical from "../../containers/Vertical";
 import {BasicTreeView} from "./BasicTreeView";
 import Align from "../../Align";
-import {rgbaToRgb, stringToRgba} from "../../colorUtils";
+import {rgbaToRgb, stringToColor, stringToRgba} from "../../colorUtils";
 import p5 from "p5";
 import {BasicTreeNode, NodeView} from "./TreeModel";
 import {AnimationValue} from "../../animation/AnimationValue";
@@ -124,7 +124,7 @@ export class TreeGroup extends Vertical {
         p.pop()
         logViewData["scale"] = this.scale
         logViewData["useCache"] = this.useCache
-        logViewData["stack size"] = this.trees[0].model.stack.getSize()
+        //logViewData["stack size"] = this.trees[0].model.stack.getSize()
 
         this.handleDrag(p)
     }
@@ -148,21 +148,36 @@ export class TreeGroup extends Vertical {
 
     renderStack(p: p5) {
         p.push()
-        p.stroke(255, 255, 255, 255)
         p.strokeWeight(5)
         p.noFill()
         let prevNode: NodeView | null = null
+        let shift = 0
+        let colorId = 100
         this.trees.forEach((tree) => {
-            tree.model.stack.forEach((node) => {
-                let x = node.view.getX(p)
-                let y = node.view.getY(p)
-                p.rect(x, y, node.view.getWidth(p), node.view.getHeight(p))
 
+            tree.model.stacks.forEach((stack, id) => {
+                let color = stringToColor(colorId.toString())
+                p.stroke(color[0], color[1], color[2], 255)
+                stack.forEach((node) => {
+                    let x = node.view.getX(p)
+                    let y = node.view.getY(p)
 
-                if (prevNode != null) {
-                    drawRectConnection(prevNode.view, node.view, p)
-                }
-                prevNode = node
+                    p.rect(
+                        x + shift,
+                        y + shift,
+                        node.view.getWidth(p) + shift,
+                        node.view.getHeight(p) + shift
+                    )
+
+                    if (prevNode != null) {
+                        drawRectConnection(prevNode.view, node.view, p, shift)
+                    }
+                    prevNode = node
+                })
+
+                prevNode = null
+                shift += 10
+                colorId *= 3
             })
         })
         p.pop()
@@ -255,7 +270,7 @@ export class TreeGroup extends Vertical {
     resetStack() {
         console.log("reset stack ---------------------------")
         this.trees.forEach(tree => {
-            tree.model.stack.reset()
+            //tree.model.stack.reset()
         })
     }
 
