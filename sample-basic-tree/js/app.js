@@ -4,33 +4,61 @@ import Align from "../../src/p5000/Align";
 import {ColorDrawable} from "../../src/p5000/drawable/ColorDrawable";
 import {Direction, NavigationView} from "../../src/p5000/navigation/NavigationView";
 import {initP5000} from "../../src/p5000/initP5000";
-import LogView from "../../src/p5000/debug/LogView";
+import LogView, {logViewData} from "../../src/p5000/debug/LogView";
 import Vertical from "../../src/p5000/containers/Vertical";
 import {PlaybackControlsView} from "../../src/p5000/playback/PlaybackControlsView";
-import {TreeGroup} from "../../src/p5000/tree/basic/TreeGroup";
+import {TreeGroup, TreeMode} from "../../src/p5000/tree/basic/TreeGroup";
 import {PlaybackController} from "../../src/p5000/playback/PlaybackController";
 import {loadAndParseTree} from "../../src/p5000/tree/basic/loadAndParseTree";
 import {ScaleAction, ScaleView} from "../../src/p5000/views/ScaleView";
+import {CheckboxView} from "../../src/p5000/views/CheckboxView";
+import {RadioList} from "../../src/p5000/views/RadioList";
+import {CallStackController} from "../../src/p5000/tree/basic/CallStackController";
+import {errorOnNullOrUndefined} from "../../src/p5000/utils/errorOnNullOrUndefined";
 
-let fileName = "objc-export-k2.json";
-//let fileName = "tree-data-sample-small.json";
+
+// let fileName = "tree-data-sample-small.json";
 // let fileName = "tree-data-sample-super-small.json";
-const scaleDiff = .1
-const historySelectInterval = 200
+// let fileName = "objc-export-k2.json";
+// let fileName = "assets/service-loading.json";
+//let fileName = "assets/multiple-stacks.json";
+let fileName = "assets/another-stack.json";
 
+const scaleDiff = .3
+const historySelectInterval = 100
 const follow = false
+const showHistory = false
+const useCachedRendering = true
 
 const root = new Free()
 const treesContainer = new Vertical()
 
+let callStackController = new CallStackController()
 const treeGroup = new TreeGroup()
 let timeline = new PlaybackTimelineView();
 let navigationView = new NavigationView();
 let scaleView = new ScaleView();
+let playbackGroup = new Vertical()
+let modesListView = new RadioList([
+    TreeMode.HISTORY,
+    TreeMode.DEFAULT,
+    TreeMode.EXEC_TIME,
+    TreeMode.CALL_COUNT
+], (item) => {
+    treeGroup.setMode(item)
+    setHistoryVisible(item === TreeMode.HISTORY)
+})
+
+let settings = new Vertical()
+
+settings.addChild(modesListView)
+settings.addChild(new CheckboxView("Use cached rendering", (checked) => {
+    treeGroup.useCache = checked
+}, useCachedRendering))
 
 treesContainer.alignContent = Align.CENTER
 
-let playbackGroup = new Vertical()
+
 playbackGroup.alignContent = Align.CENTER
 
 let controls = new PlaybackControlsView()
@@ -47,16 +75,22 @@ scaleView.setClickHandler((scale) => {
     treeGroup.setScaleAndReload(scaleValue)
 })
 
+callStackController.addChangeListener((instruction, stack) => {
+    treeGroup.addStackInstruction(instruction)
+})
+
 let controller = new PlaybackController(
+    callStackController,
     timeline,
     controls,
     treeGroup,
     historySelectInterval, (frame) => {
         //tre0.setSelectedNode(frame.id)
-        if (frame !== undefined) {
-            treeGroup.setSelectedNode(frame.id)
-            //console.log(">" + frame.id)
-        }
+        errorOnNullOrUndefined(frame)
+
+        console.log("frame: " + frame)
+        if (frame.index === 0) treeGroup.resetStack()
+        treeGroup.setSelectedNode(frame.nodeId)
 
 
         if (follow) {
@@ -97,16 +131,34 @@ playbackGroup.addChild(timeline)
 
 root.addChild(playbackGroup, Align.CENTER_BOTTOM)
 root.addChild(fpsView, Align.LEFT_TOP)
-root.addChild(navigationView, Align.LEFT_BOTTOM)
+//root.addChild(navigationView, Align.LEFT_BOTTOM)
 root.addChild(scaleView, Align.RIGHT_BOTTOM)
+root.addChild(settings, Align.LEFT_BOTTOM)
 
 
 loadAndParseTree(fileName, (result) => {
-    timeline.setFrames(result.history)
-    treeGroup.setRoots(result.roots, result.maxExecTime, result.minExecTime)
+    //timeline.setFrames(result.stacks)
+    callStackController.setFrames(result.stacks)
+    treeGroup.setRoots(
+        result.roots,
+        result.analytics.minExecTime,
+        result.analytics.maxExecTime,
+        result.analytics.minChildren,
+        result.analytics.maxChildren
+    )
+}, (error) => {
+    logViewData["(!) LOADING JSON ERROR"] = error.message
 })
 
 const p = initP5000(root, false, (p) => {
     treeGroup.setScale(1)
     // treeGroup.setScale(1)
 })
+
+function setHistoryVisible(visible) {
+    treeGroup.enableHistory = visible
+    timeline.setVisible(visible)
+    playbackGroup.setVisible(visible)
+}
+
+//setHistoryVisible(showHistory)
