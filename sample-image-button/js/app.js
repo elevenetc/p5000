@@ -5,7 +5,7 @@ import {ImageButton} from "../../src/p5000/button/ImageButton";
 import Align from "../../src/p5000/Align";
 
 const root = new Free()
-const button = new ImageButton("static/arrow_top.png")
+const button = new ImageButton("assets/arrow_top.png")
 root.addChild(button, Align.CENTER)
 button.clickListener = () => {
     console.log("clicked");
