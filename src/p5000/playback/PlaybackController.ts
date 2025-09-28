@@ -1,61 +1,68 @@
 import {PlaybackFrame, PlaybackTimelineView} from './PlaybackTimelineView';
 import {PlaybackControlsView} from "./PlaybackControlsView";
 import {TreeGroup} from "../tree/basic/TreeGroup";
+import {CallStackController} from "../tree/basic/CallStackController";
 
 class PlaybackController {
 
-    private timeline: PlaybackTimelineView;
-    private treeGroup: TreeGroup;
+    private timelineView: PlaybackTimelineView;
+    private controller: CallStackController;
+    private treeView: TreeGroup;
     private handler: ((selected: PlaybackFrame) => void) | null = null;
 
     constructor(
-        timeline: PlaybackTimelineView,
-        controls: PlaybackControlsView,
-        treeGroup: TreeGroup,
+        stackController: CallStackController,
+        timelineView: PlaybackTimelineView,
+        controlsView: PlaybackControlsView,
+        treeView: TreeGroup,
         interval: number,
         handler: (selected: PlaybackFrame) => void
     ) {
-        this.timeline = timeline;
+        this.controller = stackController;
+        this.timelineView = timelineView;
         this.handler = handler;
-        this.treeGroup = treeGroup;
+        this.treeView = treeView;
 
-        controls.next.clickListener = () => {
+        controlsView.next.clickListener = () => {
             this.selectNext()
         }
 
-        controls.prev.clickListener = () => {
+        controlsView.prev.clickListener = () => {
             this.selectPrevious()
         }
 
         setInterval(() => {
-            handler(this.timeline.getCurrentFrame())
-            this.timeline.selectNext()
+
+            this.controller.selectNext()
+            let currentFrame = this.controller.getCurrentFrame();
+            if (currentFrame !== null) handler(currentFrame)
         }, interval);
     }
 
     setPlaybackView(view: PlaybackTimelineView): void {
-        this.timeline = view
+        this.timelineView = view
     }
 
     selectNext() {
-        this.timeline.selectNext()
+        //this.timelineView.selectNext()
         this.updateViews()
     }
 
     selectPrevious() {
-        this.timeline.selectPrevious()
+        //this.timelineView.selectPrevious()
         this.updateViews();
     }
 
     private updateViews() {
-        let currentFrame = this.timeline.getCurrentFrame();
+        let currentFrame = this.controller.getCurrentFrame();
+        if (currentFrame === null) return;
 
         if (currentFrame.index === 0) {
-            this.treeGroup.resetStack()
+            this.treeView.resetStack()
         }
 
         this.handler(currentFrame)
-        this.treeGroup.setSelectedNode(currentFrame.id)
+        this.treeView.setSelectedNode(currentFrame.id)
     }
 }
 
