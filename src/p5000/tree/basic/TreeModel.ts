@@ -69,7 +69,12 @@ export class TreeModel {
         if (instruction instanceof PushStackInstruction) {
             let nodeId = instruction.nodeId
             let nodeView = this.views.get(nodeId)
-            stack.push(nodeView)
+            if (nodeView === undefined) {
+                console.error("Failed to find nodeView for nodeId: " + nodeId)
+            } else {
+                stack.push(nodeView)
+            }
+
         } else if (instruction instanceof PopStackInstruction) {
             stack.pop()
         } else if (instruction instanceof ResetStackInstruction) {
