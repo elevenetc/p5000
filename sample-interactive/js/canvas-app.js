@@ -1,4 +1,3 @@
-import p5 from 'p5';
 import {allProjects, allTags} from "./projectsData";
 import {formatDateToMMYYYY} from "./dateUtils";
 import LinksView from "./LinksView";
@@ -8,10 +7,10 @@ import Align from "../../src/p5000/Align";
 import TextView from "../../src/p5000/text/TextView";
 import {Free} from "../../src/p5000/containers/Free";
 import {KeyboardHandlerImpl} from "../../src/p5000/keyboard/KeyboardHandler";
-import {layoutAndRender} from "../../src/p5000/layoutAndRender";
 import {InputView} from "../../src/p5000/text/InputView";
 import SelectionTextOverlay from "../../src/p5000/text/SelectionTextOverlay";
 import LogView from "../../src/p5000/debug/LogView";
+import {initP5000} from "../../src/p5000/initP5000";
 
 
 const projectsToTags = new Map();
@@ -104,24 +103,12 @@ root.addChild(tagsView, Align.RIGHT_TOP)
 root.addChild(filterText, Align.CENTER_BOTTOM)
 root.addChild(logView, Align.CENTER)
 
-function setup(p) {
-    p.createCanvas(p.windowWidth, p.windowHeight);
-    p.textSize(32);
-}
+initP5000(
+    root,
+    false,
+    (p) => {
 
-function draw(p) {
-    p.background(0);
-
-    layoutAndRender(root, p, null, (view, p) => {
+    }, (v, p) => {
         linksView.onNoHover(p)
-    })
-}
-
-
-const sketch = (p) => {
-    p.setup = () => setup(p);
-    p.draw = () => draw(p);
-    p.windowResized = () => p.resizeCanvas(p.windowWidth, p.windowHeight);
-};
-
-new p5(sketch);
+    }
+);

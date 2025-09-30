@@ -2,8 +2,13 @@ import {layoutAndRender} from "./layoutAndRender";
 import View from "./View";
 import p5 from "p5";
 
-export function initP5000(root: View, useWebGL: boolean = false, onSetup: (p: p5) => void = () => {
-}): p5 {
+export function initP5000(
+    root: View,
+    useWebGL: boolean = false,
+    onSetup: (p: p5) => void = () => {
+    },
+    offHover?: (view: View, p: p5) => void
+): p5 {
 
     let config = new P5000Config()
 
@@ -56,6 +61,7 @@ export function initP5000(root: View, useWebGL: boolean = false, onSetup: (p: p5
                 root.onHoverIn(p)
             },
             (view, p) => {
+                offHover?.(view, p)
                 root.onHoverOut(p)
             },
             config
