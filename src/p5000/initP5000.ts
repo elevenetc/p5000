@@ -12,11 +12,20 @@ export function initP5000(
 
     let config = new P5000Config()
 
+    // Create a dedicated parent for this instance so it stacks above previous ones
+    const overlayParent = createOverlayParent();
+
     function setup(p: p5) {
         const canvas = p.createCanvas(p.windowWidth, p.windowHeight, useWebGL ? p.WEBGL : p.P2D)
 
+        canvas.parent(overlayParent);
+        canvas.style('position', 'absolute');
+        canvas.style('left', '0px');
+        canvas.style('top', '0px');
+        canvas.style('width', '100%');
+        canvas.style('height', '100%');
+
         if (useWebGL) {
-            console.log("USE WEBGL MODE")
             root.setX(-p.windowWidth / 2)
             root.setY(-p.windowHeight / 2)
         }
@@ -53,7 +62,7 @@ export function initP5000(
             config.isGrabbing = false
         }
 
-        p.background(0, 0, 0);
+        p.clear()
         layoutAndRender(
             root,
             p,
@@ -95,7 +104,7 @@ export function initP5000(
         }
     }
 
-    const sketch = (p) => {
+    const sketch = (p: p5) => {
         p.setup = () => setup(p);
         p.draw = () => draw(p);
         p.windowResized = () => {
@@ -130,4 +139,23 @@ export class TextStyle {
     titleSize1: number
     titleSize2: number
     titleSize3: number
+}
+
+// Keep a counter for stacking order (higher = on top)
+let P5000_NEXT_Z = 1;
+
+function createOverlayParent(): HTMLElement {
+    const parent = document.createElement('div');
+    parent.className = 'p5000-overlay-parent';
+    Object.assign(parent.style, {
+        position: 'fixed',       // or 'absolute' if you want to scroll with page
+        left: '0',
+        top: '0',
+        width: '100vw',
+        height: '100vh',
+        zIndex: String(P5000_NEXT_Z++),
+        pointerEvents: 'auto',   // change to 'none' if you want clicks to pass through
+    } as CSSStyleDeclaration);
+    document.body.appendChild(parent);
+    return parent;
 }
