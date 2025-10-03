@@ -29,14 +29,14 @@ export class GlPlaygroundDrawable implements Drawable {
     }
 
     draw(view: View, p: p5) {
-        playgroundWebGL(this.root, p)
+        playgroundWebGL(this.root, view, p)
     }
 
 }
 
-export function playgroundWebGL(root: GraphNode, p: p5): void {
-    //throw new Error("Not implemented");
-    getRenderer(p).render(root, p);
+export function playgroundWebGL(root: GraphNode, container: View, p: p5): void {
+    console.log("playgroundWebGL", container.getX(p));
+    getRenderer(p).render(root, container, p);
 }
 
 /* -------------------- Internal implementation -------------------- */
@@ -129,7 +129,10 @@ class InstancedRectsRenderer {
         this.initialized = true;
     }
 
-    render(root: GraphNode, p: p5) {
+    render(
+        root: GraphNode,
+        container: View,
+        p: p5) {
         if (!this.initialized) this.init(p);
         const gl = this.gl;
 
@@ -184,8 +187,8 @@ class InstancedRectsRenderer {
         for (let i = 0; i < nodes.length; i++) {
             const n = nodes[i];
             // centers
-            this.centers[2 * i + 0] = n.x;
-            this.centers[2 * i + 1] = n.y;
+            this.centers[2 * i + 0] = n.x + n.width / 2;
+            this.centers[2 * i + 1] = n.y + n.height / 2;
             // half sizes
             this.halfSizes[2 * i + 0] = n.width * 0.5;
             this.halfSizes[2 * i + 1] = n.height * 0.5;
@@ -196,7 +199,8 @@ class InstancedRectsRenderer {
             this.colors[4 * i + 2] = c[2] / 255;
             this.colors[4 * i + 3] = 1.0;
             // radius (tweak or store on node if you like)
-            this.radii[i] = Math.min(n.width, n.height) * 0.1; // 10% corner
+            //this.radii[i] = Math.min(n.width, n.height) * 0.1; // 10% corner
+            this.radii[i] = 5;
         }
 
         // Push changed ranges
@@ -210,7 +214,10 @@ class InstancedRectsRenderer {
         gl.bufferSubData(gl.ARRAY_BUFFER, 0, this.radii, 0, nodes.length);
 
         // Draw
-        gl.viewport(0, 0, p.width, p.height);
+        const w = this.gl.drawingBufferWidth;
+        const h = this.gl.drawingBufferHeight;
+        gl.viewport(0, 0, w, h);
+        //gl.viewport(0, 0, p.width, p.height);
         gl.clearColor(0, 0, 0, 1);
         gl.clear(gl.COLOR_BUFFER_BIT);
 
