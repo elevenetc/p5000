@@ -144,11 +144,15 @@ class Free extends View implements Container {
     }
 
     onHoverIn(p: import("p5")): void {
-
+        this.children.forEach(child => {
+            child.onHoverIn(p)
+        })
     }
 
     onHoverOut(p: import("p5")): void {
-
+        this.children.forEach(child => {
+            child.onHoverOut(p)
+        })
     }
 
     setX(x: number) {

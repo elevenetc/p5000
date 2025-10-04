@@ -10,6 +10,8 @@ export class GraphNode {
     color!: [number, number, number]; // 0..255
     children!: GraphNode[];
 
+    selected: boolean = false;
+
     constructor(x: number, y: number, width: number, height: number, color: [number, number, number]) {
         this.x = x;
         this.y = y;

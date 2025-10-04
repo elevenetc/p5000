@@ -7,12 +7,8 @@ export class DrawableView extends View {
         super();
         this.background = drawable
         this.hoverHandler = (id: string, hovered: boolean, p: p5) => {
-            console.log("drawable view hovered")
+            //console.log("drawable view hovered", hovered)
         }
-    }
-
-    handleHover(mouseX: number, mouseY: number, p: p5): boolean {
-        return super.handleHover(mouseX, mouseY, p);
     }
 
     getX(p: p5): number {

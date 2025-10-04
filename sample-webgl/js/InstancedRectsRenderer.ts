@@ -160,12 +160,19 @@ export class InstancedRectsRenderer {
             // half sizes
             this.halfSizes[2 * i + 0] = n.width * 0.5;
             this.halfSizes[2 * i + 1] = n.height * 0.5;
-            // colors 0..1
-            const c = n.color as RGB;
-            this.colors[4 * i + 0] = c[0] / 255;
-            this.colors[4 * i + 1] = c[1] / 255;
-            this.colors[4 * i + 2] = c[2] / 255;
-            this.colors[4 * i + 3] = 1.0;
+            // colors 0..1 (white if selected)
+            if (n.selected) {
+                this.colors[4 * i + 0] = 1.0;
+                this.colors[4 * i + 1] = 1.0;
+                this.colors[4 * i + 2] = 1.0;
+                this.colors[4 * i + 3] = 1.0;
+            } else {
+                const c = n.color as RGB;
+                this.colors[4 * i + 0] = c[0] / 255;
+                this.colors[4 * i + 1] = c[1] / 255;
+                this.colors[4 * i + 2] = c[2] / 255;
+                this.colors[4 * i + 3] = 1.0;
+            }
             // radius (tweak or store on node if you like)
             //this.radii[i] = Math.min(n.width, n.height) * 0.1; // 10% corner
             this.radii[i] = 5;
