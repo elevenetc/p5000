@@ -1,10 +1,11 @@
 import {Free} from "../../src/p5000/containers/Free";
 import {initP5000} from "../../src/p5000/initP5000";
-import {GlPlaygroundDrawable, GraphNode} from "./playground-webgl";
+import {GraphNode} from "./playground-webgl";
 import {DrawableView} from "../../src/p5000/views/DrawableView";
 import LogView from "../../src/p5000/debug/LogView";
 import Align from "../../src/p5000/Align";
 import {ColorDrawable} from "../../src/p5000/drawable/ColorDrawable";
+import {GraphDrawable} from "./GraphDrawable";
 
 const rootNodeSize = 50
 const rootNode = new GraphNode(0, 0, rootNodeSize, rootNodeSize, [255, 0, 0])
@@ -39,7 +40,6 @@ function generateHorizontalChianOfChildren() {
 }
 
 generateAreanOfChildren();
-
 //generateHorizontalChianOfChildren()
 
 
@@ -52,11 +52,7 @@ function initLogView(s) {
 
 
 function initGlView() {
-    const glView = new DrawableView(
-        new GlPlaygroundDrawable(
-            rootNode
-        )
-    )
+    const glView = new DrawableView(new GraphDrawable(rootNode))
     const glRoot = new Free()
     glRoot.background = new ColorDrawable([22, 44, 255, 200])
     glRoot.addChild(glView)
