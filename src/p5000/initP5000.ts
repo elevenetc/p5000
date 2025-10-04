@@ -11,12 +11,16 @@ export function initP5000(
 ): p5 {
 
     let config = new P5000Config()
+    let mouseOverCanvas = false
 
     // Create a dedicated parent for this instance so it stacks above previous ones
     const overlayParent = createOverlayParent();
 
     function setup(p: p5) {
         const canvas = p.createCanvas(p.windowWidth, p.windowHeight, useWebGL ? p.WEBGL : p.P2D)
+
+        canvas.mouseOver(() => mouseOverCanvas = true)
+        canvas.mouseOut(() => mouseOverCanvas = false)
 
         canvas.parent(overlayParent);
         canvas.style('position', 'absolute');
@@ -65,6 +69,7 @@ export function initP5000(
         p.clear()
         layoutRenderAndHandleHover(
             root,
+            mouseOverCanvas,
             p,
             (view, p) => {
                 root.onHoverIn(p)
