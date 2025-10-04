@@ -6,10 +6,10 @@ import LogView from "../../src/p5000/debug/LogView";
 import Align from "../../src/p5000/Align";
 import {ColorDrawable} from "../../src/p5000/drawable/ColorDrawable";
 
+const rootNodeSize = 50
+const rootNode = new GraphNode(0, 0, rootNodeSize, rootNodeSize, [255, 0, 0])
 
-const rootNode = new GraphNode(0, 0, 300, 300, [255, 0, 0])
-
-function generateChildren() {
+function generateAreanOfChildren() {
     let d = 28
     for (let i = 0; i < 5000; i++) {
         const x = (i % d) * 25
@@ -23,7 +23,24 @@ function generateChildren() {
     }
 }
 
-generateChildren();
+function generateHorizontalChianOfChildren() {
+    let distBetweenNodes = 15;
+    for (let i = 0; i < 10; i++) {
+        let idx = i + 1; // 0 is root node
+
+        const x = idx * rootNodeSize + idx * distBetweenNodes
+        const color = [
+            Math.random() * 255,
+            Math.random() * 255,
+            Math.random() * 255
+        ]
+        rootNode.children.push(new GraphNode(x, 0, rootNodeSize, rootNodeSize, color))
+    }
+}
+
+generateAreanOfChildren();
+
+//generateHorizontalChianOfChildren()
 
 
 function initLogView(s) {
