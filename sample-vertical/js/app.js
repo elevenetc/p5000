@@ -3,7 +3,7 @@ import {Free} from "../../src/p5000/containers/Free";
 import TextView from "../../src/p5000/text/TextView";
 import Align from "../../src/p5000/Align";
 import Vertical from "../../src/p5000/containers/Vertical";
-import {layoutAndRender} from "../../src/p5000/layoutAndRender";
+import {layoutRenderAndHandleHover} from "../../src/p5000/layoutRenderAndHandleHover";
 
 const root = new Free()
 const vertical = new Vertical()
@@ -30,7 +30,7 @@ function setup(p) {
 
 function draw(p) {
     p.background(0, 0, 0)
-    layoutAndRender(root, p)
+    layoutRenderAndHandleHover(root, p)
 }
 
 const sketch = (p) => {

@@ -5,7 +5,7 @@ import {InputView} from "../../src/p5000/text/InputView";
 import {TextStyle} from "../../src/p5000/text/TextStyle";
 import Align from "../../src/p5000/Align";
 import {KeyboardHandlerImpl} from "../../src/p5000/keyboard/KeyboardHandler";
-import {layoutAndRender} from "../../src/p5000/layoutAndRender";
+import {layoutRenderAndHandleHover} from "../../src/p5000/layoutRenderAndHandleHover";
 
 const root = new Free()
 root.background = new ColorDrawable([50, 0, 0, 255])
@@ -28,7 +28,7 @@ function setup(p) {
 
 function draw(p) {
     p.background(0, 0, 0);
-    layoutAndRender(root, p)
+    layoutRenderAndHandleHover(root, p)
 }
 
 const sketch = (p) => {

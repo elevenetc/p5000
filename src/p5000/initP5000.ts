@@ -1,4 +1,4 @@
-import {layoutAndRender} from "./layoutAndRender";
+import {layoutRenderAndHandleHover} from "./layoutRenderAndHandleHover";
 import View from "./View";
 import p5 from "p5";
 
@@ -63,7 +63,7 @@ export function initP5000(
         }
 
         p.clear()
-        layoutAndRender(
+        layoutRenderAndHandleHover(
             root,
             p,
             (view, p) => {

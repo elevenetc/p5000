@@ -55,7 +55,7 @@ function initGlView() {
     const glView = new DrawableView(new GraphDrawable(rootNode))
     const glRoot = new Free()
     glRoot.background = new ColorDrawable([22, 44, 255, 200])
-    glRoot.addChild(glView)
+    glRoot.addChild(glView, Align.LEFT_TOP)
     initP5000(glRoot, true)
 }
 

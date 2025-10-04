@@ -5,7 +5,7 @@ import Align from "../../src/p5000/Align";
 import SelectionTextOverlay from "../../src/p5000/text/SelectionTextOverlay";
 import KeyboardTypeTransformer from "../../src/p5000/transformers/KeyboardTypeTransformer";
 import {KeyboardHandlerImpl} from "../../src/p5000/keyboard/KeyboardHandler";
-import {layoutAndRender} from "../../src/p5000/layoutAndRender";
+import {layoutRenderAndHandleHover} from "../../src/p5000/layoutRenderAndHandleHover";
 
 const root = new Free()
 
@@ -32,7 +32,7 @@ function setup(p) {
 
 function draw(p) {
     p.background(0, 0, 0);
-    layoutAndRender(root, p)
+    layoutRenderAndHandleHover(root, p)
 }
 
 const sketch = (p) => {

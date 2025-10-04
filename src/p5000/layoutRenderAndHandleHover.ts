@@ -2,7 +2,7 @@ import View from "./View";
 import p5 from "p5";
 import {P5000Config} from "./initP5000";
 
-function layoutAndRender(
+function layoutRenderAndHandleHover(
     view: View,
     p: p5,
     onHover?: (view: View, p: p5) => void,
@@ -22,7 +22,9 @@ function handleHover(
     config?: P5000Config
 ): void {
     if (!onHover && !offHover) return
-    if (root.handleHover(p.mouseX, p.mouseY, p)) {
+    let handleHoverResult = root.handleHover(p.mouseX, p.mouseY, p)
+
+    if (handleHoverResult) {
         onHover?.(root, p)
     } else {
         offHover?.(root, p)
@@ -32,7 +34,7 @@ function handleHover(
     if (config?.spacePressed) {
         p.cursor('grab')
     } else {
-        if (root.handleHover(p.mouseX, p.mouseY, p)) {
+        if (handleHoverResult) {
             p.cursor('pointer');
         } else {
             p.cursor('default')
@@ -41,5 +43,5 @@ function handleHover(
 }
 
 export {
-    layoutAndRender
+    layoutRenderAndHandleHover
 }

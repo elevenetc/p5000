@@ -140,7 +140,7 @@ class View {
     }
 
     contains(x: number, y: number, p: p5): boolean {
-        return viewContains(x, y, this, p)
+        return viewContains(x, y, this, p);
     }
 
     handleHover(mouseX: number, mouseY: number, p: p5): boolean {
@@ -172,7 +172,6 @@ class View {
 
     handleClick(mouseX: number, mouseY: number, p: p5): boolean {
         let contains = this.contains(mouseX, mouseY, p);
-        //console.log(`${this.constructor.name} - handleClick: contains: ${contains}, clickable: ${this.clickable}`);
         if (this.clickable && contains) {
             this.clickListener?.call(this)
             return true
