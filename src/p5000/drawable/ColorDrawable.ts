@@ -4,9 +4,13 @@ import p5 from "p5";
 
 class ColorDrawable implements Drawable {
 
+    width: number = -1;
+    height: number = -1;
+
     color: [number, number, number, number]
 
     constructor(color: [number, number, number, number] | null)
+
     constructor(...args: any[]) {
         if (args.length === 0) {
             this.color = [255, 0, 0, 255]
@@ -16,6 +20,8 @@ class ColorDrawable implements Drawable {
     }
 
     draw(view: View, p: p5): void {
+        this.width = view.getWidth(p)
+        this.height = view.getHeight(p) //TODO: probably flicker case when width initially is -1
         p.push()
         p.noStroke()
         p.fill(this.color[0], this.color[1], this.color[2], this.color[3])
